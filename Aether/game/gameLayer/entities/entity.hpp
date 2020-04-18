@@ -20,6 +20,8 @@ public:
     inline bool Selected() const { return m_selected; }
 
     virtual void Update() {}
+    // This handleClick will only be called for the selected entity
+    virtual bool HandleClick(float x, float y) { return false; }
 
     void Select() { m_selected = true; SelectCallback(); }
     void Deselect() { m_selected = false; DeselectCallback(); }

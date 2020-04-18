@@ -110,13 +110,6 @@ bool UILayer::HandleMousePress(float x, float y)
     // The button clicks should mirror rendering
     if (auto selected = GameService::GetSelectedEntity())
     {
-        // Resources do nothing on click for now
-        /*
-        if (auto resource = Oasis::DynamicCast<ResourceEntity>(selected))
-        {
-            HandleResourceUI(resource);
-        }
-        */
         if (auto player = Oasis::DynamicCast<PlayerEntity>(selected))
         {
             if (player->CanMove())
@@ -128,7 +121,8 @@ bool UILayer::HandleMousePress(float x, float y)
                 float icon_y = margin_bottom;
                 if (x > icon_x && x < icon_x + action_icon_width && y > icon_y && y < icon_y + action_icon_height)
                 {
-                    player->TryMove();
+                    // Change player to move state
+                    player->MoveAction();
                     return true;
                 }
             }

@@ -21,7 +21,8 @@ public:
     inline int GetPopulation() const { return m_population; }
     inline int GetMetal() const { return m_metal; }
 
-    virtual void TryMove() {}
+    virtual void MoveAction() {}
+    virtual void TryMove(float x, float y) {}
 
 private:
     int m_oxygen;

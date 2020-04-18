@@ -14,8 +14,8 @@ void RenderEntity::Render()
     float window_height = static_cast<float>(Oasis::WindowService::WindowHeight());
     float width = m_width * scale;
     float height = m_height * scale;
-    float screen_x = (GetX() - Camera::GetCamera()->GetX()) * scale + window_width / 2;
-    float screen_y = (GetY() - Camera::GetCamera()->GetY()) * scale + window_height / 2;
+    float screen_x = (GetX() - Camera::GetCamera()->GetX() - GetWidth() / 2) * scale + window_width / 2;
+    float screen_y = (GetY() - Camera::GetCamera()->GetY() - GetHeight() / 2) * scale + window_height / 2;
     if (screen_x > -width && screen_x < window_width && screen_y > -height && screen_y < window_height)
     {
         // Render
@@ -28,6 +28,9 @@ void RenderEntity::Render()
 
 bool RenderEntity::Colliding(float x, float y) const
 {
+    // Center the sprite
+    x += GetWidth() / 2;
+    y += GetHeight() / 2;
     // Assume the input points are raw coords and not screen adjusted
     return x > GetX() && x < GetX() + GetWidth() && y > GetY() && y < GetY() + GetHeight();
 }

@@ -19,7 +19,7 @@ void GameLayer::Init()
     m_entities.push_back(new Earth());
 
     {   // New ship
-        Ship * ship = new Ship();
+        FlagShip * ship = new FlagShip();
         ship->SetPos(-200.f, -200.f);
         m_entities.push_back(ship);
     }
@@ -38,10 +38,15 @@ void GameLayer::Close()
 
 bool GameLayer::HandleEvent(const Oasis::Event& event)
 {
-    
+
     if (event.GetType() == Oasis::EventType::MOUSE_PRESS)
     {
         const Oasis::MousePressedEvent& mouseEvent = dynamic_cast<const Oasis::MousePressedEvent&>(event);
+        // Try to handle the click for the ship first
+        if (m_selected && m_selected->HandleClick(mouseEvent.GetX(), mouseEvent.GetY()))
+        {
+            return true;
+        }
         // try to select a unit
         bool selected = false;
         for (Oasis::Reference<Entity> entity : m_entities)
@@ -50,9 +55,9 @@ bool GameLayer::HandleEvent(const Oasis::Event& event)
             if (renderEntity)
             {
                 float scale = Camera::GetCamera()->GetScale();
-                float x = static_cast<float>(mouseEvent.GetX() - Oasis::WindowService::WindowWidth() / 2) / scale + Camera::GetCamera()->GetX();
+                float x = Camera::ScreenToRawX(mouseEvent.GetX());
 				// this is such lazy code but I'm a lazy person so whatever
-                float y = static_cast<float>(Oasis::WindowService::WindowHeight() - mouseEvent.GetY() - Oasis::WindowService::WindowHeight() / 2) / scale + Camera::GetCamera()->GetY();
+                float y = Camera::ScreenToRawY(mouseEvent.GetY());
                 if (renderEntity->Colliding(x, y))
                 {
                     SelectEntity(Oasis::DynamicCast<Entity>(renderEntity));

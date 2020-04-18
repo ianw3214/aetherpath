@@ -9,7 +9,12 @@ public:
     friend class DebugLayer;
 public:
     // Global access to the camera
-    static Oasis::Reference<Camera> GetCamera() { return s_camera;}
+    static Oasis::Reference<Camera> GetCamera() { return s_camera; }
+
+    static float ScreenToRawX(int x);
+    static float ScreenToRawY(int y);
+    static int RawToScreenX(float x);
+    static int RawToScreenY(float y);
 public:
     Camera();
 

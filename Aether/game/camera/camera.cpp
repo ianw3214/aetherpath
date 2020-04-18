@@ -2,6 +2,34 @@
 
 Oasis::Reference<Camera> Camera::s_camera;
 
+float Camera::ScreenToRawX(int x)
+{
+    const float scale = Camera::GetCamera()->GetScale();
+    return static_cast<float>(x - Oasis::WindowService::WindowWidth() / 2) / scale + Camera::GetCamera()->GetX();
+
+}
+
+float Camera::ScreenToRawY(int y)
+{
+    const float scale = Camera::GetCamera()->GetScale();
+    return static_cast<float>(Oasis::WindowService::WindowHeight() - y - Oasis::WindowService::WindowHeight() / 2) / scale + Camera::GetCamera()->GetY();
+}
+
+int Camera::RawToScreenX(float x)
+{
+    const float scale = Camera::GetCamera()->GetScale();
+    const float window_width = static_cast<float>(Oasis::WindowService::WindowWidth());
+    return (x - Camera::GetCamera()->GetX()) * scale + window_width / 2;
+}
+
+int Camera::RawToScreenY(float y)
+{
+    const float scale = Camera::GetCamera()->GetScale();
+    float window_height = static_cast<float>(Oasis::WindowService::WindowHeight());
+    return (y - Camera::GetCamera()->GetY()) * scale + window_height / 2;
+}
+
+
 Camera::Camera()
     : m_x(0.f)
     , m_y(0.f)
