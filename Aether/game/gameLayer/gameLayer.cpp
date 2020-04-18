@@ -1,7 +1,7 @@
 #include "gameLayer.hpp"
 
-#include "entities/earth.hpp"
-#include "entities/ships/ship.hpp"
+#include "entities/player/earth.hpp"
+#include "entities/player/ship.hpp"
 #include "entities/universe/resource.hpp"
 
 #include "game/gameLayer/gameService.hpp"

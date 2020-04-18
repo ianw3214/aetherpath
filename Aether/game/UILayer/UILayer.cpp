@@ -2,11 +2,21 @@
 
 #include "game/gameLayer/gameService.hpp"
 #include "game/gameLayer/entities/entity.hpp"
+#include "game/gameLayer/entities/player/player.hpp"
 #include "game/gameLayer/entities/universe/resource.hpp"
+
+// Use fixed size UI
+constexpr float icon_width = 80.f;
+constexpr float icon_height = 80.f;
 
 void UILayer::Init()
 {
     m_cursor = Oasis::Sprite("res/icons/cursor.png");
+
+    m_oxygenIcon = Oasis::Sprite("res/icons/oxygen.png");
+    m_fuelIcon = Oasis::Sprite("res/icons/fuel.png");
+    m_populationIcon = Oasis::Sprite("res/icons/population.png");
+    m_metalIcon = Oasis::Sprite("res/icons/metal.png");
 }
 
 void UILayer::Close()
@@ -35,11 +45,51 @@ void UILayer::Update()
     {
         if (auto resource = Oasis::DynamicCast<ResourceEntity>(selected))
         {
-            Oasis::Console::Print("RESOURCE");
+            float y = 10;
+            DrawResource(ResourceIcon::OXYGEN, resource->GetOxygen(), y);
+            AddPadding(10, y);
+            DrawResource(ResourceIcon::FUEL, resource->GetFuel(),y);
+            AddPadding(10, y);
+            DrawResource(ResourceIcon::METAL, resource->GetMetal(),y);
         }
         if (auto player = Oasis::DynamicCast<PlayerEntity>(selected))
         {
-            Oasis::Console::Print("PLAYER");
+            float y = 10;
+            DrawResource(ResourceIcon::OXYGEN, player->GetOxygen(), y);
+            AddPadding(10, y);
+            DrawResource(ResourceIcon::FUEL, player->GetFuel(), y);
+            AddPadding(10, y);
+            DrawResource(ResourceIcon::POPULATION, player->GetPopulation(),y);
+            AddPadding(10, y);
+            DrawResource(ResourceIcon::METAL, player->GetMetal(),y);
         }
     }
+}
+
+void UILayer::AddPadding(float padding, float& curr_y)
+{
+    curr_y += padding;
+}
+
+void UILayer::DrawResource(ResourceIcon resource, int numResource, float& curr_y)
+{
+    constexpr float margin_left = 10;
+    constexpr float text_margin_left = 20;
+    constexpr float text_margin_vert = 10;
+
+    Oasis::Sprite sprite;
+    if (resource == UILayer::ResourceIcon::OXYGEN) sprite = m_oxygenIcon;
+    if (resource == UILayer::ResourceIcon::FUEL) sprite = m_fuelIcon;
+    if (resource == UILayer::ResourceIcon::POPULATION) sprite = m_populationIcon;
+    if (resource == UILayer::ResourceIcon::METAL) sprite = m_metalIcon;
+    sprite.SetPos(margin_left, Oasis::WindowService::WindowHeight() - icon_height - curr_y);
+    Oasis::Renderer::DrawSprite(sprite);
+
+    // Draw the text representing how much resource there is
+    // TODO: Align right
+    float x = margin_left + icon_width + text_margin_left;
+    float y = Oasis::WindowService::WindowHeight() - curr_y -icon_height + text_margin_vert;
+    Oasis::TextRenderer::DrawString(std::to_string(numResource), "default60", x, y, Oasis::Colours::WHITE);
+
+    curr_y += icon_height;
 }

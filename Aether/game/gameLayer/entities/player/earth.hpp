@@ -1,6 +1,6 @@
 #pragma once
 #include "oasis.h"
-#include "entity.hpp"
+#include "game/gameLayer/entities/player/player.hpp"
 
 class Earth : public PlayerEntity
 {

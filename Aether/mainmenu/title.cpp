@@ -4,7 +4,8 @@
 void Title::Init()
 {
     // Initialize any global resources because the title will only be loaded once at the start
-    Oasis::TextRenderer::LoadFont("res/fonts/Munro.ttf");
+    Oasis::TextRenderer::LoadFont("res/fonts/Munro.ttf", "default");
+    Oasis::TextRenderer::LoadFont("res/fonts/Munro.ttf", "default60", 60);
 }
 
 void Title::Close()
