@@ -1,0 +1,5 @@
+target_sources(Aether PRIVATE config.cpp)
+
+add_subdirectory(mainmenu)
+add_subdirectory(game)
+add_subdirectory(util)

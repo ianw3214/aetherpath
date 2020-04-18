@@ -9,6 +9,6 @@ In this game, you will have to manage humanity to ensure its survival. While ear
 ## IDEAS
 
 - How will the game end?
-  - Research based - spend certain amount of resources to 'unlock' humanities surivial
+  - Research based - spend certain amount of resources to 'unlock' humanities survival
   - Exploration based - find a habitable planet for humanity
   - Why not both? alternate endings :D

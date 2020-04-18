@@ -1,0 +1,5 @@
+target_sources(Aether PRIVATE game.hpp)
+
+target_sources(Aether PRIVATE game.cpp)
+
+add_subdirectory(debugLayer)
