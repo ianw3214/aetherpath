@@ -19,15 +19,15 @@ public:
     virtual bool HandleEvent(const Oasis::Event& event) override;
     virtual void Update()  override;
 
-    int GetX() const { return m_x; }
-    int GetY() const { return m_y; }
+    float GetX() const { return m_x; }
+    float GetY() const { return m_y; }
     float GetScale() const { return m_scale; }
 private:
     static Oasis::Reference<Camera> s_camera;
 
     // Center position of the camera
-    int m_x;
-    int m_y;
+    float m_x;
+    float m_y;
     // How zoomed in/out the user is with the camera
     float m_scale;
 };

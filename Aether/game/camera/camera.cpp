@@ -3,8 +3,8 @@
 Oasis::Reference<Camera> Camera::s_camera;
 
 Camera::Camera()
-    : m_x(0)
-    , m_y(0)
+    : m_x(0.f)
+    , m_y(0.f)
     , m_scale(1.f)
 {
     

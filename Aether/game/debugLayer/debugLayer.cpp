@@ -20,9 +20,9 @@ void DebugLayer::Init()
         ImGui::Checkbox("Draw health", &m_drawHealth);
         */
         // Camera debug (Technically numbers go a lot higher, but limit it for debug purposes)
-        ImGui::SliderInt("Camera x", &(Camera::GetCamera()->m_x), -100000, 100000);
-        ImGui::SliderInt("Camera y", &(Camera::GetCamera()->m_y), -100000, 100000);
-        ImGui::SliderFloat("Camera scale", &(Camera::GetCamera()->m_scale), 0.1, 5);
+        ImGui::SliderFloat("Camera x", &(Camera::GetCamera()->m_x), -1000.f, 1000.f);
+        ImGui::SliderFloat("Camera y", &(Camera::GetCamera()->m_y), -1000.f, 1000.f);
+        ImGui::SliderFloat("Camera scale", &(Camera::GetCamera()->m_scale), 0.1f, 5.f);
         ImGui::End();   
     });
 }

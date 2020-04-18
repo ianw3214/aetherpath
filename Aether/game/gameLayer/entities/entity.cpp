@@ -1,0 +1,26 @@
+#include "entity.hpp"
+
+void RenderEntity::SetSprite(const std::string& path, float width, float height)
+{
+    m_sprite = Oasis::Sprite(path);
+    m_width = width == -1 ? m_sprite.GetWidth() : width;
+    m_height = height == -1 ? m_sprite.GetHeight() : height;
+}
+
+void RenderEntity::Render() 
+{
+    const float scale = Camera::GetCamera()->GetScale();
+    float window_width = static_cast<float>(Oasis::WindowService::WindowWidth());
+    float window_height = static_cast<float>(Oasis::WindowService::WindowHeight());
+    float width = m_width * scale;
+    float height = m_height * scale;
+    float screen_x = (GetX() - Camera::GetCamera()->GetX()) * scale + window_width / 2;
+    float screen_y = (GetY() - Camera::GetCamera()->GetY()) * scale + window_height / 2;
+    if (screen_x > -width && screen_x < window_width && screen_y > -height && screen_y < window_height)
+    {
+        // Render
+        m_sprite.SetPos(screen_x, screen_y);
+        m_sprite.SetDimensions(width, height);
+        Oasis::Renderer::DrawSprite(m_sprite);
+    }
+}
