@@ -1,6 +1,10 @@
 #pragma once
 #include "oasis.h"
 
+class ResourceEntity;
+class PlayerEntity;
+class Ship;
+
 ////////////////////////////////////////////////////////////////////////////////////////
 class UILayer : public Oasis::GameStateLayer
 {
@@ -28,6 +32,13 @@ private:
     Oasis::Sprite m_fuelIcon;
     Oasis::Sprite m_populationIcon;
     Oasis::Sprite m_metalIcon;
+
+    Oasis::Sprite m_moveIcon;
+private:
+    void HandleResourceUI(Oasis::Reference<ResourceEntity> resource);
+    void HandlePlayerUI(Oasis::Reference<PlayerEntity> player);
+    void HandleShipUI(Oasis::Reference<Ship> ship);
+    bool HandleMousePress(float x, float y);
 private:
     // Drawing helper functions
     void AddPadding(float padding, float& curr_y);

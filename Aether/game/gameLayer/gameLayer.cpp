@@ -38,6 +38,7 @@ void GameLayer::Close()
 
 bool GameLayer::HandleEvent(const Oasis::Event& event)
 {
+    
     if (event.GetType() == Oasis::EventType::MOUSE_PRESS)
     {
         const Oasis::MousePressedEvent& mouseEvent = dynamic_cast<const Oasis::MousePressedEvent&>(event);

@@ -14,10 +14,14 @@ public:
         , m_metal(0) 
     {}
 
+    virtual bool CanMove() const { return false; }
+
     inline int GetOxygen() const { return m_oxygen; }
     inline int GetFuel() const { return m_fuel; }
     inline int GetPopulation() const { return m_population; }
     inline int GetMetal() const { return m_metal; }
+
+    virtual void TryMove() {}
 
 private:
     int m_oxygen;

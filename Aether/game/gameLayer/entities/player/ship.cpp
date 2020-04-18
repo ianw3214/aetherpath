@@ -9,3 +9,8 @@ void Ship::Update()
 {
     Render();
 }
+
+void Ship::TryMove()
+{
+    Oasis::Console::Print("TRY MOVE");
+}
