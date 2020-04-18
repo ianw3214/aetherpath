@@ -1,5 +1,7 @@
 #include "gameLayer.hpp"
 
+#include <random>
+
 #include "entities/player/earth.hpp"
 #include "entities/player/ship.hpp"
 #include "entities/universe/resource.hpp"
@@ -15,20 +17,7 @@ GameLayer::GameLayer()
 
 void GameLayer::Init()
 {
-    // Mother earth
-    m_entities.push_back(new Earth());
-
-    {   // New ship
-        FlagShip * ship = new FlagShip();
-        ship->SetPos(-200.f, -200.f);
-        m_entities.push_back(ship);
-    }
-
-    {   // New resource entity
-        ResourceEntity * ent = new ResourceEntity();
-        ent->SetPos(-150.f, 200.f);
-        m_entities.push_back(ent);
-    }
+    GenerateGameWorld();
 }
 
 void GameLayer::Close()
@@ -94,4 +83,50 @@ void GameLayer::SelectEntity(Oasis::Reference<Entity> entity)
     {
         entity->Select();
     }
+}
+
+void GameLayer::GenerateGameWorld()
+{
+    GameSettings settings = GameService::GetGameSettings();
+
+    // Mother earth always generated at 0, 0
+    m_entities.push_back(new Earth());
+
+    // -----------------------------------------------------------------
+    // TEMPORARY CODE
+    {   // New ship
+        FlagShip * ship = new FlagShip();
+        ship->InitializeShip(-200.f, -200.f);
+        m_entities.push_back(ship);
+    }
+
+    {   // New ship
+        FlagShip * ship = new FlagShip();
+        ship->InitializeShip(200.f, -200.f);
+        m_entities.push_back(ship);
+    }
+    // -----------------------------------------------------------------
+
+    // Generate all other game entities randomly
+    std::random_device r;
+    std::default_random_engine el(r());
+    std::uniform_int_distribution<int> position_dist(-(settings.m_mapBorder), settings.m_mapBorder);
+
+    const int area = (settings.m_mapBorder * 2) * (settings.m_mapBorder * 2);
+    const int numThings = area * settings.m_densityPerSquareThousand / 1000 / 1000;
+    
+    for (int i = 0; i < numThings; ++i)
+    {
+        ResourceEntity * ent = new ResourceEntity();
+        ent->SetPos(static_cast<float>(position_dist(el)), static_cast<float>(position_dist(el)));
+        m_entities.push_back(ent);
+    }
+
+    /*
+    {   // New resource entity
+        ResourceEntity * ent = new ResourceEntity();
+        ent->SetPos(-150.f, 200.f);
+        m_entities.push_back(ent);
+    }
+    */
 }

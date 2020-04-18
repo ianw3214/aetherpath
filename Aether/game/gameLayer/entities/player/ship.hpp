@@ -17,6 +17,7 @@ public:
     };
 public:
     Ship(float speed = 100.f);
+    void InitializeShip(float x, float y);
 
     float GetSpeed() const { return m_speed; }
 

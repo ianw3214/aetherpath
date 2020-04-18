@@ -13,8 +13,8 @@ public:
 
     static float ScreenToRawX(int x);
     static float ScreenToRawY(int y);
-    static int RawToScreenX(float x);
-    static int RawToScreenY(float y);
+    static int RawToScreenX(float x, float parallax = 1.f);
+    static int RawToScreenY(float y, float parallax = 1.f);
 public:
     Camera();
 

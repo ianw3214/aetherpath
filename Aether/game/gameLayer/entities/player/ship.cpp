@@ -8,10 +8,17 @@ Ship::Ship(float speed)
     : m_speed(speed)
     , m_UIState(UIState::NONE)
     , m_state(State::IDLE)
-    , m_targetX(-200.f)
-    , m_targetY(-200.f)
+    , m_targetX(0.f)
+    , m_targetY(0.f)
 {
     SetSprite("res/sprites/ship.png");
+}
+
+void Ship::InitializeShip(float x, float y)
+{
+    SetPos(x, y);
+    m_targetX = x;
+    m_targetY = y;
 }
 
 void Ship::Update()

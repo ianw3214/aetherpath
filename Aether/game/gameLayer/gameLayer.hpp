@@ -24,4 +24,7 @@ private:
     std::vector<Oasis::Owned<Entity>> m_entities;
 
     Oasis::Reference<Entity> m_selected;
+private:
+    // Additional helper methods
+    void GenerateGameWorld();
 };
