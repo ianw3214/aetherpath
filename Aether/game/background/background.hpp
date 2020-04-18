@@ -13,7 +13,7 @@ struct Star
     float y;
     float parallax;
 
-    static const int StarDensityPerSquareThousand = 5;
+    static const int StarDensityPerSquareThousand = 4;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////

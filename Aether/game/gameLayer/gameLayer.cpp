@@ -32,7 +32,7 @@ bool GameLayer::HandleEvent(const Oasis::Event& event)
     {
         const Oasis::MousePressedEvent& mouseEvent = dynamic_cast<const Oasis::MousePressedEvent&>(event);
         // Try to handle the click for the ship first
-        if (m_selected && m_selected->HandleClick(mouseEvent.GetX(), mouseEvent.GetY()))
+        if (m_selected && m_selected->HandleClick(static_cast<float>(mouseEvent.GetX()), static_cast<float>(mouseEvent.GetY())))
         {
             return true;
         }
@@ -101,7 +101,7 @@ void GameLayer::GenerateGameWorld()
     }
 
     {   // New ship
-        FlagShip * ship = new FlagShip();
+        DroneShip * ship = new DroneShip();
         ship->InitializeShip(200.f, -200.f);
         m_entities.push_back(ship);
     }

@@ -1,5 +1,7 @@
 #include "UILayer.hpp"
 
+#include <SDL2/SDL.h>
+
 #include "game/gameLayer/gameService.hpp"
 #include "game/gameLayer/entities/entity.hpp"
 #include "game/gameLayer/entities/player/player.hpp"
@@ -12,6 +14,7 @@ constexpr float resource_icon_height = 80.f;
 constexpr float action_icon_width = 100.f;
 constexpr float action_icon_height = 100.f;
 
+////////////////////////////////////////////////////////////////////////////////////////////
 void UILayer::Init()
 {
     m_cursor = Oasis::Sprite("res/icons/cursor.png");
@@ -22,13 +25,16 @@ void UILayer::Init()
     m_metalIcon = Oasis::Sprite("res/icons/metal.png");
     
     m_moveIcon = Oasis::Sprite("res/icons/move.png");
+    m_mineIcon = Oasis::Sprite("res/icons/mine.png");
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////
 void UILayer::Close()
 {
 
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////
 bool UILayer::HandleEvent(const Oasis::Event& event)
 {
     if (event.GetType() == Oasis::EventType::MOUSE_MOVE)
@@ -47,9 +53,30 @@ bool UILayer::HandleEvent(const Oasis::Event& event)
         );
         if (result) return true;
     }
+    // Hotkeys for when a player entity is selected
+    if (auto player = Oasis::DynamicCast<PlayerEntity>(GameService::GetSelectedEntity()))
+    {
+        if (event.GetType() == Oasis::EventType::KEY_PRESSED)
+        {
+            const Oasis::KeyPressedEvent& keyEvent = dynamic_cast<const Oasis::KeyPressedEvent&>(event);
+            if (keyEvent.GetKey() == SDL_SCANCODE_1)
+            {
+                // Change player to move UI state
+                player->MoveAction();
+                return true;
+            }
+            if (keyEvent.GetKey() == SDL_SCANCODE_2)
+            {
+                // Change player to mine UI state
+                player->MineAction();
+                return true;
+            }
+        }
+    }
     return false;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////
 void UILayer::Update() 
 {
     // Show UI based on what's selected
@@ -68,6 +95,7 @@ void UILayer::Update()
     Oasis::Renderer::DrawSprite(m_cursor);
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////
 void UILayer::HandleResourceUI(Oasis::Reference<ResourceEntity> resource)
 {
     float y = 10;
@@ -78,6 +106,7 @@ void UILayer::HandleResourceUI(Oasis::Reference<ResourceEntity> resource)
     DrawResource(ResourceIcon::METAL, resource->GetMetal(),y);
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////
 void UILayer::HandlePlayerUI(Oasis::Reference<PlayerEntity> player)
 {
     float y = 10;
@@ -94,6 +123,7 @@ void UILayer::HandlePlayerUI(Oasis::Reference<PlayerEntity> player)
     }
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////
 void UILayer::HandleShipUI(Oasis::Reference<Ship> ship)
 {
     constexpr float margin_left = 10;
@@ -101,10 +131,13 @@ void UILayer::HandleShipUI(Oasis::Reference<Ship> ship)
 
     float x = margin_left;
     float y = margin_bottom;
-    m_moveIcon.SetPos(x, y);
-    Oasis::Renderer::DrawSprite(m_moveIcon);
+    
+    DrawActionIcon(m_moveIcon, x, y);
+    AddPadding(margin_left, x);
+    DrawActionIcon(m_mineIcon, x, y);
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////
 bool UILayer::HandleMousePress(float x, float y)
 {
     // The button clicks should mirror rendering
@@ -112,17 +145,27 @@ bool UILayer::HandleMousePress(float x, float y)
     {
         if (auto player = Oasis::DynamicCast<PlayerEntity>(selected))
         {
+            constexpr float margin_left = 10;
+            constexpr float margin_bottom = 10;
+            float icon_x = margin_left;
+            float icon_y = margin_bottom;
             if (player->CanMove())
             {
-                constexpr float margin_left = 10;
-                constexpr float margin_bottom = 10;
-
-                float icon_x = margin_left;
-                float icon_y = margin_bottom;
                 if (x > icon_x && x < icon_x + action_icon_width && y > icon_y && y < icon_y + action_icon_height)
                 {
                     // Change player to move state
                     player->MoveAction();
+                    return true;
+                }
+            }
+            AddPadding(action_icon_width, icon_x);
+            AddPadding(margin_left, icon_x);
+            if (player->CanMine())
+            {
+                if (x > icon_x && x < icon_x + action_icon_width && y > icon_y && y < icon_y + action_icon_height)
+                {
+                    // Change player to move state
+                    player->MineAction();
                     return true;
                 }
             }
@@ -131,11 +174,13 @@ bool UILayer::HandleMousePress(float x, float y)
     return false;
 }
 
-void UILayer::AddPadding(float padding, float& curr_y)
+////////////////////////////////////////////////////////////////////////////////////////////
+void UILayer::AddPadding(float padding, float& curr)
 {
-    curr_y += padding;
+    curr += padding;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////
 void UILayer::DrawResource(ResourceIcon resource, int numResource, float& curr_y)
 {
     constexpr float margin_left = 10;
@@ -157,4 +202,12 @@ void UILayer::DrawResource(ResourceIcon resource, int numResource, float& curr_y
     Oasis::TextRenderer::DrawString(std::to_string(numResource), "default60", x, y, Oasis::Colours::WHITE);
 
     curr_y += resource_icon_height;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
+void UILayer::DrawActionIcon(Oasis::Reference<Oasis::Sprite> icon, float& curr_x, float y)
+{
+    icon->SetPos(curr_x, y);
+    Oasis::Renderer::DrawSprite(icon);
+    curr_x += action_icon_width;
 }

@@ -10,12 +10,12 @@ void RenderEntity::SetSprite(const std::string& path, float width, float height)
 void RenderEntity::Render() 
 {
     const float scale = Camera::GetCamera()->GetScale();
-    float window_width = static_cast<float>(Oasis::WindowService::WindowWidth());
-    float window_height = static_cast<float>(Oasis::WindowService::WindowHeight());
-    float width = m_width * scale;
-    float height = m_height * scale;
-    float screen_x = (GetX() - Camera::GetCamera()->GetX() - GetWidth() / 2) * scale + window_width / 2;
-    float screen_y = (GetY() - Camera::GetCamera()->GetY() - GetHeight() / 2) * scale + window_height / 2;
+    const float window_width = static_cast<float>(Oasis::WindowService::WindowWidth());
+    const float window_height = static_cast<float>(Oasis::WindowService::WindowHeight());
+    const float width = m_width * scale;
+    const float height = m_height * scale;
+    const float screen_x = Camera::RawToScreenX(GetX() - GetWidth() / 2);
+    const float screen_y = Camera::RawToScreenY(GetY() - GetHeight() / 2);
     if (screen_x > -width && screen_x < window_width && screen_y > -height && screen_y < window_height)
     {
         // Render

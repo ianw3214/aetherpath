@@ -15,6 +15,7 @@ public:
     {}
 
     virtual bool CanMove() const { return false; }
+    virtual bool CanMine() const { return false; }
 
     inline int GetOxygen() const { return m_oxygen; }
     inline int GetFuel() const { return m_fuel; }
@@ -23,6 +24,8 @@ public:
 
     virtual void MoveAction() {}
     virtual void TryMove(float x, float y) {}
+    virtual void MineAction() {}
+    virtual void TryMine(float x, float y) {}
 
 private:
     int m_oxygen;

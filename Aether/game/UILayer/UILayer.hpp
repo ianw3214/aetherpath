@@ -34,6 +34,7 @@ private:
     Oasis::Sprite m_metalIcon;
 
     Oasis::Sprite m_moveIcon;
+    Oasis::Sprite m_mineIcon;
 private:
     void HandleResourceUI(Oasis::Reference<ResourceEntity> resource);
     void HandlePlayerUI(Oasis::Reference<PlayerEntity> player);
@@ -41,6 +42,7 @@ private:
     bool HandleMousePress(float x, float y);
 private:
     // Drawing helper functions
-    void AddPadding(float padding, float& curr_y);
+    void AddPadding(float padding, float& curr);
     void DrawResource(ResourceIcon resource, int numResource, float& curr_y);
+    void DrawActionIcon(Oasis::Reference<Oasis::Sprite> icon, float& curr_x, float y);
 };
