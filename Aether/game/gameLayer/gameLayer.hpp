@@ -9,6 +9,8 @@
 class GameLayer : public Oasis::GameStateLayer
 {
 public:
+    friend class GameService;
+public:
     GameLayer();
 
     virtual void Init() override;

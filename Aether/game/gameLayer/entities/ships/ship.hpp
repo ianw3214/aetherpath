@@ -1,11 +1,11 @@
 #pragma once
 #include "oasis.h"
-#include "entity.hpp"
+#include "game/gameLayer/entities/entity.hpp"
 
-class Earth : public PlayerEntity
+class Ship : public PlayerEntity
 {
 public:
-    Earth();
+    Ship();
 
     virtual void Update() override;
 private:

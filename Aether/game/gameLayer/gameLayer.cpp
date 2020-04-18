@@ -1,17 +1,34 @@
 #include "gameLayer.hpp"
 
 #include "entities/earth.hpp"
+#include "entities/ships/ship.hpp"
+#include "entities/universe/resource.hpp"
+
+#include "game/gameLayer/gameService.hpp"
 
 GameLayer::GameLayer()
     : m_entities()
     , m_selected(nullptr)
 {
-
+    GameService::SetGameLayer(this);
 }
 
 void GameLayer::Init()
 {
+    // Mother earth
     m_entities.push_back(new Earth());
+
+    {   // New ship
+        Ship * ship = new Ship();
+        ship->SetPos(-200.f, -200.f);
+        m_entities.push_back(ship);
+    }
+
+    {   // New resource entity
+        ResourceEntity * ent = new ResourceEntity();
+        ent->SetPos(-150.f, 200.f);
+        m_entities.push_back(ent);
+    }
 }
 
 void GameLayer::Close()
@@ -31,11 +48,11 @@ bool GameLayer::HandleEvent(const Oasis::Event& event)
             Oasis::Reference<RenderEntity> renderEntity = Oasis::DynamicCast<RenderEntity>(entity);
             if (renderEntity)
             {
-                float x = static_cast<float>(mouseEvent.GetX() + Camera::GetCamera()->GetX() - Oasis::WindowService::WindowWidth() / 2);
-				// this is such lazy code but I'm a lazy person so whatever
-                float y = static_cast<float>(Oasis::WindowService::WindowHeight() - mouseEvent.GetY() + Camera::GetCamera()->GetY() - Oasis::WindowService::WindowHeight() / 2);
                 float scale = Camera::GetCamera()->GetScale();
-                if (renderEntity->Colliding(x / scale, y / scale))
+                float x = static_cast<float>(mouseEvent.GetX() - Oasis::WindowService::WindowWidth() / 2) / scale + Camera::GetCamera()->GetX();
+				// this is such lazy code but I'm a lazy person so whatever
+                float y = static_cast<float>(Oasis::WindowService::WindowHeight() - mouseEvent.GetY() - Oasis::WindowService::WindowHeight() / 2) / scale + Camera::GetCamera()->GetY();
+                if (renderEntity->Colliding(x, y))
                 {
                     SelectEntity(Oasis::DynamicCast<Entity>(renderEntity));
                     selected = true;

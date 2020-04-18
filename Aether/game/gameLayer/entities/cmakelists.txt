@@ -1,3 +1,6 @@
 target_sources(Aether PRIVATE entity.hpp entity.cpp)
 
 target_sources(Aether PRIVATE earth.hpp earth.cpp)
+
+add_subdirectory(ships)
+add_subdirectory(universe)

@@ -1,3 +1,4 @@
+target_sources(Aether PRIVATE gameService.hpp gameService.cpp)
 target_sources(Aether PRIVATE gameLayer.hpp gameLayer.cpp)
 
 add_subdirectory(entities)
