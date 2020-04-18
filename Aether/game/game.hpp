@@ -13,8 +13,8 @@ public:
     {
         // Layers are added bottom -> top
         AddLayer(new Background());
-        AddLayer(new GameLayer());
         AddLayer(new Camera());
+        AddLayer(new GameLayer());
         AddLayer(new UILayer());
         AddLayer(new DebugLayer());
     }

@@ -21,6 +21,13 @@ void RenderEntity::Render()
         // Render
         m_sprite.SetPos(screen_x, screen_y);
         m_sprite.SetDimensions(width, height);
+        m_sprite.SetTint(Oasis::Colours::WHITE, static_cast<float>(Selected()) * 0.2f);
         Oasis::Renderer::DrawSprite(m_sprite);
     }
+}
+
+bool RenderEntity::Colliding(float x, float y) const
+{
+    // Assume the input points are raw coords and not screen adjusted
+    return x > GetX() && x < GetX() + GetWidth() && y > GetY() && y < GetY() + GetHeight();
 }
