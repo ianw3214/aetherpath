@@ -30,4 +30,7 @@ private:
     float m_y;
     // How zoomed in/out the user is with the camera
     float m_scale;
+
+    // Input state
+    bool m_dragging;
 };
