@@ -16,3 +16,7 @@ reference/
 
 # ENGINE FILES
 Oasis/
+
+# EXPORTED BUILD
+export/
+*.zip

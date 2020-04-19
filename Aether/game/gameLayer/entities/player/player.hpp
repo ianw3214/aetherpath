@@ -16,6 +16,7 @@ public:
 
     virtual bool CanMove() const { return false; }
     virtual bool CanMine() const { return false; }
+    virtual bool CanCreate() const { return false; }
 
     virtual void Tick() override;
     virtual void DayCycle() override;
@@ -37,6 +38,8 @@ public:
     virtual void TryMove(float x, float y) {}
     virtual void MineAction() {}
     virtual void TryMine(float x, float y) {}
+
+    virtual void CreateAction() {}
 
 private:
     int m_oxygen;

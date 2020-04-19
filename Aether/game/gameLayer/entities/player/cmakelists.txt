@@ -1,3 +1,4 @@
 target_sources(Aether PRIVATE player.hpp player.cpp)
-target_sources(Aether PRIVATE ship.hpp ship.cpp)
+target_sources(Aether PRIVATE base.hpp base.cpp)
+target_sources(Aether PRIVATE ship.hpp ship.cpp shipDatabase.hpp)
 target_sources(Aether PRIVATE earth.hpp earth.cpp)

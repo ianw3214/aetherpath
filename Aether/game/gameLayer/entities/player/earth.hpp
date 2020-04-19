@@ -1,8 +1,8 @@
 #pragma once
 #include "oasis.h"
-#include "game/gameLayer/entities/player/player.hpp"
+#include "game/gameLayer/entities/player/base.hpp"
 
-class Earth : public PlayerEntity
+class Earth : public Base
 {
 public:
     Earth(int o, int f, int p, int m);

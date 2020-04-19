@@ -15,6 +15,11 @@ GameLayer::GameLayer()
     , m_dayAccumulator(0.f)
 {
     GameService::SetGameLayer(this);
+
+    Oasis::Reference<Oasis::AudioResource> audio = Oasis::ResourceManager::LoadResource<Oasis::AudioResource>("res/music/track.wav");
+    Oasis::AudioSource * source = new Oasis::AudioSource();
+    source->SetVolume(0.1f);
+    source->Play(audio.GetData());
 }
 
 void GameLayer::Init()
@@ -102,7 +107,16 @@ void GameLayer::GenerateGameWorld()
 
     // -----------------------------------------------------------------
     // TEMPORARY CODE
-    {   // New ship
+    {   // Mothership
+        MotherShip * ship = new MotherShip();
+        ship->InitializeShip(400.f, -400.f);
+        ship->AddFuel(1000);
+        ship->AddOxygen(20);
+        ship->AddPopulation(500);
+        m_entities.push_back(ship);
+    }
+
+    {   // Flagship
         FlagShip * ship = new FlagShip();
         ship->InitializeShip(-200.f, -200.f);
         ship->AddFuel(1000);
@@ -111,9 +125,16 @@ void GameLayer::GenerateGameWorld()
         m_entities.push_back(ship);
     }
 
-    {   // New ship
+    {   // Droneship
         DroneShip * ship = new DroneShip();
         ship->InitializeShip(200.f, -200.f);
+        ship->AddFuel(1000);
+        m_entities.push_back(ship);
+    }
+
+    {   // Scout
+        Scout * ship = new Scout();
+        ship->InitializeShip(300.f, 300.f);
         ship->AddFuel(1000);
         m_entities.push_back(ship);
     }

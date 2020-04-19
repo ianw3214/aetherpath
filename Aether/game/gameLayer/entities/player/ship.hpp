@@ -56,6 +56,12 @@ private:
     void RenderMineDots();
 };
 
+class MotherShip : public Ship
+{
+public:
+    MotherShip();
+};
+
 class FlagShip : public Ship
 {
 public:
@@ -66,4 +72,10 @@ class DroneShip : public Ship
 {
 public:
     DroneShip();
+};
+
+class Scout : public Ship
+{
+public:
+    Scout();
 };

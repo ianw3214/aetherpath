@@ -210,6 +210,12 @@ void Ship::ResetState()
     m_mineTarget = nullptr;
 }
 
+MotherShip::MotherShip()
+    : Ship(20.f)
+{
+    SetSprite("res/sprites/mothership.png");
+}
+
 FlagShip::FlagShip()
     : Ship(40.f)
 {
@@ -220,4 +226,10 @@ DroneShip::DroneShip()
     : Ship(100.f, 600.f)
 {
     SetSprite("res/sprites/droneship.png");
+}
+
+Scout::Scout()
+    : Ship(220.f, 20.f, 20)
+{
+    SetSprite("res/sprites/scout.png");
 }

@@ -4,6 +4,7 @@
 class ResourceEntity;
 class PlayerEntity;
 class Ship;
+class Base;
 
 ////////////////////////////////////////////////////////////////////////////////////////
 class UILayer : public Oasis::GameStateLayer
@@ -35,10 +36,31 @@ private:
 
     Oasis::Sprite m_moveIcon;
     Oasis::Sprite m_mineIcon;
+
+    Oasis::Sprite m_createIcon;
+    // Sub icons for create
+    Oasis::Sprite m_createMotherShipIcon;
+    Oasis::Sprite m_createFlagShipIcon;
+    Oasis::Sprite m_createDroneShipIcon;
+    Oasis::Sprite m_createScoutIcon;
+
+    // UI For building ships queue in base
+    Oasis::Sprite m_queueMotherShipIcon;    
+    Oasis::Sprite m_queueFlagShipIcon;    
+    Oasis::Sprite m_queueDroneShipIcon;
+    Oasis::Sprite m_queueScoutIcon;
+    Oasis::Sprite m_queueProgressIcon;
+
+    // Ships in storage
+    Oasis::Sprite m_storageMotherShipIcon;
+    Oasis::Sprite m_storageFlagShipIcon;
+    Oasis::Sprite m_storageDroneShipIcon;
+    Oasis::Sprite m_storageScoutIcon;
 private:
     void HandleResourceUI(Oasis::Reference<ResourceEntity> resource);
     void HandlePlayerUI(Oasis::Reference<PlayerEntity> player);
     void HandleShipUI(Oasis::Reference<Ship> ship);
+    void HandleBaseUI(Oasis::Reference<Base> base);
     bool HandleMousePress(float x, float y);
 private:
     // Drawing helper functions
