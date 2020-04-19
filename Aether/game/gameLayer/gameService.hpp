@@ -45,6 +45,7 @@ class GameService
 public:
     static Oasis::Reference<Entity> GetSelectedEntity();
     static Oasis::Reference<Entity> GetEntityAt(float x, float y);
+    static void TransferEntityToGame(Oasis::Owned<Entity>& entity);
     static GameSettings GetGameSettings() { return s_settings; }
 private:
     static GameSettings s_settings;

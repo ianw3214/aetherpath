@@ -35,6 +35,7 @@ void UILayer::Init()
     m_mineIcon = Oasis::Sprite("res/icons/mine.png");
 
     m_createIcon = Oasis::Sprite("res/icons/create.png");
+    m_deployIcon = Oasis::Sprite("res/icons/deploy.png");
 
     m_createMotherShipIcon = Oasis::Sprite("res/icons/create_mothership.png");
     m_createFlagShipIcon = Oasis::Sprite("res/icons/create_flagship.png");
@@ -175,6 +176,8 @@ void UILayer::HandleBaseUI(Oasis::Reference<Base> base)
     float y = margin_vertical;
     
     DrawActionIcon(m_createIcon, x, y);
+    AddPadding(margin_horizontal, x);
+    DrawActionIcon(m_deployIcon, x, y);
 
     if (base->GetUIState() == Base::UIState::CREATE)
     {
@@ -192,15 +195,14 @@ void UILayer::HandleBaseUI(Oasis::Reference<Base> base)
         m_createMotherShipIcon.SetPos(x, y2);
         Oasis::Renderer::DrawSprite(m_createMotherShipIcon);
     }
-    AddPadding(margin_horizontal, x);
-    // DrawActionIcon(m_mineIcon, x, y);
 
     {   // Render ship storage AND building queue at bottom right I guess?
         float x = Oasis::WindowService::WindowWidth() - build_queue_icon_width - margin_horizontal;
         float y = margin_vertical;
 
-        for (const Oasis::Reference<Ship> ship : base->GetShipStorage())
+        for (const Oasis::Reference<Entity> entity : base->GetShipStorage())
         {
+            const Oasis::Reference<Ship> ship = Oasis::DynamicCast<Ship>(entity);
             Oasis::Reference<Oasis::Sprite> sprite = nullptr;
             if (Oasis::DynamicCast<MotherShip>(ship)) sprite = m_storageMotherShipIcon;
             if (Oasis::DynamicCast<FlagShip>(ship)) sprite = m_storageFlagShipIcon;
@@ -287,23 +289,26 @@ bool UILayer::HandleMousePress(float x, float y)
         // Second icon
         if (x > icon_x && x < icon_x + action_icon_width && y > icon_y && y < icon_y + action_icon_height)
         {
+            if (ship && ship->CanMine())
             {
-                if (ship && ship->CanMine())
-                {
-                    // Change player to move state
-                    ship->MineAction();
-                    return true;
-                }
+                // Change player to move state
+                ship->MineAction();
+                return true;
+            }
+            if (base && base->CanDeploy() && base->GetShipStorage().size() > 0)
+            {
+                // Change base to deploy state
+                base->DeployAction();
+                return true;
             }
         }
+        constexpr float margin_horizontal = 10;
+        constexpr float margin_vertical = 10;
         if (base && base->GetUIState() == Base::UIState::CREATE)
         {   // If the creation menu is open
-            constexpr float margin_left = 10;
-            constexpr float margin_bottom = 10;
-
             // The player pressed the create button and is now wanting to create a new ship
-            float icon_x = margin_left + action_icon_width;
-            float icon_y = margin_bottom + action_icon_height + margin_bottom;
+            float icon_x = margin_horizontal + action_icon_width;
+            float icon_y = margin_vertical + action_icon_height + margin_bottom;
 
             constexpr float w = create_ship_icon_width;
             constexpr float h = create_ship_icon_height;
@@ -312,24 +317,48 @@ bool UILayer::HandleMousePress(float x, float y)
             if (x > icon_x && x < icon_x + w && y > icon_y && y < icon_y + h)
             {
                 base->CreateShip(ShipType::SCOUT);
+                return true;
             }
             // Droneship
-            AddPadding(margin_bottom + create_ship_icon_height, icon_y);
+            AddPadding(margin_vertical + create_ship_icon_height, icon_y);
             if (x > icon_x && x < icon_x + w && y > icon_y && y < icon_y + h)
             {
                 base->CreateShip(ShipType::DRONESHIP);
+                return true;
             }
             // Flagship
-            AddPadding(margin_bottom + create_ship_icon_height, icon_y);
+            AddPadding(margin_vertical + create_ship_icon_height, icon_y);
             if (x > icon_x && x < icon_x + w && y > icon_y && y < icon_y + h)
             {
                 base->CreateShip(ShipType::FLAGSHIP);
+                return true;
             }
             // Mothership
-            AddPadding(margin_bottom + create_ship_icon_height, icon_y);
+            AddPadding(margin_vertical + create_ship_icon_height, icon_y);
             if (x > icon_x && x < icon_x + w && y > icon_y && y < icon_y + h)
             {
                 base->CreateShip(ShipType::MOTHERSHIP);
+                return true;
+            }
+        }
+        if (base && base->GetUIState() == Base::UIState::DEPLOY)
+        {
+            float icon_x = Oasis::WindowService::WindowWidth() - build_queue_icon_width - margin_horizontal;
+            float icon_y = margin_vertical;
+            for (const Oasis::Reference<Entity> entity : base->GetShipStorage())
+            {
+                const Oasis::Reference<Ship> ship = Oasis::DynamicCast<Ship>(entity);
+                constexpr float w = build_queue_icon_width;
+                constexpr float h = build_queue_icon_height;
+
+                if (x > icon_x && x < icon_x + w && y > icon_y && y < icon_y + h)
+                {
+                    Oasis::Console::Print("DEPLOY?");
+                    base->ChooseShipToDeploy(ship);
+                    return true;
+                }
+
+                AddPadding(margin_vertical + build_queue_icon_height, icon_y);
             }
         }
     }

@@ -43,6 +43,7 @@ private:
     Oasis::Sprite m_createFlagShipIcon;
     Oasis::Sprite m_createDroneShipIcon;
     Oasis::Sprite m_createScoutIcon;
+    Oasis::Sprite m_deployIcon;
 
     // UI For building ships queue in base
     Oasis::Sprite m_queueMotherShipIcon;    

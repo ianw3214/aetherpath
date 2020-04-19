@@ -6,7 +6,5 @@ class Earth : public Base
 {
 public:
     Earth(int o, int f, int p, int m);
-
-    virtual void Update() override;
 private:
 };
