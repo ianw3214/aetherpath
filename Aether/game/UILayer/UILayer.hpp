@@ -40,6 +40,7 @@ private:
     Oasis::Sprite m_transferFuelIcon;
     Oasis::Sprite m_transferPopulationIcon;
     Oasis::Sprite m_transferMetalIcon;
+    Oasis::Sprite m_colonizeIcon;
 
     Oasis::Sprite m_createIcon;
     // Sub icons for create

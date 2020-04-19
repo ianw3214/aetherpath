@@ -8,6 +8,7 @@
 #include "entities/universe/resource.hpp"
 
 #include "game/gameLayer/gameService.hpp"
+#include "game/alertLayer/alertService.hpp"
 
 GameLayer::GameLayer()
     : m_entities()
@@ -245,6 +246,18 @@ void GameLayer::UpdateClockAndTick()
         for (Oasis::Reference<Entity> entity : m_entities)
         {
             entity->DayCycle();
+        }
+    }
+
+    {   // Check for game lost conditions
+        int total_population = 0;
+        for (auto player : m_players)
+        {
+            total_population += player->GetPopulation();
+        }
+        if (total_population <= 0)
+        {
+            AlertService::Lose();
         }
     }
 }

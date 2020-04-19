@@ -7,7 +7,14 @@ class AlertService
 private:
     friend class AlertLayer;
     static Oasis::Reference<AlertLayer> s_layer;
-    static void SetAlertLayer(Oasis::Reference<AlertLayer> layer) { s_layer = layer;}
+    static void SetAlertLayer(Oasis::Reference<AlertLayer> layer) { 
+        s_layer = layer;
+        // Treat this as a reset
+        s_won = false;
+        s_lost = false;
+    }
+    static bool s_won;
+    static bool s_lost;
 public:
     static void Info(const std::string& message);
     static void Warning(const std::string& message);

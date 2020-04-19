@@ -10,7 +10,6 @@
 class Ship;
 
 // -------------------------------------------------------------
-// For now bases are just used to tag entities as bases
 class Base : public PlayerEntity
 {
 public:
@@ -84,4 +83,13 @@ private:
 
     std::vector<Oasis::Owned<Entity>> m_shipStorage;
     std::deque<BuildingEntry> m_buildingQueue;
+};
+
+// -------------------------------------------------------------
+// The goal base is the win condition
+class GoalBase : public Base
+{
+public:
+    GoalBase(int o = 0, int f = 0, int p = 0, int m = 0, int t = 1);
+    virtual void Tick() override;
 };

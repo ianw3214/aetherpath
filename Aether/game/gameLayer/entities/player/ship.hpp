@@ -2,6 +2,8 @@
 #include "oasis.h"
 #include "game/gameLayer/entities/player/player.hpp"
 
+#define SPEED_DEBUG_MULTIPLIER 1000
+
 class ResourceEntity;
 class Ship : public PlayerEntity
 {
@@ -12,7 +14,8 @@ public:
         MOVE,
         MINE,
         TRANSFER,
-        TRANSFER2
+        TRANSFER2,
+        COLONIZE
     };
     enum class State
     {
@@ -30,6 +33,7 @@ public:
     };
 
     static constexpr float TRANSFER_RADIUS = 500.f;
+    static constexpr float COLONIZE_RADIUS = 500.f;
 public:
     Ship(float speed = 100.f, float mineRange = 200.f, int ticksPerFuel = 10, int gatherSpeed = 1, int transferSpeed = 1);
     void InitializeShip(float x, float y);
@@ -52,6 +56,8 @@ public:
     virtual void TryMine(float x, float y) override;
     virtual void TransferAction() override;
     virtual void TryTransfer(float x, float y) override;
+    virtual void ColonizeAction() override;
+    virtual void TryColonize(float x, float y) override;
     virtual void DeselectCallback() override;
 
     void TransferResource(ResourceType type);
@@ -78,18 +84,21 @@ private:
     void RenderMineDots();
     void RenderTransferRange();
     void RenderTransferDots();
+    void RenderColonizeRange();
 };
 
 class MotherShip : public Ship
 {
 public:
     MotherShip();
+    virtual bool CanColonize() const { return true; }
 };
 
 class FlagShip : public Ship
 {
 public:
     FlagShip();
+    virtual bool CanColonize() const { return true; }
 };
 
 class DroneShip : public Ship

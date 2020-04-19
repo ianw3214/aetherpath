@@ -35,11 +35,11 @@ void UILayer::Init()
     m_moveIcon = Oasis::Sprite("res/icons/move.png");
     m_mineIcon = Oasis::Sprite("res/icons/mine.png");
     m_transferIcon = Oasis::Sprite("res/icons/transfer.png");
-
     m_transferOxygenIcon = Oasis::Sprite("res/icons/transfer_oxygen_ship.png");
     m_transferFuelIcon = Oasis::Sprite("res/icons/transfer_fuel_ship.png");
     m_transferPopulationIcon = Oasis::Sprite("res/icons/transfer_population_ship.png");
     m_transferMetalIcon = Oasis::Sprite("res/icons/transfer_metal_ship.png");
+    m_colonizeIcon = Oasis::Sprite("res/icons/colonize.png");
 
     m_createIcon = Oasis::Sprite("res/icons/create.png");
     m_createMotherShipIcon = Oasis::Sprite("res/icons/create_mothership.png");
@@ -102,6 +102,11 @@ bool UILayer::HandleEvent(const Oasis::Event& event)
             if (keyEvent.GetKey() == SDL_SCANCODE_3)
             {
                 player->TransferAction();
+                return true;
+            }
+            if (keyEvent.GetKey() == SDL_SCANCODE_4)
+            {
+                player->ColonizeAction();
                 return true;
             }
         }
@@ -190,6 +195,7 @@ void UILayer::HandleShipUI(Oasis::Reference<Ship> ship)
         AddPadding(action_icon_width, x);
     }
     AddPadding(margin_horizontal, x);
+    DrawActionIcon(m_colonizeIcon, x, y);
 }
 
 void UILayer::HandleBaseUI(Oasis::Reference<Base> base)
@@ -408,6 +414,17 @@ bool UILayer::HandleMousePress(float x, float y)
             // Restore the x to after the icon
             AddPadding(action_icon_width, icon_x);
         }
+        // Fourth icon
+        if (x > icon_x && x < icon_x + action_icon_width && y > icon_y && y < icon_y + action_icon_height)
+        {
+            if (ship)
+            {
+                // Change player to move state
+                ship->ColonizeAction();
+                return true;
+            }
+        }
+        // Bottom right deployment list
         if (base && base->GetUIState() == Base::UIState::DEPLOY)
         {
             float icon_x = Oasis::WindowService::WindowWidth() - build_queue_icon_width - margin_horizontal;
@@ -467,6 +484,7 @@ bool UILayer::HandleShipCreateMousePress(float x, float y, Oasis::Reference<Base
         base->CreateShip(ShipType::MOTHERSHIP);
         return true;
     }
+    return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

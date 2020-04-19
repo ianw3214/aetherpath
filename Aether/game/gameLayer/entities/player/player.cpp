@@ -27,9 +27,9 @@ void PlayerEntity::Tick()
 
 void PlayerEntity::DayCycle()
 {
-    if (GetOxygen() > 0)
+    if (GetOxygen() > 0 && GetPopulation() > 0)
     {
-        int result = ConsumeOxygen(m_population / 100);
+        int result = ConsumeOxygen(m_population / 100 > 0 ? m_population / 100 : 1);
         if (result <= 0)
         {
             AlertService::Critical("No oxygen - population will start dying");

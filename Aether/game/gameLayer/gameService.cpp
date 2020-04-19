@@ -56,3 +56,16 @@ Oasis::Reference<PlayerEntity> GameService::GetPlayerAt(float x, float y)
     }
     return nullptr;
 }
+
+void GameService::DestroyEntity(Oasis::Reference<Entity> entity)
+{
+    for (auto it = s_game->m_entities.begin(); it != s_game->m_entities.end(); ++it)
+    {
+        Oasis::Reference<Entity> e = *it;
+        if (e == entity)
+        {
+            s_game->m_entities.erase(it);
+            return;
+        }
+    }   
+}

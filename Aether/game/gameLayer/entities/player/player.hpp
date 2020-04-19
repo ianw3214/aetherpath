@@ -20,6 +20,7 @@ public:
     virtual bool CanCreate() const { return false; }
     virtual bool CanDeploy() const { return false; }
     virtual bool CanTransfer() const { return true; }
+    virtual bool CanColonize() const { return false; }
 
     virtual void Tick() override;
     virtual void DayCycle() override;
@@ -47,6 +48,8 @@ public:
     virtual void TryDeploy(float x, float y) {}
     virtual void TransferAction() {}
     virtual void TryTransfer(float x, float y) {}
+    virtual void ColonizeAction() {}
+    virtual void TryColonize(float x, float y) {}
 
     virtual void CreateAction() {}
 

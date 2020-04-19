@@ -1,5 +1,8 @@
 #pragma once
 #include "oasis.h"
+
+#include <string>
+
 #include "game/gameLayer/entities/entity.hpp"
 
 class ResourceEntity : public RenderEntity
@@ -39,6 +42,9 @@ class Planet : public ResourceEntity
 {
 public:
     Planet(int o = 0, int f = 0, int m = 0);
+    inline const std::string& GetColonyImagePath() const { return m_colony_img_path; }
+private:
+    std::string m_colony_img_path;
 };
 
 class Goal : public ResourceEntity

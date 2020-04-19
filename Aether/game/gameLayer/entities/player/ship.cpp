@@ -5,6 +5,7 @@
 #include "game/camera/camera.hpp"
 #include "game/gameLayer/gameService.hpp"
 #include "game/gameLayer/entities/universe/resource.hpp"
+#include "game/gameLayer/entities/player/base.hpp"
 #include "game/alertLayer/alertService.hpp"
 
 Ship::Ship(float speed, float mineRange, int ticksPerFuel, int gatherSpeed, int transferSpeed)
@@ -62,6 +63,7 @@ void Ship::Update()
     RenderMineDots();
     RenderTransferRange();
     RenderTransferDots();
+    RenderColonizeRange();
     Render();
     if (m_UIState == UIState::MINE)
     {
@@ -179,6 +181,12 @@ bool Ship::HandleClick(float x, float y)
         TryTransfer(Camera::ScreenToRawX(static_cast<int>(x)), Camera::ScreenToRawY(static_cast<int>(y)));
         return true;
     }
+    if (m_UIState == UIState::COLONIZE)
+    {
+        m_UIState = UIState::NONE;
+        TryColonize(Camera::ScreenToRawX(static_cast<int>(x)), Camera::ScreenToRawY(static_cast<int>(y)));
+        return true;
+    }
     return false;
 }
 
@@ -251,6 +259,56 @@ void Ship::TryTransfer(float x, float y)
     }
 }
 
+void Ship::ColonizeAction() 
+{
+    ResetUIState();
+    m_UIState = UIState::COLONIZE;
+}
+
+void Ship::TryColonize(float x, float y) 
+{
+    auto target = GameService::GetEntityAt(x, y);
+    if (target)
+    {
+        float x_offset = x - GetX();
+        float y_offset = y - GetY();
+        if (x_offset * x_offset + y_offset * y_offset <= TRANSFER_RADIUS * TRANSFER_RADIUS)
+        {
+            if (auto planet = Oasis::DynamicCast<Planet>(target))
+            {
+                // Create the new colony and destroy the old planet
+                Base * base = new Base(
+                    planet->GetOxygen(),
+                    planet->GetFuel(),
+                    0,
+                    planet->GetMetal(),
+                    15
+                );
+                base->SetSprite(planet->GetColonyImagePath());
+                base->SetPos(planet->GetX(), planet->GetY());
+                GameService::TransferEntityToGame(base);
+                GameService::DestroyEntity(target);
+            }
+            if (auto goal = Oasis::DynamicCast<Goal>(target))
+            {
+                // Create the new colony and destroy the old planet
+                GoalBase * base = new GoalBase(
+                    goal->GetOxygen(),
+                    goal->GetFuel(),
+                    0,
+                    goal->GetMetal(),
+                    15
+                );
+                base->SetPos(goal->GetX(), goal->GetY());
+                GameService::TransferEntityToGame(base);
+                GameService::DestroyEntity(target);
+            }
+            // Colonization happens instantaniously
+            ResetState();
+        }
+    }
+}
+
 void Ship::DeselectCallback()
 {
     void ResetUIState();
@@ -317,6 +375,24 @@ void Ship::RenderTransferDots()
     Oasis::Renderer::DrawLine(x1, y1, x2, y2, Oasis::Colour{ 1.f, 0.4f, 0.f });
 }
 
+void Ship::RenderColonizeRange()
+{
+    if(m_UIState != UIState::COLONIZE) return;
+    // Render a circle to show the deploy range
+    constexpr float granularity = 30.f;
+    constexpr float pi = 3.141592653f;
+    float last_x = static_cast<float>(Camera::RawToScreenX(std::cos(0.f) * Ship::COLONIZE_RADIUS + GetX()));
+    float last_y = static_cast<float>(Camera::RawToScreenY(std::sin(0.f) * Ship::COLONIZE_RADIUS + GetY()));
+    for (float i = 1; i <= granularity; ++i)
+    {
+        const float x = static_cast<float>(Camera::RawToScreenX(std::cos(i * 2 * pi / granularity) * Ship::COLONIZE_RADIUS + GetX()));
+        const float y = static_cast<float>(Camera::RawToScreenY(std::sin(i * 2 * pi / granularity) * Ship::COLONIZE_RADIUS + GetY()));
+        Oasis::Renderer::DrawLine(x, y, last_x, last_y, Oasis::Colour{1.f, 0.3f, 1.f});
+        last_x = x;
+        last_y = y;
+    }
+}
+
 void Ship::ResetState()
 {
     ResetUIState();
@@ -332,25 +408,25 @@ void Ship::ResetUIState()
 }
 
 MotherShip::MotherShip()
-    : Ship(20.f, 200.f, 8, 1, 10)
+    : Ship(20.f * SPEED_DEBUG_MULTIPLIER, 200.f, 8, 1, 10)
 {
     SetSprite("res/sprites/mothership.png");
 }
 
 FlagShip::FlagShip()
-    : Ship(40.f, 250.f, 10, 2, 3)
+    : Ship(40.f * SPEED_DEBUG_MULTIPLIER, 250.f, 10, 2, 3)
 {
     SetSprite("res/sprites/flagship.png");   
 }
 
 DroneShip::DroneShip()
-    : Ship(100.f, 600.f, 8, 10, 1)
+    : Ship(100.f * SPEED_DEBUG_MULTIPLIER, 600.f, 8, 10, 1)
 {
     SetSprite("res/sprites/droneship.png");
 }
 
 Scout::Scout()
-    : Ship(220.f, 50.f, 20, 1, 5)
+    : Ship(220.f * SPEED_DEBUG_MULTIPLIER, 50.f, 20, 1, 5)
 {
     SetSprite("res/sprites/scout.png");
 }

@@ -111,6 +111,7 @@ void Base::Update()
 
 void Base::Tick()
 {
+    PlayerEntity::Tick();
     // Update the ship building if there is one
     if (!m_buildingQueue.empty())
     {
@@ -251,4 +252,22 @@ void Base::RenderTransferDots()
     float y2 = static_cast<float>(Camera::RawToScreenY(m_transferTarget->GetY()));
     // TODO: Render dot sprites for the path
     Oasis::Renderer::DrawLine(x1, y1, x2, y2, Oasis::Colour{ 1.f, 0.4f, 0.f });
+}
+
+GoalBase::GoalBase(int o, int f, int p, int m, int t)
+    : Base(o, f, p, m, t)
+{
+    SetSprite("res/sprites/planets/goal_base.png");
+}
+
+void GoalBase::Tick() 
+{
+    Base::Tick();
+
+    GameSettings settings = GameService::GetGameSettings();
+    // Check for win condition
+    if (GetPopulation() >= settings.m_population_to_win)
+    {
+        AlertService::Win();
+    }
 }

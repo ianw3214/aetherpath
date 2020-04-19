@@ -2,6 +2,8 @@
 #include "alertLayer.hpp"
 
 Oasis::Reference<AlertLayer> AlertService::s_layer;
+bool AlertService::s_won = false;
+bool AlertService::s_lost = false;
 
 void AlertService::Info(const std::string& message)
 {
@@ -38,10 +40,18 @@ void AlertService::PopupCritical(const std::string& message)
 
 void AlertService::Win()
 {
-    s_layer->m_alerts.push_back({AlertLayer::AlertLevel::WIN});
+    if (!s_won && !s_lost)
+    {
+        s_won = true;
+        s_layer->m_alerts.push_back({AlertLayer::AlertLevel::WIN});
+    }
 }
 
 void AlertService::Lose()
 {
-    s_layer->m_alerts.push_back({AlertLayer::AlertLevel::LOSE});
+    if (!s_won && !s_lost)
+    {
+        s_lost = true;
+        s_layer->m_alerts.push_back({AlertLayer::AlertLevel::LOSE});
+    }
 }

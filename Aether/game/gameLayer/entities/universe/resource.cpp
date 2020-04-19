@@ -1,5 +1,7 @@
 #include "resource.hpp"
 
+#include <random>
+
 ResourceEntity::ResourceEntity(int o, int f, int m)
     : m_oxygen(o)
     , m_fuel(f)
@@ -47,7 +49,20 @@ Asteroid::Asteroid(int o, int f, int m)
 Planet::Planet(int o, int f, int m)
     : ResourceEntity(o, f, m)
 {
-    SetSprite("res/sprites/planets/planet1.png");
+    static std::random_device r;
+    static std::default_random_engine el(r());
+    static std::uniform_int_distribution<int> dist(0, 1);
+    int key = dist(el);
+    if (key == 0)
+    {
+        SetSprite("res/sprites/planets/planet1.png");
+        m_colony_img_path = "res/sprites/planets/planet1_base.png";
+    }
+    if (key == 1)
+    {
+        SetSprite("res/sprites/planets/planet2.png");
+        m_colony_img_path = "res/sprites/planets/planet2_base.png";
+    }
 }
 
 Goal::Goal(int o, int f, int m)
