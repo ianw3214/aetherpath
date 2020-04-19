@@ -25,8 +25,6 @@ public:
     virtual bool HandleEvent(const Oasis::Event& event) override;
     virtual void Update()  override;
 private:
-    Oasis::Sprite m_cursor;
-    
     // Icons
     // TODO: Make these sprites more consistent (use fuel as reference)
     Oasis::Sprite m_oxygenIcon;

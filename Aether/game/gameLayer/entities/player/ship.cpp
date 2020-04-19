@@ -5,6 +5,7 @@
 #include "game/camera/camera.hpp"
 #include "game/gameLayer/gameService.hpp"
 #include "game/gameLayer/entities/universe/resource.hpp"
+#include "game/alertLayer/alertService.hpp"
 
 Ship::Ship(float speed, float mineRange, int ticksPerFuel, int gatherSpeed, int transferSpeed)
     : m_speed(speed)
@@ -45,7 +46,7 @@ void Ship::Update()
             SetX(m_targetX);
             SetY(m_targetY);
             ResetState();
-            // TODO: Send an alert
+            AlertService::Info("Ship has arrived at destination");
         }
         // Move a teeny bit
         else
@@ -94,7 +95,7 @@ void Ship::Tick()
                 int fuel_left = ConsumeFuel(1);
                 if (fuel_left <= 0)
                 {
-                    // TODO: Alert player
+                    AlertService::Warning("Can no logner move ship = no fuel");
                 }
             }
         }
@@ -110,7 +111,7 @@ void Ship::Tick()
         if (oxygen + fuel + metal == 0)
         {
             ResetState();
-            // TODO: Notification - done mining
+            AlertService::Info("mining complete");
         }
     }
     if (m_state == State::TRANSFER && m_transferTarget)
@@ -121,7 +122,7 @@ void Ship::Tick()
             m_transferTarget->AddOxygen(amount);
             if (ConsumeOxygen(amount) == 0)
             {
-                // TODO: Alert
+                AlertService::Warning("All oxygen has been transferred");
                 ResetState();
             }
         }
@@ -131,7 +132,7 @@ void Ship::Tick()
             m_transferTarget->AddFuel(amount);
             if (ConsumeFuel(amount) == 0)
             {
-                // TODO: Alert
+                AlertService::Warning("All fuel has been transferred");
                 ResetState();
             }
         }
@@ -141,7 +142,7 @@ void Ship::Tick()
             m_transferTarget->AddPopulation(amount);
             if (ConsumePopulation(amount) == 0)
             {
-                // TODO: Alert
+                AlertService::Warning("All population has been transferred");
                 ResetState();
             }
         }
@@ -151,7 +152,7 @@ void Ship::Tick()
             m_transferTarget->AddMetal(amount);
             if (ConsumeMetal(amount) == 0)
             {
-                // TODO: Alert
+                AlertService::Warning("All metal has been transferred");
                 ResetState();
             }
         }
@@ -198,7 +199,7 @@ void Ship::TryMove(float x, float y)
     }
     else
     {
-        // TODO: Alert the player of no fuel
+        AlertService::Info("Can't move ship - no fuel");
     }
 }
 

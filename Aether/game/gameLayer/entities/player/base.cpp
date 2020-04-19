@@ -3,6 +3,8 @@
 #include "game/gameLayer/entities/player/ship.hpp"
 #include "game/gameLayer/gameService.hpp"
 
+#include "game/alertLayer/alertService.hpp"
+
 Base::Base(int o, int f, int p, int m, int t)
     : PlayerEntity(o, f, p, m, t)
     , m_uiState(UIState::NONE)
@@ -149,7 +151,7 @@ void Base::Tick()
             m_transferTarget->AddOxygen(amount);
             if (ConsumeOxygen(amount) == 0)
             {
-                // TODO: Alert
+                AlertService::Warning("All oxygen has been transferred");
                 ResetState();
             }
         }
@@ -159,7 +161,7 @@ void Base::Tick()
             m_transferTarget->AddFuel(amount);
             if (ConsumeFuel(amount) == 0)
             {
-                // TODO: Alert
+                AlertService::Warning("All fuel has been transferred");
                 ResetState();
             }
         }
@@ -169,7 +171,7 @@ void Base::Tick()
             m_transferTarget->AddPopulation(amount);
             if (ConsumePopulation(amount) == 0)
             {
-                // TODO: Alert
+                AlertService::Warning("All population has been transferred");
                 ResetState();
             }
         }
@@ -179,7 +181,7 @@ void Base::Tick()
             m_transferTarget->AddMetal(amount);
             if (ConsumeMetal(amount) == 0)
             {
-                // TODO: Alert
+                AlertService::Warning("All metal has been transferred");
                 ResetState();
             }
         }

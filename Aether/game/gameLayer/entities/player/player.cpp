@@ -3,6 +3,7 @@
 #include <random>
 
 #include "game/gameLayer/gameService.hpp"
+#include "game/alertLayer/alertService.hpp"
 
 void PlayerEntity::Tick()
 {
@@ -18,7 +19,7 @@ void PlayerEntity::Tick()
             int result = ConsumePopulation(1);
             if (result == 0)
             {
-                // TODO: Alert the player
+                AlertService::Warning("Population has completely died aboard entity");
             }
         }
     }
@@ -31,7 +32,7 @@ void PlayerEntity::DayCycle()
         int result = ConsumeOxygen(m_population / 100);
         if (result <= 0)
         {
-            // TODO: Alert the player
+            AlertService::Critical("No oxygen - population will start dying");
         }
     }
 }

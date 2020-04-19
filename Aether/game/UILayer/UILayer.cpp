@@ -27,8 +27,6 @@ constexpr float margin_vertical = 10;
 ////////////////////////////////////////////////////////////////////////////////////////////
 void UILayer::Init()
 {
-    m_cursor = Oasis::Sprite("res/icons/cursor.png");
-
     m_oxygenIcon = Oasis::Sprite("res/icons/oxygen.png");
     m_fuelIcon = Oasis::Sprite("res/icons/fuel.png");
     m_populationIcon = Oasis::Sprite("res/icons/population.png");
@@ -76,13 +74,6 @@ void UILayer::Close()
 ////////////////////////////////////////////////////////////////////////////////////////////
 bool UILayer::HandleEvent(const Oasis::Event& event)
 {
-    if (event.GetType() == Oasis::EventType::MOUSE_MOVE)
-    {
-        const Oasis::MouseMovedEvent& mouseEvent = dynamic_cast<const Oasis::MouseMovedEvent&>(event);
-        float mouse_x = static_cast<float>(mouseEvent.GetX());
-        float mouse_y = static_cast<float>(Oasis::WindowService::WindowHeight() - mouseEvent.GetY());
-        m_cursor.SetPos(mouse_x, mouse_y - m_cursor.GetHeight());
-    }
     if (event.GetType() == Oasis::EventType::MOUSE_PRESS)
     {
         const Oasis::MousePressedEvent& mouseEvent = dynamic_cast<const Oasis::MousePressedEvent&>(event);
@@ -133,8 +124,6 @@ void UILayer::Update()
             HandlePlayerUI(player);
         }
     }
-    // Draw the cursor on top of other things
-    Oasis::Renderer::DrawSprite(m_cursor);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
