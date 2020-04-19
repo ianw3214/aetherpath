@@ -2,6 +2,7 @@
 #include "oasis.h"
 
 #include "game/gameLayer/entities/entity.hpp"
+class PlayerEntity;
 
 struct GameSettings
 {
@@ -20,13 +21,15 @@ struct GameSettings
     int m_metal_range = 80;
     int m_asteroid_multiplier = 2;
     int m_planet_multiplier = 10;
+    int m_goal_multiplier = 1000;
 
     // Map generation settings
-    int m_mapBorder = 10000;
-    float m_densityPerSquareThousand = 0.3f;
+    int m_mapBorder = 20000;
+    float m_densityPerSquareThousand = 0.2f;
     int m_meteoroid_weight = 50;
     int m_asteroid_weight = 30;
     int m_planet_weight = 20;
+    int m_min_goal_distance = 15000;
 
     int m_defaultEarthOxygen = 100;
     int m_defaultEarthFuel = 1000;
@@ -44,8 +47,11 @@ class GameService
     static void SetGameLayer(Oasis::Reference<GameLayer> game) { s_game = game;}
 public:
     static Oasis::Reference<Entity> GetSelectedEntity();
-    static Oasis::Reference<Entity> GetEntityAt(float x, float y);
+    static void TransferEntityToGame(Entity * entity);
     static void TransferEntityToGame(Oasis::Owned<Entity>& entity);
+    static Oasis::Reference<Entity> GetEntityAt(float x, float y);
+    static Oasis::Reference<PlayerEntity> GetPlayerAt(float x, float y);
+
     static GameSettings GetGameSettings() { return s_settings; }
 private:
     static GameSettings s_settings;

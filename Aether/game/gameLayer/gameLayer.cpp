@@ -2,6 +2,7 @@
 
 #include <random>
 
+#include "entities/player/player.hpp"
 #include "entities/player/earth.hpp"
 #include "entities/player/ship.hpp"
 #include "entities/universe/resource.hpp"
@@ -79,6 +80,15 @@ void GameLayer::Update()
     }
 }
 
+void GameLayer::AddPlayer(Entity * entity)
+{
+    m_entities.push_back(entity);
+    if (auto ref = Oasis::DynamicCast<PlayerEntity>(m_entities[m_entities.size() - 1]))
+    {
+        m_players.push_back(ref);
+    }
+}
+
 void GameLayer::SelectEntity(Oasis::Reference<Entity> entity)
 {
     // Passing in a null entity will just deselct it
@@ -98,7 +108,7 @@ void GameLayer::GenerateGameWorld()
     GameSettings settings = GameService::GetGameSettings();
 
     // Mother earth always generated at 0, 0
-    m_entities.push_back(new Earth(
+    AddPlayer(new Earth(
         settings.m_defaultEarthOxygen,
         settings.m_defaultEarthFuel,
         settings.m_defaultltEarthPopulation,
@@ -113,7 +123,7 @@ void GameLayer::GenerateGameWorld()
         ship->AddFuel(1000);
         ship->AddOxygen(20);
         ship->AddPopulation(500);
-        m_entities.push_back(ship);
+        AddPlayer(ship);
     }
 
     {   // Flagship
@@ -122,21 +132,21 @@ void GameLayer::GenerateGameWorld()
         ship->AddFuel(1000);
         ship->AddOxygen(20);
         ship->AddPopulation(500);
-        m_entities.push_back(ship);
+        AddPlayer(ship);
     }
 
     {   // Droneship
         DroneShip * ship = new DroneShip();
         ship->InitializeShip(200.f, -200.f);
         ship->AddFuel(1000);
-        m_entities.push_back(ship);
+        AddPlayer(ship);
     }
 
     {   // Scout
         Scout * ship = new Scout();
         ship->InitializeShip(300.f, 300.f);
         ship->AddFuel(1000);
-        m_entities.push_back(ship);
+        AddPlayer(ship);
     }
     // -----------------------------------------------------------------
 
@@ -191,6 +201,25 @@ void GameLayer::GenerateGameWorld()
                 m_entities.push_back(ent);
             }
         }
+    }
+
+    {   // Create the goal planet
+        const int oxygen = settings.m_oxygen_floor + oxygen_dist(el);
+        const int fuel = settings.m_fuel_floor + fuel_dist(el);
+        const int metal = settings.m_metal_floor + metal_dist(el);
+        Goal * ent = new Goal(
+            oxygen * settings.m_goal_multiplier, 
+            fuel * settings.m_goal_multiplier, 
+            metal * settings.m_goal_multiplier
+        );
+        ent->SetPos(static_cast<float>(position_dist(el)), static_cast<float>(position_dist(el)));
+        // Set the goal planet a minimum distance away from earth
+        OASIS_TRAP(settings.m_min_goal_distance < settings.m_mapBorder);
+        while(ent->GetX() * ent->GetX() + ent->GetY() * ent->GetY() < settings.m_min_goal_distance * settings.m_min_goal_distance)
+        {
+            ent->SetPos(static_cast<float>(position_dist(el)), static_cast<float>(position_dist(el)));
+        }
+        m_entities.push_back(ent);
     }
 }
 

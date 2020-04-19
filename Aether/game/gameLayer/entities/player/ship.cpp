@@ -6,7 +6,7 @@
 #include "game/gameLayer/gameService.hpp"
 #include "game/gameLayer/entities/universe/resource.hpp"
 
-Ship::Ship(float speed, float mineRange, int ticksPerFuel, int gatherSpeed)
+Ship::Ship(float speed, float mineRange, int ticksPerFuel, int gatherSpeed, int transferSpeed)
     : m_speed(speed)
     , m_mineRange(mineRange)
     , m_ticksPerFuel(ticksPerFuel)
@@ -16,6 +16,7 @@ Ship::Ship(float speed, float mineRange, int ticksPerFuel, int gatherSpeed)
     , m_fuelTickAccumulator(0)
     , m_targetX(0.f)
     , m_targetY(0.f)
+    , PlayerEntity(0, 0, 0, 0, transferSpeed)
 {
     SetSprite("res/sprites/ship.png");
 }
@@ -58,6 +59,8 @@ void Ship::Update()
 
     RenderMoveDots();
     RenderMineDots();
+    RenderTransferRange();
+    RenderTransferDots();
     Render();
     if (m_UIState == UIState::MINE)
     {
@@ -110,6 +113,49 @@ void Ship::Tick()
             // TODO: Notification - done mining
         }
     }
+    if (m_state == State::TRANSFER && m_transferTarget)
+    {
+        if (m_transferType == ResourceType::OXYGEN)
+        {
+            int amount = GetOxygen() < GetTransferSpeed() ? GetOxygen() : GetTransferSpeed();
+            m_transferTarget->AddOxygen(amount);
+            if (ConsumeOxygen(amount) == 0)
+            {
+                // TODO: Alert
+                ResetState();
+            }
+        }
+        if (m_transferType == ResourceType::FUEL)
+        {
+            int amount = GetFuel() < GetTransferSpeed() ? GetFuel() : GetTransferSpeed();
+            m_transferTarget->AddFuel(amount);
+            if (ConsumeFuel(amount) == 0)
+            {
+                // TODO: Alert
+                ResetState();
+            }
+        }
+        if (m_transferType == ResourceType::POPULATION)
+        {
+            int amount = GetPopulation() < GetTransferSpeed() ? GetPopulation() : GetTransferSpeed();
+            m_transferTarget->AddPopulation(amount);
+            if (ConsumePopulation(amount) == 0)
+            {
+                // TODO: Alert
+                ResetState();
+            }
+        }
+        if (m_transferType == ResourceType::METAL)
+        {
+            int amount = GetMetal() < GetTransferSpeed() ? GetMetal() : GetTransferSpeed();
+            m_transferTarget->AddMetal(amount);
+            if (ConsumeMetal(amount) == 0)
+            {
+                // TODO: Alert
+                ResetState();
+            }
+        }
+    }
 }
 
 bool Ship::HandleClick(float x, float y)
@@ -124,6 +170,12 @@ bool Ship::HandleClick(float x, float y)
     {
         m_UIState = UIState::NONE;
         TryMine(Camera::ScreenToRawX(static_cast<int>(x)), Camera::ScreenToRawY(static_cast<int>(y)));
+        return true;
+    }
+    if (m_UIState == UIState::TRANSFER2)
+    {
+        m_UIState = UIState::NONE;
+        TryTransfer(Camera::ScreenToRawX(static_cast<int>(x)), Camera::ScreenToRawY(static_cast<int>(y)));
         return true;
     }
     return false;
@@ -176,6 +228,39 @@ void Ship::TryMine(float x, float y)
     }
 }
 
+void Ship::TransferAction()
+{
+    ResetUIState();
+    m_UIState = UIState::TRANSFER;
+}
+
+void Ship::TryTransfer(float x, float y)
+{
+    auto target = GameService::GetPlayerAt(x, y);
+    if (target)
+    {
+        float x_offset = x - GetX();
+        float y_offset = y - GetY();
+        if (x_offset * x_offset + y_offset * y_offset <= TRANSFER_RADIUS * TRANSFER_RADIUS)
+        {
+            ResetState();
+            m_state = State::TRANSFER;
+            m_transferTarget = target;
+        }
+    }
+}
+
+void Ship::DeselectCallback()
+{
+    void ResetUIState();
+}
+
+void Ship::TransferResource(ResourceType type)
+{
+    if (m_state == State::TRANSFER) ResetState();
+    m_transferType = type;
+    m_UIState = UIState::TRANSFER2;
+}
 
 void Ship::RenderMoveDots()
 {
@@ -191,7 +276,7 @@ void Ship::RenderMoveDots()
 
 void Ship::RenderMineDots()
 {
-    if (!m_mineTarget) return;
+    if (!m_mineTarget || m_state != State::MINE) return;
     // Just draw a line for now
     float x1 = static_cast<float>(Camera::RawToScreenX(GetX()));
     float y1 = static_cast<float>(Camera::RawToScreenY(GetY()));
@@ -201,35 +286,70 @@ void Ship::RenderMineDots()
     Oasis::Renderer::DrawLine(x1, y1, x2, y2, Oasis::Colours::RED);
 }
 
+void Ship::RenderTransferRange()
+{
+    if(m_UIState != UIState::TRANSFER2) return;
+    // Render a circle to show the deploy range
+    constexpr float granularity = 30.f;
+    constexpr float pi = 3.141592653f;
+    float last_x = static_cast<float>(Camera::RawToScreenX(std::cos(0.f) * Ship::TRANSFER_RADIUS + GetX()));
+    float last_y = static_cast<float>(Camera::RawToScreenY(std::sin(0.f) * Ship::TRANSFER_RADIUS + GetY()));
+    for (float i = 1; i <= granularity; ++i)
+    {
+        const float x = static_cast<float>(Camera::RawToScreenX(std::cos(i * 2 * pi / granularity) * Ship::TRANSFER_RADIUS + GetX()));
+        const float y = static_cast<float>(Camera::RawToScreenY(std::sin(i * 2 * pi / granularity) * Ship::TRANSFER_RADIUS + GetY()));
+        Oasis::Renderer::DrawLine(x, y, last_x, last_y, Oasis::Colour{1.f, 1.f, 0.f});
+        last_x = x;
+        last_y = y;
+    }
+}
+
+void Ship::RenderTransferDots()
+{
+    if (!m_transferTarget || m_state != State::TRANSFER) return;
+    // Just draw a line for now
+    float x1 = static_cast<float>(Camera::RawToScreenX(GetX()));
+    float y1 = static_cast<float>(Camera::RawToScreenY(GetY()));
+    float x2 = static_cast<float>(Camera::RawToScreenX(m_transferTarget->GetX()));
+    float y2 = static_cast<float>(Camera::RawToScreenY(m_transferTarget->GetY()));
+    // TODO: Render dot sprites for the path
+    Oasis::Renderer::DrawLine(x1, y1, x2, y2, Oasis::Colour{ 1.f, 0.4f, 0.f });
+}
+
 void Ship::ResetState()
 {
-    m_UIState = UIState::NONE;
+    ResetUIState();
     m_state = State::IDLE;
     m_targetX = GetX();
     m_targetY = GetY();
     m_mineTarget = nullptr;
 }
 
+void Ship::ResetUIState()
+{
+    m_UIState = UIState::NONE;
+}
+
 MotherShip::MotherShip()
-    : Ship(20.f)
+    : Ship(20.f, 200.f, 8, 1, 10)
 {
     SetSprite("res/sprites/mothership.png");
 }
 
 FlagShip::FlagShip()
-    : Ship(40.f)
+    : Ship(40.f, 250.f, 10, 2, 3)
 {
     SetSprite("res/sprites/flagship.png");   
 }
 
 DroneShip::DroneShip()
-    : Ship(100.f, 600.f)
+    : Ship(100.f, 600.f, 8, 10, 1)
 {
     SetSprite("res/sprites/droneship.png");
 }
 
 Scout::Scout()
-    : Ship(220.f, 20.f, 20)
+    : Ship(220.f, 50.f, 20, 1, 5)
 {
     SetSprite("res/sprites/scout.png");
 }

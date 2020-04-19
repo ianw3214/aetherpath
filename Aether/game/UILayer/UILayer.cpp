@@ -21,6 +21,9 @@ constexpr float build_queue_icon_height = 120.f;
 constexpr float queue_progress_icon_width = 190.f;
 constexpr float queue_progress_icon_height = 120.f;
 
+constexpr float margin_horizontal = 10;
+constexpr float margin_vertical = 10;
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 void UILayer::Init()
 {
@@ -33,14 +36,24 @@ void UILayer::Init()
     
     m_moveIcon = Oasis::Sprite("res/icons/move.png");
     m_mineIcon = Oasis::Sprite("res/icons/mine.png");
+    m_transferIcon = Oasis::Sprite("res/icons/transfer.png");
+
+    m_transferOxygenIcon = Oasis::Sprite("res/icons/transfer_oxygen_ship.png");
+    m_transferFuelIcon = Oasis::Sprite("res/icons/transfer_fuel_ship.png");
+    m_transferPopulationIcon = Oasis::Sprite("res/icons/transfer_population_ship.png");
+    m_transferMetalIcon = Oasis::Sprite("res/icons/transfer_metal_ship.png");
 
     m_createIcon = Oasis::Sprite("res/icons/create.png");
-    m_deployIcon = Oasis::Sprite("res/icons/deploy.png");
-
     m_createMotherShipIcon = Oasis::Sprite("res/icons/create_mothership.png");
     m_createFlagShipIcon = Oasis::Sprite("res/icons/create_flagship.png");
     m_createDroneShipIcon = Oasis::Sprite("res/icons/create_droneship.png");
     m_createScoutIcon = Oasis::Sprite("res/icons/create_scout.png");
+    m_deployIcon = Oasis::Sprite("res/icons/deploy.png");
+    m_transferIconBase = Oasis::Sprite("res/icons/transfer_base.png");
+    m_transferOxygenIconBase = Oasis::Sprite("res/icons/transfer_oxygen_base.png");
+    m_transferFuelIconBase = Oasis::Sprite("res/icons/transfer_fuel_base.png");
+    m_transferPopulationIconBase = Oasis::Sprite("res/icons/transfer_population_base.png");
+    m_transferMetalIconBase = Oasis::Sprite("res/icons/transfer_metal_base.png");
 
     m_queueMotherShipIcon = Oasis::Sprite("res/icons/queue_mothership.png");
     m_queueFlagShipIcon = Oasis::Sprite("res/icons/queue_flagship.png");
@@ -87,14 +100,17 @@ bool UILayer::HandleEvent(const Oasis::Event& event)
             const Oasis::KeyPressedEvent& keyEvent = dynamic_cast<const Oasis::KeyPressedEvent&>(event);
             if (keyEvent.GetKey() == SDL_SCANCODE_1)
             {
-                // Change player to move UI state
                 player->MoveAction();
                 return true;
             }
             if (keyEvent.GetKey() == SDL_SCANCODE_2)
             {
-                // Change player to mine UI state
                 player->MineAction();
+                return true;
+            }
+            if (keyEvent.GetKey() == SDL_SCANCODE_3)
+            {
+                player->TransferAction();
                 return true;
             }
         }
@@ -156,31 +172,46 @@ void UILayer::HandlePlayerUI(Oasis::Reference<PlayerEntity> player)
 ////////////////////////////////////////////////////////////////////////////////////////////
 void UILayer::HandleShipUI(Oasis::Reference<Ship> ship)
 {
-    constexpr float margin_left = 10;
-    constexpr float margin_bottom = 10;
-
-    float x = margin_left;
-    float y = margin_bottom;
+    float x = margin_horizontal;
+    float y = margin_vertical;
     
     DrawActionIcon(m_moveIcon, x, y);
-    AddPadding(margin_left, x);
+    AddPadding(margin_horizontal, x);
     DrawActionIcon(m_mineIcon, x, y);
+    AddPadding(margin_horizontal, x);
+    DrawActionIcon(m_transferIcon, x, y);
+    // Draw the transfer icons directly above if transfering
+    if (ship->GetUIState() == Ship::UIState::TRANSFER)
+    {
+        AddPadding(-action_icon_width, x);
+        // The player pressed the transfer button and is now wanting to transfer a resource
+        float y2 = y + action_icon_height + margin_vertical;
+        m_transferMetalIcon.SetPos(x, y2);
+        Oasis::Renderer::DrawSprite(m_transferMetalIcon);
+        AddPadding(margin_vertical + create_ship_icon_height, y2);
+        m_transferPopulationIcon.SetPos(x, y2);
+        Oasis::Renderer::DrawSprite(m_transferPopulationIcon);
+        AddPadding(margin_vertical + create_ship_icon_height, y2);
+        m_transferFuelIcon.SetPos(x, y2);
+        Oasis::Renderer::DrawSprite(m_transferFuelIcon);
+        AddPadding(margin_vertical + create_ship_icon_height, y2);
+        m_transferOxygenIcon.SetPos(x, y2);
+        Oasis::Renderer::DrawSprite(m_transferOxygenIcon);
+        // Restore the x to after the icon
+        AddPadding(action_icon_width, x);
+    }
+    AddPadding(margin_horizontal, x);
 }
 
 void UILayer::HandleBaseUI(Oasis::Reference<Base> base)
 {
-    constexpr float margin_horizontal = 10;
-    constexpr float margin_vertical = 10;
-
     float x = margin_horizontal;
     float y = margin_vertical;
     
     DrawActionIcon(m_createIcon, x, y);
-    AddPadding(margin_horizontal, x);
-    DrawActionIcon(m_deployIcon, x, y);
-
     if (base->GetUIState() == Base::UIState::CREATE)
     {
+        AddPadding(-action_icon_width, x);
         // The player pressed the create button and is now wanting to create a new ship
         float y2 = y + action_icon_height + margin_vertical;
         m_createScoutIcon.SetPos(x, y2);
@@ -194,7 +225,33 @@ void UILayer::HandleBaseUI(Oasis::Reference<Base> base)
         AddPadding(margin_vertical + create_ship_icon_height, y2);
         m_createMotherShipIcon.SetPos(x, y2);
         Oasis::Renderer::DrawSprite(m_createMotherShipIcon);
+        AddPadding(action_icon_width, x);
     }
+    AddPadding(margin_horizontal, x);
+    DrawActionIcon(m_deployIcon, x, y);
+    AddPadding(margin_horizontal, x);
+    DrawActionIcon(m_transferIconBase, x, y);
+    // Draw the transfer icons directly above if transfering
+    if (base->GetUIState() == Base::UIState::TRANSFER)
+    {
+        AddPadding(-action_icon_width, x);
+        // The player pressed the transfer button and is now wanting to transfer a resource
+        float y2 = y + action_icon_height + margin_vertical;
+        m_transferMetalIconBase.SetPos(x, y2);
+        Oasis::Renderer::DrawSprite(m_transferMetalIconBase);
+        AddPadding(margin_vertical + create_ship_icon_height, y2);
+        m_transferPopulationIconBase.SetPos(x, y2);
+        Oasis::Renderer::DrawSprite(m_transferPopulationIconBase);
+        AddPadding(margin_vertical + create_ship_icon_height, y2);
+        m_transferFuelIconBase.SetPos(x, y2);
+        Oasis::Renderer::DrawSprite(m_transferFuelIconBase);
+        AddPadding(margin_vertical + create_ship_icon_height, y2);
+        m_transferOxygenIconBase.SetPos(x, y2);
+        Oasis::Renderer::DrawSprite(m_transferOxygenIconBase);
+        // Restore the x to after the icon
+        AddPadding(action_icon_width, x);
+    }
+    AddPadding(margin_horizontal, x);
 
     {   // Render ship storage AND building queue at bottom right I guess?
         float x = Oasis::WindowService::WindowWidth() - build_queue_icon_width - margin_horizontal;
@@ -302,44 +359,65 @@ bool UILayer::HandleMousePress(float x, float y)
                 return true;
             }
         }
-        constexpr float margin_horizontal = 10;
-        constexpr float margin_vertical = 10;
         if (base && base->GetUIState() == Base::UIState::CREATE)
         {   // If the creation menu is open
-            // The player pressed the create button and is now wanting to create a new ship
-            float icon_x = margin_horizontal + action_icon_width;
-            float icon_y = margin_vertical + action_icon_height + margin_bottom;
-
-            constexpr float w = create_ship_icon_width;
-            constexpr float h = create_ship_icon_height;
-
-            // Scout
-            if (x > icon_x && x < icon_x + w && y > icon_y && y < icon_y + h)
+            HandleShipCreateMousePress(x, y, base);
+        }
+        AddPadding(action_icon_width, icon_x);
+        AddPadding(margin_left, icon_x);
+        // Third icon
+        if (x > icon_x && x < icon_x + action_icon_width && y > icon_y && y < icon_y + action_icon_height)
+        {
+            if (ship && ship->CanTransfer())
             {
-                base->CreateShip(ShipType::SCOUT);
+                // Change player to move state
+                ship->TransferAction();
                 return true;
             }
-            // Droneship
-            AddPadding(margin_vertical + create_ship_icon_height, icon_y);
-            if (x > icon_x && x < icon_x + w && y > icon_y && y < icon_y + h)
+            if (base && base->CanTransfer())
             {
-                base->CreateShip(ShipType::DRONESHIP);
+                // Change base to deploy state
+                base->TransferAction();
                 return true;
             }
-            // Flagship
-            AddPadding(margin_vertical + create_ship_icon_height, icon_y);
-            if (x > icon_x && x < icon_x + w && y > icon_y && y < icon_y + h)
+        }
+		AddPadding(action_icon_width, icon_x);
+		AddPadding(margin_left, icon_x);
+        // Render transfer UI directly above the third icon
+        if ((ship && ship->GetUIState() == Ship::UIState::TRANSFER) || (base && base->GetUIState() == Base::UIState::TRANSFER))
+        {
+            AddPadding(-action_icon_width, icon_x);
+            // The player pressed the transfer button and is now wanting to transfer a resource
+            float y2 = icon_y + action_icon_height + margin_vertical;
+            if (x > icon_x && x < icon_x + action_icon_width && y > y2 && y < y2 + action_icon_height)
             {
-                base->CreateShip(ShipType::FLAGSHIP);
+                if (ship) ship->TransferResource(Ship::ResourceType::METAL);
+                if (base) base->TransferResource(Base::ResourceType::METAL);
                 return true;
             }
-            // Mothership
-            AddPadding(margin_vertical + create_ship_icon_height, icon_y);
-            if (x > icon_x && x < icon_x + w && y > icon_y && y < icon_y + h)
+            AddPadding(margin_vertical + create_ship_icon_height, y2);
+            if (x > icon_x && x < icon_x + action_icon_width && y > y2 && y < y2 + action_icon_height)
             {
-                base->CreateShip(ShipType::MOTHERSHIP);
+                if (ship) ship->TransferResource(Ship::ResourceType::POPULATION);
+                if (base) base->TransferResource(Base::ResourceType::POPULATION);
                 return true;
             }
+            AddPadding(margin_vertical + create_ship_icon_height, y2);
+            if (x > icon_x && x < icon_x + action_icon_width && y > y2 && y < y2 + action_icon_height)
+            {
+                if (ship) ship->TransferResource(Ship::ResourceType::FUEL);
+                if (base) base->TransferResource(Base::ResourceType::FUEL);
+                return true;
+            }
+            AddPadding(margin_vertical + create_ship_icon_height, y2);
+            if (x > icon_x && x < icon_x + action_icon_width && y > y2 && y < y2 + action_icon_height)
+            {
+                if (ship) ship->TransferResource(Ship::ResourceType::OXYGEN);
+                if (base) base->TransferResource(Base::ResourceType::OXYGEN);
+                return true;
+            }
+            // Restore the x to after the icon
+            AddPadding(action_icon_width, icon_x);
         }
         if (base && base->GetUIState() == Base::UIState::DEPLOY)
         {
@@ -353,7 +431,6 @@ bool UILayer::HandleMousePress(float x, float y)
 
                 if (x > icon_x && x < icon_x + w && y > icon_y && y < icon_y + h)
                 {
-                    Oasis::Console::Print("DEPLOY?");
                     base->ChooseShipToDeploy(ship);
                     return true;
                 }
@@ -363,6 +440,44 @@ bool UILayer::HandleMousePress(float x, float y)
         }
     }
     return false;
+}
+
+bool UILayer::HandleShipCreateMousePress(float x, float y, Oasis::Reference<Base> base)
+{
+    // The player pressed the create button and is now wanting to create a new ship
+    float icon_x = margin_horizontal;
+    float icon_y = margin_vertical + action_icon_height + margin_vertical;
+
+    constexpr float w = create_ship_icon_width;
+    constexpr float h = create_ship_icon_height;
+
+    // Scout
+    if (x > icon_x && x < icon_x + w && y > icon_y && y < icon_y + h)
+    {
+        base->CreateShip(ShipType::SCOUT);
+        return true;
+    }
+    // Droneship
+    AddPadding(margin_vertical + create_ship_icon_height, icon_y);
+    if (x > icon_x && x < icon_x + w && y > icon_y && y < icon_y + h)
+    {
+        base->CreateShip(ShipType::DRONESHIP);
+        return true;
+    }
+    // Flagship
+    AddPadding(margin_vertical + create_ship_icon_height, icon_y);
+    if (x > icon_x && x < icon_x + w && y > icon_y && y < icon_y + h)
+    {
+        base->CreateShip(ShipType::FLAGSHIP);
+        return true;
+    }
+    // Mothership
+    AddPadding(margin_vertical + create_ship_icon_height, icon_y);
+    if (x > icon_x && x < icon_x + w && y > icon_y && y < icon_y + h)
+    {
+        base->CreateShip(ShipType::MOTHERSHIP);
+        return true;
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

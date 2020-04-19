@@ -10,16 +10,28 @@ public:
     {
         NONE,
         MOVE,
-        MINE
+        MINE,
+        TRANSFER,
+        TRANSFER2
     };
     enum class State
     {
         IDLE,
         MOVE,
-        MINE
+        MINE,
+        TRANSFER
     };
+    enum class ResourceType
+    {
+        OXYGEN,
+        FUEL,
+        POPULATION,
+        METAL
+    };
+
+    static constexpr float TRANSFER_RADIUS = 500.f;
 public:
-    Ship(float speed = 100.f, float mineRange = 200.f, int ticksPerFuel = 10, int gatherSpeed = 1);
+    Ship(float speed = 100.f, float mineRange = 200.f, int ticksPerFuel = 10, int gatherSpeed = 1, int transferSpeed = 1);
     void InitializeShip(float x, float y);
 
     float GetSpeed() const { return m_speed; }
@@ -27,6 +39,8 @@ public:
 
     virtual bool CanMove() const override { return true; }
     virtual bool CanMine() const { return true; }
+
+    inline UIState GetUIState() const { return m_UIState; }    
 
     virtual void Update() override;
     virtual void Tick() override;
@@ -36,6 +50,11 @@ public:
     virtual void TryMove(float x, float y) override;
     virtual void MineAction() override;
     virtual void TryMine(float x, float y) override;
+    virtual void TransferAction() override;
+    virtual void TryTransfer(float x, float y) override;
+    virtual void DeselectCallback() override;
+
+    void TransferResource(ResourceType type);
 private:
     float m_speed;
     float m_mineRange;
@@ -49,11 +68,16 @@ private:
     float m_targetX;
     float m_targetY;
     Oasis::Reference<ResourceEntity> m_mineTarget;
+    ResourceType m_transferType;
+    Oasis::Reference<PlayerEntity> m_transferTarget;
 private:
     // Other less important functions
     void ResetState();
+    void ResetUIState();
     void RenderMoveDots();
     void RenderMineDots();
+    void RenderTransferRange();
+    void RenderTransferDots();
 };
 
 class MotherShip : public Ship

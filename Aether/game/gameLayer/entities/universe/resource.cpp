@@ -49,3 +49,9 @@ Planet::Planet(int o, int f, int m)
 {
     SetSprite("res/sprites/planets/planet1.png");
 }
+
+Goal::Goal(int o, int f, int m)
+    : ResourceEntity(o, f, m)
+{
+    SetSprite("res/sprites/planets/goal.png");
+}

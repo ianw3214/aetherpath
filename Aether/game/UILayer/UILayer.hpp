@@ -36,6 +36,12 @@ private:
 
     Oasis::Sprite m_moveIcon;
     Oasis::Sprite m_mineIcon;
+    Oasis::Sprite m_transferIcon;
+    // Subicons for transfer
+    Oasis::Sprite m_transferOxygenIcon;
+    Oasis::Sprite m_transferFuelIcon;
+    Oasis::Sprite m_transferPopulationIcon;
+    Oasis::Sprite m_transferMetalIcon;
 
     Oasis::Sprite m_createIcon;
     // Sub icons for create
@@ -44,6 +50,12 @@ private:
     Oasis::Sprite m_createDroneShipIcon;
     Oasis::Sprite m_createScoutIcon;
     Oasis::Sprite m_deployIcon;
+    Oasis::Sprite m_transferIconBase;
+    // Subicons for transfer(base)
+    Oasis::Sprite m_transferOxygenIconBase;
+    Oasis::Sprite m_transferFuelIconBase;
+    Oasis::Sprite m_transferPopulationIconBase;
+    Oasis::Sprite m_transferMetalIconBase;
 
     // UI For building ships queue in base
     Oasis::Sprite m_queueMotherShipIcon;    
@@ -63,6 +75,8 @@ private:
     void HandleShipUI(Oasis::Reference<Ship> ship);
     void HandleBaseUI(Oasis::Reference<Base> base);
     bool HandleMousePress(float x, float y);
+    // Sub-handle mouse presses to make function look nicer
+    bool HandleShipCreateMousePress(float x, float y, Oasis::Reference<Base> base);
 private:
     // Drawing helper functions
     void AddPadding(float padding, float& curr);

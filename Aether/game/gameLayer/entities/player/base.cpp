@@ -3,28 +3,35 @@
 #include "game/gameLayer/entities/player/ship.hpp"
 #include "game/gameLayer/gameService.hpp"
 
-Base::Base(int o, int f, int p, int m)
-    : PlayerEntity(o, f, p, m)
+Base::Base(int o, int f, int p, int m, int t)
+    : PlayerEntity(o, f, p, m, t)
     , m_uiState(UIState::NONE)
+    , m_state(State::IDLE)
     , m_building(false)
     , m_shipToDeploy(nullptr)
 {}
 
-void Base::ResetState()
+void Base::ResetUIState()
 {
     m_uiState = UIState::NONE;
+}
+
+void Base::ResetState()
+{
+    ResetUIState();
+    m_state = State::IDLE;
     m_shipToDeploy = nullptr;
 }
 
 void Base::CreateAction()
 {
-    ResetState();
+    ResetUIState();
     m_uiState = UIState::CREATE;
 }
 
 void Base::DeployAction()
 {
-    ResetState();
+    ResetUIState();
     m_uiState = UIState::DEPLOY;
 }
 
@@ -47,24 +54,34 @@ void Base::TryDeploy(float x, float y)
             }
         }
     }
-    ResetState();
+    ResetUIState();
+}
+
+void Base::TransferAction()
+{
+    ResetUIState();
+    m_uiState = UIState::TRANSFER;
+}
+
+void Base::TryTransfer(float x, float y)
+{
+    auto target = GameService::GetPlayerAt(x, y);
+    if (target)
+    {
+        float x_offset = x - GetX();
+        float y_offset = y - GetY();
+        if (x_offset * x_offset + y_offset * y_offset <= TRANSFER_RADIUS * TRANSFER_RADIUS)
+        {
+            ResetState();
+            m_state = State::TRANSFER;
+            m_transferTarget = target;
+        }
+    }
 }
 
 void Base::DeselectCallback()
 {
-    ResetState();
-}
-
-void Base::CreateShip(ShipType type)
-{
-    m_buildingQueue.push_back(BuildingEntry{ type, 0 });
-    ResetState();
-}
-
-void Base::ChooseShipToDeploy(Oasis::Reference<Ship> ship)
-{
-    m_uiState = UIState::DEPLOY2;
-    m_shipToDeploy = Oasis::DynamicCast<Entity>(ship);
+    ResetUIState();
 }
 
 void Base::Update()
@@ -85,8 +102,9 @@ void Base::Update()
             last_y = y;
         }
     }
+    RenderTransferRange();
+    RenderTransferDots();
     Render();
-
 }
 
 void Base::Tick()
@@ -123,6 +141,49 @@ void Base::Tick()
             m_buildingQueue.pop_front();
         }
     }
+    if (m_state == State::TRANSFER && m_transferTarget)
+    {
+        if (m_transferType == ResourceType::OXYGEN)
+        {
+            int amount = GetOxygen() < GetTransferSpeed() ? GetOxygen() : GetTransferSpeed();
+            m_transferTarget->AddOxygen(amount);
+            if (ConsumeOxygen(amount) == 0)
+            {
+                // TODO: Alert
+                ResetState();
+            }
+        }
+        if (m_transferType == ResourceType::FUEL)
+        {
+            int amount = GetFuel() < GetTransferSpeed() ? GetFuel() : GetTransferSpeed();
+            m_transferTarget->AddFuel(amount);
+            if (ConsumeFuel(amount) == 0)
+            {
+                // TODO: Alert
+                ResetState();
+            }
+        }
+        if (m_transferType == ResourceType::POPULATION)
+        {
+            int amount = GetPopulation() < GetTransferSpeed() ? GetPopulation() : GetTransferSpeed();
+            m_transferTarget->AddPopulation(amount);
+            if (ConsumePopulation(amount) == 0)
+            {
+                // TODO: Alert
+                ResetState();
+            }
+        }
+        if (m_transferType == ResourceType::METAL)
+        {
+            int amount = GetMetal() < GetTransferSpeed() ? GetMetal() : GetTransferSpeed();
+            m_transferTarget->AddMetal(amount);
+            if (ConsumeMetal(amount) == 0)
+            {
+                // TODO: Alert
+                ResetState();
+            }
+        }
+    }
 }
 
 bool Base::HandleClick(float x, float y)
@@ -132,5 +193,60 @@ bool Base::HandleClick(float x, float y)
         TryDeploy(Camera::ScreenToRawX(static_cast<int>(x)), Camera::ScreenToRawY(static_cast<int>(y)));
         return true;
     }
+    if (m_uiState == UIState::TRANSFER2)
+    {
+        m_uiState = UIState::NONE;
+        TryTransfer(Camera::ScreenToRawX(static_cast<int>(x)), Camera::ScreenToRawY(static_cast<int>(y)));
+        return true;
+    }
     return false;
+}
+
+void Base::CreateShip(ShipType type)
+{
+    m_buildingQueue.push_back(BuildingEntry{ type, 0 });
+    ResetUIState();
+}
+
+void Base::ChooseShipToDeploy(Oasis::Reference<Ship> ship)
+{
+    m_uiState = UIState::DEPLOY2;
+    m_shipToDeploy = Oasis::DynamicCast<Entity>(ship);
+}
+
+void Base::TransferResource(ResourceType type)
+{
+    if (m_state == State::TRANSFER) ResetState();
+    m_transferType = type;
+    m_uiState = UIState::TRANSFER2;
+}
+
+void Base::RenderTransferRange()
+{
+    if(m_uiState != UIState::TRANSFER2) return;
+    // Render a circle to show the deploy range
+    constexpr float granularity = 30.f;
+    constexpr float pi = 3.141592653f;
+    float last_x = static_cast<float>(Camera::RawToScreenX(std::cos(0.f) * Ship::TRANSFER_RADIUS + GetX()));
+    float last_y = static_cast<float>(Camera::RawToScreenY(std::sin(0.f) * Ship::TRANSFER_RADIUS + GetY()));
+    for (float i = 1; i <= granularity; ++i)
+    {
+        const float x = static_cast<float>(Camera::RawToScreenX(std::cos(i * 2 * pi / granularity) * Ship::TRANSFER_RADIUS + GetX()));
+        const float y = static_cast<float>(Camera::RawToScreenY(std::sin(i * 2 * pi / granularity) * Ship::TRANSFER_RADIUS + GetY()));
+        Oasis::Renderer::DrawLine(x, y, last_x, last_y, Oasis::Colour{1.f, 1.f, 0.f});
+        last_x = x;
+        last_y = y;
+    }
+}
+
+void Base::RenderTransferDots()
+{
+    if (!m_transferTarget || m_state != State::TRANSFER) return;
+    // Just draw a line for now
+    float x1 = static_cast<float>(Camera::RawToScreenX(GetX()));
+    float y1 = static_cast<float>(Camera::RawToScreenY(GetY()));
+    float x2 = static_cast<float>(Camera::RawToScreenX(m_transferTarget->GetX()));
+    float y2 = static_cast<float>(Camera::RawToScreenY(m_transferTarget->GetY()));
+    // TODO: Render dot sprites for the path
+    Oasis::Renderer::DrawLine(x1, y1, x2, y2, Oasis::Colour{ 1.f, 0.4f, 0.f });
 }

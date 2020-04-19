@@ -40,3 +40,9 @@ class Planet : public ResourceEntity
 public:
     Planet(int o = 0, int f = 0, int m = 0);
 };
+
+class Goal : public ResourceEntity
+{
+public:
+    Goal(int o = 0, int f = 0, int m = 0);
+};
