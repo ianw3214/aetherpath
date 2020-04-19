@@ -12,6 +12,10 @@ public:
         , m_fuel(f)
         , m_population(p)
         , m_metal(m)
+        , m_oxygenCapacity(-1)
+        , m_fuelCapactiy(-1)
+        , m_populationCapacity(-1)
+        , m_metalCapacity(-1)
         , m_transferSpeed(t)
     {}
 
@@ -38,6 +42,18 @@ public:
     inline int ConsumePopulation(int amount) { m_population -= amount; return m_population; }
     inline int ConsumeMetal(int amount) { m_metal -= amount; return m_metal; }
 
+    inline void SetCapacities(int o, int f, int p, int m)
+    {
+        m_oxygenCapacity = o;
+        m_fuelCapactiy = f;
+        m_populationCapacity = p;
+        m_metalCapacity = m;
+    }
+    inline int GetOxygenCapacity() const { return m_oxygenCapacity; }
+    inline int GetFuelCapacity() const { return m_fuelCapactiy; }
+    inline int GetPopulationCapacity() const { return m_populationCapacity; }
+    inline int GetMetalCapacity() const { return m_metalCapacity; }
+
     inline int GetTransferSpeed() const { return m_transferSpeed; }
 
     virtual void MoveAction() {}
@@ -58,6 +74,11 @@ private:
     int m_fuel;
     int m_population;
     int m_metal;
+
+    int m_oxygenCapacity;
+    int m_fuelCapactiy;
+    int m_populationCapacity;
+    int m_metalCapacity;
     
     int m_transferSpeed;
 };

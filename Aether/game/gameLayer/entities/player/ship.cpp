@@ -104,16 +104,28 @@ void Ship::Tick()
     }
     if (m_state == State::MINE && m_mineTarget)
     {
-        int oxygen = m_mineTarget->GatherOxygen(m_gatherSpeed);
-        int fuel = m_mineTarget->GatherFuel(m_gatherSpeed);
-        int metal = m_mineTarget->GatherMetal(m_gatherSpeed);
-        AddOxygen(oxygen);
-        AddFuel(fuel);
-        AddMetal(metal);
-        if (oxygen + fuel + metal == 0)
+        const int o_capacity = GetOxygenCapacity() - GetOxygen();
+        const int f_capacity = GetFuelCapacity() - GetFuel();
+        const int m_capacity = GetMetalCapacity() - GetMetal();
+        if (o_capacity + f_capacity + m_capacity == 0)
         {
             ResetState();
-            AlertService::Info("mining complete");
+            AlertService::Info("Ship at storage capacity");   
+        }
+        else
+        {
+            // Assume it is not possible for ships to have infinite capacity
+            const int oxygen = m_mineTarget->GatherOxygen(m_gatherSpeed > o_capacity ? o_capacity : m_gatherSpeed);
+            const int fuel = m_mineTarget->GatherFuel(m_gatherSpeed > f_capacity ? f_capacity : m_gatherSpeed);
+            const int metal = m_mineTarget->GatherMetal(m_gatherSpeed > m_capacity ? m_capacity : m_gatherSpeed);
+            AddOxygen(oxygen);
+            AddFuel(fuel);
+            AddMetal(metal);
+            if (oxygen + fuel + metal == 0)
+            {
+                ResetState();
+                AlertService::Info("mining complete");
+            }
         }
     }
     if (m_state == State::TRANSFER && m_transferTarget)
@@ -121,6 +133,13 @@ void Ship::Tick()
         if (m_transferType == ResourceType::OXYGEN)
         {
             int amount = GetOxygen() < GetTransferSpeed() ? GetOxygen() : GetTransferSpeed();
+            int capacity = m_transferTarget->GetOxygenCapacity() - m_transferTarget->GetOxygen();
+            if (capacity <= amount && m_transferTarget->GetMetalCapacity() >= 0)
+            {
+                amount = capacity;
+                AlertService::Info("Oxygen at capactiy");
+                ResetState();
+            }
             m_transferTarget->AddOxygen(amount);
             if (ConsumeOxygen(amount) == 0)
             {
@@ -131,6 +150,13 @@ void Ship::Tick()
         if (m_transferType == ResourceType::FUEL)
         {
             int amount = GetFuel() < GetTransferSpeed() ? GetFuel() : GetTransferSpeed();
+            int capacity = m_transferTarget->GetFuelCapacity() - m_transferTarget->GetFuel();
+            if (capacity <= amount && m_transferTarget->GetMetalCapacity() >= 0)
+            {
+                amount = capacity;
+                AlertService::Info("Fuel at capactiy");
+                ResetState();
+            }
             m_transferTarget->AddFuel(amount);
             if (ConsumeFuel(amount) == 0)
             {
@@ -141,6 +167,13 @@ void Ship::Tick()
         if (m_transferType == ResourceType::POPULATION)
         {
             int amount = GetPopulation() < GetTransferSpeed() ? GetPopulation() : GetTransferSpeed();
+            int capacity = m_transferTarget->GetPopulationCapacity() - m_transferTarget->GetPopulation();
+            if (capacity <= amount && m_transferTarget->GetMetalCapacity() >= 0)
+            {
+                amount = capacity;
+                AlertService::Info("Population at capactiy");
+                ResetState();
+            }
             m_transferTarget->AddPopulation(amount);
             if (ConsumePopulation(amount) == 0)
             {
@@ -151,6 +184,13 @@ void Ship::Tick()
         if (m_transferType == ResourceType::METAL)
         {
             int amount = GetMetal() < GetTransferSpeed() ? GetMetal() : GetTransferSpeed();
+            int capacity = m_transferTarget->GetMetalCapacity() - m_transferTarget->GetMetal();
+            if (capacity <= amount && m_transferTarget->GetMetalCapacity() >= 0)
+            {
+                amount = capacity;
+                AlertService::Info("Metal at capactiy");
+                ResetState();
+            }
             m_transferTarget->AddMetal(amount);
             if (ConsumeMetal(amount) == 0)
             {
@@ -302,6 +342,8 @@ void Ship::TryColonize(float x, float y)
                 base->SetPos(goal->GetX(), goal->GetY());
                 GameService::TransferEntityToGame(base);
                 GameService::DestroyEntity(target);
+                AlertService::Info("You've found a suitable planet!");
+                AlertService::Info("Populate 1000 humans to save humanity");
             }
             // Colonization happens instantaniously
             ResetState();
@@ -410,23 +452,27 @@ void Ship::ResetUIState()
 MotherShip::MotherShip()
     : Ship(20.f * SPEED_DEBUG_MULTIPLIER, 200.f, 8, 1, 10)
 {
+    SetCapacities(120, 500, 500, 500);
     SetSprite("res/sprites/mothership.png");
 }
 
 FlagShip::FlagShip()
     : Ship(40.f * SPEED_DEBUG_MULTIPLIER, 250.f, 10, 2, 3)
 {
+    SetCapacities(90, 250, 150, 350);
     SetSprite("res/sprites/flagship.png");   
 }
 
 DroneShip::DroneShip()
     : Ship(100.f * SPEED_DEBUG_MULTIPLIER, 600.f, 8, 10, 1)
 {
+    SetCapacities(20, 50, 50, 200);
     SetSprite("res/sprites/droneship.png");
 }
 
 Scout::Scout()
     : Ship(220.f * SPEED_DEBUG_MULTIPLIER, 50.f, 20, 1, 5)
 {
+    SetCapacities(40, 40, 80, 50);
     SetSprite("res/sprites/scout.png");
 }

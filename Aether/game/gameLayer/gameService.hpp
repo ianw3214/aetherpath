@@ -9,7 +9,7 @@ struct GameSettings
     // Gameplay settings
     float m_seconds_per_tick = 0.5f;
     float m_seconds_per_day = 5.f * 60.f; // 5 minutes
-    int m_no_oxygen_death_chance = 5;   // 1 out of this number death chance
+    int m_no_oxygen_death_chance = 4;   // 1 out of this number death chance
 
     // Win conditions
     int m_population_to_win = 1;

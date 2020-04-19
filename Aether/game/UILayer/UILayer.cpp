@@ -27,6 +27,12 @@ constexpr float margin_vertical = 10;
 ////////////////////////////////////////////////////////////////////////////////////////////
 void UILayer::Init()
 {
+    m_motherShipInfo = Oasis::Sprite("res/icons/mothership_info.png");
+    m_flagShipInfo = Oasis::Sprite("res/icons/flagship_info.png");
+    m_droneShipInfo = Oasis::Sprite("res/icons/droneship_info.png");
+    m_scoutInfo = Oasis::Sprite("res/icons/scout_info.png");
+    m_planetInfo = Oasis::Sprite("res/icons/planet_info.png");
+
     m_oxygenIcon = Oasis::Sprite("res/icons/oxygen.png");
     m_fuelIcon = Oasis::Sprite("res/icons/fuel.png");
     m_populationIcon = Oasis::Sprite("res/icons/population.png");
@@ -145,13 +151,27 @@ void UILayer::HandleResourceUI(Oasis::Reference<ResourceEntity> resource)
 ////////////////////////////////////////////////////////////////////////////////////////////
 void UILayer::HandlePlayerUI(Oasis::Reference<PlayerEntity> player)
 {
-    float y = 10;
+    float y = margin_vertical;
+    {   // Draw the info sprite
+        Oasis::Reference<Oasis::Sprite> target;
+        if (Oasis::DynamicCast<MotherShip>(player)) target = m_motherShipInfo;
+        if (Oasis::DynamicCast<FlagShip>(player)) target = m_flagShipInfo;
+        if (Oasis::DynamicCast<DroneShip>(player)) target = m_droneShipInfo;
+        if (Oasis::DynamicCast<Scout>(player)) target = m_scoutInfo;
+        if (Oasis::DynamicCast<Base>(player)) target = m_planetInfo;
+        if (target)
+        {
+            target->SetPos(margin_horizontal, Oasis::WindowService::WindowHeight() - 200 - y);
+            Oasis::Renderer::DrawSprite(target);
+            y += m_droneShipInfo.GetHeight() + margin_vertical;
+        }
+    }
     DrawResource(ResourceIcon::OXYGEN, player->GetOxygen(), y);
-    AddPadding(10, y);
+    AddPadding(margin_vertical, y);
     DrawResource(ResourceIcon::FUEL, player->GetFuel(), y);
-    AddPadding(10, y);
+    AddPadding(margin_vertical, y);
     DrawResource(ResourceIcon::POPULATION, player->GetPopulation(),y);
-    AddPadding(10, y);
+    AddPadding(margin_vertical, y);
     DrawResource(ResourceIcon::METAL, player->GetMetal(),y);
     if (auto ship = Oasis::DynamicCast<Ship>(player))
     {

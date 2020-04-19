@@ -26,7 +26,13 @@ public:
     virtual void Update()  override;
 private:
     // Icons
-    // TODO: Make these sprites more consistent (use fuel as reference)
+
+    Oasis::Sprite m_motherShipInfo;
+    Oasis::Sprite m_flagShipInfo;
+    Oasis::Sprite m_droneShipInfo;
+    Oasis::Sprite m_scoutInfo;
+    Oasis::Sprite m_planetInfo;
+
     Oasis::Sprite m_oxygenIcon;
     Oasis::Sprite m_fuelIcon;
     Oasis::Sprite m_populationIcon;

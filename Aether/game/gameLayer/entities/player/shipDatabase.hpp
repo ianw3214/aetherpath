@@ -21,3 +21,15 @@ inline int SecondsToBuildShip(ShipType type)
         default: return 0;
     }
 }
+
+inline int ShipCost(ShipType type)
+{
+    switch(type)
+    {
+        case ShipType::MOTHERSHIP: return 950;
+        case ShipType::FLAGSHIP: return 500;
+        case ShipType::DRONESHIP: return 100;
+        case ShipType::SCOUT: return 80;
+        default: return 0;
+    }
+}

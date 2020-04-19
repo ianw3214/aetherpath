@@ -142,6 +142,8 @@ void Base::Tick()
             ship->InitializeShip(GetX(), GetY());
             m_shipStorage.emplace_back(ship);
             m_buildingQueue.pop_front();
+
+            AlertService::Info("Ship built!");
         }
     }
     if (m_state == State::TRANSFER && m_transferTarget)
@@ -149,6 +151,13 @@ void Base::Tick()
         if (m_transferType == ResourceType::OXYGEN)
         {
             int amount = GetOxygen() < GetTransferSpeed() ? GetOxygen() : GetTransferSpeed();
+            int capacity = m_transferTarget->GetOxygenCapacity() - m_transferTarget->GetOxygen();
+            if (capacity <= amount && m_transferTarget->GetMetalCapacity() >= 0)
+            {
+                amount = capacity;
+                AlertService::Info("Oxygen at capactiy");
+                ResetState();
+            }
             m_transferTarget->AddOxygen(amount);
             if (ConsumeOxygen(amount) == 0)
             {
@@ -159,6 +168,13 @@ void Base::Tick()
         if (m_transferType == ResourceType::FUEL)
         {
             int amount = GetFuel() < GetTransferSpeed() ? GetFuel() : GetTransferSpeed();
+            int capacity = m_transferTarget->GetFuelCapacity() - m_transferTarget->GetFuel();
+            if (capacity <= amount && m_transferTarget->GetMetalCapacity() >= 0)
+            {
+                amount = capacity;
+                AlertService::Info("Fuel at capactiy");
+                ResetState();
+            }
             m_transferTarget->AddFuel(amount);
             if (ConsumeFuel(amount) == 0)
             {
@@ -169,6 +185,13 @@ void Base::Tick()
         if (m_transferType == ResourceType::POPULATION)
         {
             int amount = GetPopulation() < GetTransferSpeed() ? GetPopulation() : GetTransferSpeed();
+            int capacity = m_transferTarget->GetPopulationCapacity() - m_transferTarget->GetPopulation();
+            if (capacity <= amount && m_transferTarget->GetMetalCapacity() >= 0)
+            {
+                amount = capacity;
+                AlertService::Info("Population at capactiy");
+                ResetState();
+            }
             m_transferTarget->AddPopulation(amount);
             if (ConsumePopulation(amount) == 0)
             {
@@ -179,6 +202,13 @@ void Base::Tick()
         if (m_transferType == ResourceType::METAL)
         {
             int amount = GetMetal() < GetTransferSpeed() ? GetMetal() : GetTransferSpeed();
+            int capacity = m_transferTarget->GetMetalCapacity() - m_transferTarget->GetMetal();
+            if (capacity <= amount && m_transferTarget->GetMetalCapacity() >= 0)
+            {
+                amount = capacity;
+                AlertService::Info("Metal at capactiy");
+                ResetState();
+            }
             m_transferTarget->AddMetal(amount);
             if (ConsumeMetal(amount) == 0)
             {
@@ -207,7 +237,15 @@ bool Base::HandleClick(float x, float y)
 
 void Base::CreateShip(ShipType type)
 {
-    m_buildingQueue.push_back(BuildingEntry{ type, 0 });
+    if (GetMetal() > ShipCost(type))
+    {
+        ConsumeMetal(ShipCost(type));
+        m_buildingQueue.push_back(BuildingEntry{ type, 0 });
+    }
+    else
+    {
+        AlertService::Critical("Not enough metal to build ship");
+    }
     ResetUIState();
 }
 
