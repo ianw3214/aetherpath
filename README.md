@@ -12,3 +12,8 @@ In this game, you will have to manage humanity to ensure its survival. While ear
   - Research based - spend certain amount of resources to 'unlock' humanities survival
   - Exploration based - find a habitable planet for humanity
   - Why not both? alternate endings :D
+
+## GAME DESIGN NOTES
+
+- Each unit of oxygen will sustain 100 people per day
+- Each day will be set as an arbitrary amount of time irl (5 minutes or something)

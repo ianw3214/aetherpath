@@ -5,7 +5,7 @@
 class Earth : public PlayerEntity
 {
 public:
-    Earth();
+    Earth(int o, int f, int p, int m);
 
     virtual void Update() override;
 private:

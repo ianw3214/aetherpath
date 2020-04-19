@@ -3,6 +3,7 @@
 #include "game/gameLayer/gameLayer.hpp"
 
 Oasis::Reference<GameLayer> GameService::s_game;
+GameSettings GameService::s_settings;
 
 Oasis::Reference<Entity> GameService::GetSelectedEntity()
 {

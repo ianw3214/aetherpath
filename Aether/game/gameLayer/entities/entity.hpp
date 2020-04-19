@@ -20,6 +20,10 @@ public:
     inline bool Selected() const { return m_selected; }
 
     virtual void Update() {}
+    // A tick is set for certain intervals
+    virtual void Tick() {}
+    // A day cycle is a set super long interval
+    virtual void DayCycle() {}
     // This handleClick will only be called for the selected entity
     virtual bool HandleClick(float x, float y) { return false; }
 

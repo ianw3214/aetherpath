@@ -1,6 +1,7 @@
 #include "debugLayer.hpp"
 
 #include "game/game.hpp"
+#include "game/gameLayer/gameService.hpp"
 
 #include "imgui.h"
 void DebugLayer::Init() 
@@ -10,19 +11,15 @@ void DebugLayer::Init()
         static bool show = true;
         ImGui::Begin("DEBUG", &show, ImGuiWindowFlags_MenuBar);
 
-        /*
-        // General debug info
-        auto player = Game::GetEntityLayer()->GetPlayer();
-        ImGui::Text("Player Position: (%.2f, %.2f)", player->GetX(), player->GetY());
-
-        // Draw flags
-        ImGui::Checkbox("Draw collisions", &m_drawPhysics);
-        ImGui::Checkbox("Draw health", &m_drawHealth);
-        */
         // Camera debug (Technically numbers go a lot higher, but limit it for debug purposes)
         ImGui::SliderFloat("Camera x", &(Camera::GetCamera()->m_x), -1000.f, 1000.f);
         ImGui::SliderFloat("Camera y", &(Camera::GetCamera()->m_y), -1000.f, 1000.f);
         ImGui::SliderFloat("Camera scale", &(Camera::GetCamera()->m_scale), 0.1f, 5.f);
+
+        // Mess with gameplay settings debug
+        ImGui::SliderFloat("seconds_per_tick", &(GameService::s_settings.m_seconds_per_tick), 0.001f, 1.f);
+        ImGui::SliderFloat("seconds_per_day", &(GameService::s_settings.m_seconds_per_day), 1.f, 5.f * 60.f);
+
         ImGui::End();   
     });
 }

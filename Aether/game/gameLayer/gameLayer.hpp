@@ -21,10 +21,15 @@ public:
 
     void SelectEntity(Oasis::Reference<Entity> entity);
 private:
+    // Game entities
     std::vector<Oasis::Owned<Entity>> m_entities;
-
     Oasis::Reference<Entity> m_selected;
+
+    // Game clock
+    float m_tickAccumulator;
+    float m_dayAccumulator;
 private:
     // Additional helper methods
     void GenerateGameWorld();
+    void UpdateClockAndTick();
 };

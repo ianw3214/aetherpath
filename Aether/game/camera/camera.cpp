@@ -15,14 +15,14 @@ float Camera::ScreenToRawY(int y)
     return static_cast<float>(Oasis::WindowService::WindowHeight() - y - Oasis::WindowService::WindowHeight() / 2) / scale + Camera::GetCamera()->GetY();
 }
 
-int Camera::RawToScreenX(float x, float parallax)
+float Camera::RawToScreenX(float x, float parallax)
 {
     const float scale = Camera::GetCamera()->GetScale();
     const float window_width = static_cast<float>(Oasis::WindowService::WindowWidth());
     return (x - Camera::GetCamera()->GetX()) / parallax * scale + window_width / 2;
 }
 
-int Camera::RawToScreenY(float y, float parallax)
+float Camera::RawToScreenY(float y, float parallax)
 {
     const float scale = Camera::GetCamera()->GetScale();
     float window_height = static_cast<float>(Oasis::WindowService::WindowHeight());

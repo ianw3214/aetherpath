@@ -19,7 +19,7 @@ public:
         MINE
     };
 public:
-    Ship(float speed = 100.f, float mineRange = 200.f);
+    Ship(float speed = 100.f, float mineRange = 200.f, int ticksPerFuel = 10, int gatherSpeed = 1);
     void InitializeShip(float x, float y);
 
     float GetSpeed() const { return m_speed; }
@@ -29,6 +29,7 @@ public:
     virtual bool CanMine() const { return true; }
 
     virtual void Update() override;
+    virtual void Tick() override;
     virtual bool HandleClick(float x, float y) override;
 
     virtual void MoveAction() override;
@@ -38,9 +39,12 @@ public:
 private:
     float m_speed;
     float m_mineRange;
+    int m_ticksPerFuel;
+    int m_gatherSpeed;
 
     UIState m_UIState;
     State m_state;
+    int m_fuelTickAccumulator;
 
     float m_targetX;
     float m_targetY;
