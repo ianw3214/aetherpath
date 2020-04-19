@@ -14,7 +14,9 @@ public:
     {
         INFO,
         WARNING,
-        CRITICAL
+        CRITICAL,
+        WIN,
+        LOSE
     };
     struct Alert
     {
@@ -40,8 +42,12 @@ private:
     Oasis::Sprite m_infoIcon;
     Oasis::Sprite m_warningIcon;
     Oasis::Sprite m_criticalIcon;
+    Oasis::Sprite m_winIcon;
+    Oasis::Sprite m_loseIcon;
 
     Oasis::Sprite m_infoPopup;
     Oasis::Sprite m_warningPopup;
     Oasis::Sprite m_criticalPopup;
+    Oasis::Sprite m_winPopup;
+    Oasis::Sprite m_losePopup;
 };

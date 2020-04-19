@@ -19,19 +19,18 @@ void AlertLayer::Init()
 
     m_cursor = Oasis::Sprite("res/icons/cursor.png");
 
-    // Test
-    m_alerts.push_back({AlertLevel::CRITICAL, "TEST CRITICAL0!"});
-    m_alerts.push_back({AlertLevel::WARNING, "TEST WARNING!"});
-    m_alerts.push_back({AlertLevel::INFO, "TEST INFO!"});
-
     m_infoIcon = Oasis::Sprite("res/icons/info.png");
     m_warningIcon = Oasis::Sprite("res/icons/warning.png");
     m_criticalIcon = Oasis::Sprite("res/icons/error.png");
+    m_winIcon = Oasis::Sprite("res/icons/win.png");
+    m_loseIcon = Oasis::Sprite("res/icons/lose.png");
 
     // These positions are constant, set at beginning
     m_infoPopup = Oasis::Sprite("res/icons/popup_info.png");
     m_warningPopup = Oasis::Sprite("res/icons/popup_warning.png");
     m_criticalPopup = Oasis::Sprite("res/icons/popup_error.png");
+    m_winPopup = Oasis::Sprite("res/icons/popup_win.png");
+    m_losePopup = Oasis::Sprite("res/icons/popup_lose.png");
 
     Oasis::TextRenderer::LoadFont("res/fonts/Munro.ttf", "error", 32);
     AlertService::SetAlertLayer(this);
@@ -55,6 +54,16 @@ bool AlertLayer::HandleEvent(const Oasis::Event& event)
     {
         if (m_showPopup)
         {
+            if (m_popup.m_level == AlertLevel::WIN)
+            {
+                Oasis::Console::Print("WIN GAME");
+                // TODO: Hook in win game logic here
+            }
+            if (m_popup.m_level == AlertLevel::LOSE)
+            {
+                Oasis::Console::Print("LOSE GAME");
+                // TODO: Hook in lose game logic here
+            }
             m_showPopup = false;
             return true;
         }
@@ -92,6 +101,8 @@ void AlertLayer::Update()
         if (alert.m_level == AlertLevel::INFO) target = m_infoIcon;
         if (alert.m_level == AlertLevel::WARNING) target = m_warningIcon;
         if (alert.m_level == AlertLevel::CRITICAL) target = m_criticalIcon;
+        if (alert.m_level == AlertLevel::WIN) target = m_winIcon;
+        if (alert.m_level == AlertLevel::LOSE) target = m_loseIcon;
         if (target)
         {
             target->SetPos(x, y);
@@ -109,6 +120,8 @@ void AlertLayer::Update()
         if (m_popup.m_level == AlertLevel::INFO) target = m_infoPopup;
         if (m_popup.m_level == AlertLevel::WARNING) target = m_warningPopup;
         if (m_popup.m_level == AlertLevel::CRITICAL) target = m_criticalPopup;
+        if (m_popup.m_level == AlertLevel::WIN) target = m_winPopup;
+        if (m_popup.m_level == AlertLevel::LOSE) target = m_losePopup;
         if (target)
         {
             const float x = (static_cast<float>(Oasis::WindowService::WindowWidth()) - popup_width) / 2.f;

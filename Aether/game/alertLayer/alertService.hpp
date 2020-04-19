@@ -17,4 +17,7 @@ public:
     static void PopupInfo(const std::string& message);
     static void PopupWarning(const std::string& message);
     static void PopupCritical(const std::string& message);
+
+    static void Win();
+    static void Lose();
 };

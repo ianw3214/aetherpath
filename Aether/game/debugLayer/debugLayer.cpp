@@ -2,6 +2,7 @@
 
 #include "game/game.hpp"
 #include "game/gameLayer/gameService.hpp"
+#include "game/alertLayer/alertService.hpp"
 
 #include "imgui.h"
 void DebugLayer::Init() 
@@ -19,6 +20,16 @@ void DebugLayer::Init()
         // Mess with gameplay settings debug
         ImGui::SliderFloat("seconds_per_tick", &(GameService::s_settings.m_seconds_per_tick), 0.001f, 1.f);
         ImGui::SliderFloat("seconds_per_day", &(GameService::s_settings.m_seconds_per_day), 1.f, 5.f * 60.f);
+
+        // Test win/lose the game
+        if (ImGui::Button("WIN GAME"))
+        {
+            AlertService::Win();
+        }
+        if (ImGui::Button("LOSE GAME"))
+        {
+            AlertService::Lose();
+        }
 
         ImGui::End();   
     });

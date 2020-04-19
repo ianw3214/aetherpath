@@ -35,3 +35,13 @@ void AlertService::PopupCritical(const std::string& message)
     s_layer->m_showPopup = true;
     s_layer->m_popup = { AlertLayer::AlertLevel::CRITICAL, message };
 }
+
+void AlertService::Win()
+{
+    s_layer->m_alerts.push_back({AlertLayer::AlertLevel::WIN});
+}
+
+void AlertService::Lose()
+{
+    s_layer->m_alerts.push_back({AlertLayer::AlertLevel::LOSE});
+}
