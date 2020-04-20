@@ -235,6 +235,17 @@ bool Base::HandleClick(float x, float y)
     return false;
 }
 
+bool Base::Colliding(float x, float y) const
+{
+    // Center the sprite
+    x -= GetX();
+    y -= GetY();
+    // Assume bases are circles
+    float radius = GetWidth() / 2.f;
+    // Check distance to center
+    return x * x + y * y < radius * radius;
+}
+
 void Base::CreateShip(ShipType type)
 {
     if (GetMetal() > ShipCost(type))

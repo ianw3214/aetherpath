@@ -66,6 +66,8 @@ public:
     virtual void Tick() override;
     virtual bool HandleClick(float x, float y) override;
 
+    virtual bool Colliding(float x, float y) const override;
+
     void CreateShip(ShipType type);
     void ChooseShipToDeploy(Oasis::Reference<Ship> ship);
     void TransferResource(ResourceType type);

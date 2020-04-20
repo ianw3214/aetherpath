@@ -34,6 +34,17 @@ int ResourceEntity::GatherMetal(int speed)
     return amount;
 }
 
+bool ResourceEntity::Colliding(float x, float y) const
+{
+    // Center the sprite
+    x -= GetX();
+    y -= GetY();
+    // Assume resources are circles
+    float radius = GetWidth() / 2.f;
+    // Check distance to center
+    return x * x + y * y < radius * radius;
+}
+
 Meteoroid::Meteoroid(int o, int f, int m)
     : ResourceEntity(o, f, m)
 {

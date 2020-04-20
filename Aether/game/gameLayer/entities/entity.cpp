@@ -29,8 +29,8 @@ void RenderEntity::Render()
 bool RenderEntity::Colliding(float x, float y) const
 {
     // Center the sprite
-    x += GetWidth() / 2;
-    y += GetHeight() / 2;
+    x += GetWidth() / 2.f;
+    y += GetHeight() / 2.f;
     // Assume the input points are raw coords and not screen adjusted
     return x > GetX() && x < GetX() + GetWidth() && y > GetY() && y < GetY() + GetHeight();
 }

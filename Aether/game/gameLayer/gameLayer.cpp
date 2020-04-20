@@ -21,7 +21,7 @@ GameLayer::GameLayer()
     Oasis::Reference<Oasis::AudioResource> audio = Oasis::ResourceManager::LoadResource<Oasis::AudioResource>("res/music/track.wav");
     Oasis::AudioSource * source = new Oasis::AudioSource();
     source->SetVolume(0.1f);
-    source->Play(audio.GetData());
+    source->Play(audio.GetData(), true);
 }
 
 void GameLayer::Init()

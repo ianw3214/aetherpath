@@ -51,7 +51,8 @@ public:
 
     void SetSprite(const std::string& path, float width = -1.f, float height = -1.f);
     void Render();
-    bool Colliding(float x, float y) const;
+
+    virtual bool Colliding(float x, float y) const;
 
     // Don't override update, let derived entities render themselves for more control
 

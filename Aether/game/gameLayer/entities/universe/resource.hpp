@@ -20,6 +20,8 @@ public:
     int GatherFuel(int speed);
     int GatherMetal(int speed);
 
+    virtual bool Colliding(float x, float y) const override;
+
 protected:
     int m_oxygen;
     int m_fuel;
