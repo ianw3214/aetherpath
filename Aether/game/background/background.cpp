@@ -14,10 +14,10 @@ void Background::Init()
     std::random_device r;
     std::default_random_engine el(r());
     std::uniform_int_distribution<int> position_dist(-(settings.m_mapBorder) * 5, settings.m_mapBorder * 5);
-    std::uniform_int_distribution<int> parallax_dist(1, 5);
+    std::uniform_int_distribution<int> parallax_dist(1, 6);
 
-    const int area = (settings.m_mapBorder * 2) * (settings.m_mapBorder * 2);
-    const int numStars = area * Star::StarDensityPerSquareThousand / 1000 / 1000;
+    const float area = static_cast<float>((settings.m_mapBorder * 2) * (settings.m_mapBorder * 2));
+    const int numStars = static_cast<int>(area * Star::StarDensityPerSquareThousand / 1000.f / 1000.f);
  
     for (int i = 0; i < numStars; ++i)
     {
@@ -41,7 +41,10 @@ bool Background::HandleEvent(const Oasis::Event& event)
 void Background::Update() 
 {
     // Render a black base background
-    Oasis::Renderer::DrawQuad(0, 0, 1280, 960, Oasis::Texture("res/sprites/background.png"));
+    static Oasis::Sprite bg("res/sprites/background_backup.png");
+    bg.SetDimensions(Oasis::WindowService::WindowWidth(), Oasis::WindowService::WindowHeight());
+    Oasis::Renderer::DrawSprite(bg);
+    // Oasis::Renderer::DrawQuad(0, 0, 1280, 960, Oasis::Texture("res/sprites/background.png"));
 
     // Draw the stars
     // TODO: This can be heavily optimized

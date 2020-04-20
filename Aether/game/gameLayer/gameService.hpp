@@ -16,7 +16,7 @@ struct GameSettings
 
     // Map generation settings
     int m_mapBorder = 20000;
-    float m_densityPerSquareThousand = 0.2f;
+    float m_densityPerSquareThousand = 0.1f;
     int m_meteoroid_weight = 50;
     int m_asteroid_weight = 30;
     int m_planet_weight = 20;

@@ -1,5 +1,6 @@
 #include "gameLayer.hpp"
 
+#include <SDL2/SDL.h>
 #include <random>
 
 #include "entities/player/player.hpp"
@@ -17,21 +18,17 @@ GameLayer::GameLayer()
     , m_dayAccumulator(0.f)
 {
     GameService::SetGameLayer(this);
-
-    Oasis::Reference<Oasis::AudioResource> audio = Oasis::ResourceManager::LoadResource<Oasis::AudioResource>("res/music/track.wav");
-    Oasis::AudioSource * source = new Oasis::AudioSource();
-    source->SetVolume(0.1f);
-    source->Play(audio.GetData(), true);
 }
 
 void GameLayer::Init()
 {
     GenerateGameWorld();
+    SDL_ShowCursor(SDL_FALSE);
 }
 
 void GameLayer::Close()
 {
-
+    SDL_ShowCursor(SDL_TRUE);
 }
 
 bool GameLayer::HandleEvent(const Oasis::Event& event)
