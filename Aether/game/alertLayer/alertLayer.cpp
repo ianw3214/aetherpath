@@ -2,6 +2,9 @@
 
 #include "alertService.hpp"
 
+#include "game/gameLayer/entities/entity.hpp"
+#include "game/camera/camera.hpp"
+
 constexpr int max_on_screen = 8;
 constexpr float alert_icon_width = 80.f;
 constexpr float alert_icon_height = 80.f;
@@ -12,6 +15,9 @@ constexpr float padding_horizontal = 10.f;
 constexpr float padding_vertical = 10.f;
 constexpr float popup_text_padding_h = 30.f;
 constexpr float popup_text_padding_v = 60.f;
+
+#include "mainmenu/title.hpp"
+#include "credits/credits.hpp"
 
 void AlertLayer::Init() 
 {
@@ -57,12 +63,12 @@ bool AlertLayer::HandleEvent(const Oasis::Event& event)
             if (m_popup.m_level == AlertLevel::WIN)
             {
                 Oasis::Console::Print("WIN GAME");
-                // TODO: Hook in win game logic here
+                Oasis::StateManager::ChangeState(new Credits());
             }
             if (m_popup.m_level == AlertLevel::LOSE)
             {
                 Oasis::Console::Print("LOSE GAME");
-                // TODO: Hook in lose game logic here
+                Oasis::StateManager::ChangeState(new Title());
             }
             m_showPopup = false;
             return true;
@@ -82,6 +88,11 @@ bool AlertLayer::HandleEvent(const Oasis::Event& event)
                     m_showPopup = true;
                     m_popup = *it;
                     m_alerts.erase(it);
+                    if (m_popup.m_entity)
+                    {
+                        Camera::GetCamera()->m_x = m_popup.m_entity->GetX();
+                        Camera::GetCamera()->m_y = m_popup.m_entity->GetY();
+                    }
                     return true;
                 }
                 icon_x -= padding_horizontal + alert_icon_width;

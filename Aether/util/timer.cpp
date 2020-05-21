@@ -32,6 +32,7 @@ void Profiler::Update()
 
 void Profiler::ImGuiFunc()
 {
+	/*
     ImGui::SetCurrentContext(Oasis::ImGuiWrapper::GetContext());
     static bool show = true;
     ImGui::Begin("PROFILER INFO", &show, ImGuiWindowFlags_MenuBar);
@@ -40,4 +41,5 @@ void Profiler::ImGuiFunc()
         ImGui::Text("%s: %f ms", profile.m_name, profile.m_time);
     }
     ImGui::End();
+	*/
 }

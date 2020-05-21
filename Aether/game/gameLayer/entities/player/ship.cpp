@@ -47,7 +47,7 @@ void Ship::Update()
             SetX(m_targetX);
             SetY(m_targetY);
             ResetState();
-            AlertService::Info("Ship has arrived at destination");
+            AlertService::Info("Ship has arrived at destination", this);
         }
         // Move a teeny bit
         else
@@ -97,7 +97,7 @@ void Ship::Tick()
                 int fuel_left = ConsumeFuel(1);
                 if (fuel_left <= 0)
                 {
-                    AlertService::Warning("Can no logner move ship = no fuel");
+                    AlertService::Warning("Can no longer move ship - no fuel", this);
                 }
             }
         }
@@ -110,7 +110,7 @@ void Ship::Tick()
         if (o_capacity + f_capacity + m_capacity == 0)
         {
             ResetState();
-            AlertService::Info("Ship at storage capacity");   
+            AlertService::Info("Ship at storage capacity", this);   
         }
         else
         {
@@ -124,7 +124,7 @@ void Ship::Tick()
             if (oxygen + fuel + metal == 0)
             {
                 ResetState();
-                AlertService::Info("mining complete");
+                AlertService::Info("mining complete", this);
             }
         }
     }
@@ -137,13 +137,13 @@ void Ship::Tick()
             if (capacity <= amount && m_transferTarget->GetMetalCapacity() >= 0)
             {
                 amount = capacity;
-                AlertService::Info("Oxygen at capactiy");
+                AlertService::Info("Oxygen at capactiy", m_transferTarget.GetData());
                 ResetState();
             }
             m_transferTarget->AddOxygen(amount);
             if (ConsumeOxygen(amount) == 0)
             {
-                AlertService::Warning("All oxygen has been transferred");
+                AlertService::Warning("All oxygen has been transferred", this);
                 ResetState();
             }
         }
@@ -154,13 +154,13 @@ void Ship::Tick()
             if (capacity <= amount && m_transferTarget->GetMetalCapacity() >= 0)
             {
                 amount = capacity;
-                AlertService::Info("Fuel at capactiy");
+                AlertService::Info("Fuel at capactiy", m_transferTarget.GetData());
                 ResetState();
             }
             m_transferTarget->AddFuel(amount);
             if (ConsumeFuel(amount) == 0)
             {
-                AlertService::Warning("All fuel has been transferred");
+                AlertService::Warning("All fuel has been transferred", this);
                 ResetState();
             }
         }
@@ -171,13 +171,13 @@ void Ship::Tick()
             if (capacity <= amount && m_transferTarget->GetMetalCapacity() >= 0)
             {
                 amount = capacity;
-                AlertService::Info("Population at capactiy");
+                AlertService::Info("Population at capactiy", m_transferTarget.GetData());
                 ResetState();
             }
             m_transferTarget->AddPopulation(amount);
             if (ConsumePopulation(amount) == 0)
             {
-                AlertService::Warning("All population has been transferred");
+                AlertService::Warning("All population has been transferred", this);
                 ResetState();
             }
         }
@@ -188,13 +188,13 @@ void Ship::Tick()
             if (capacity <= amount && m_transferTarget->GetMetalCapacity() >= 0)
             {
                 amount = capacity;
-                AlertService::Info("Metal at capactiy");
+                AlertService::Info("Metal at capactiy", m_transferTarget.GetData());
                 ResetState();
             }
             m_transferTarget->AddMetal(amount);
             if (ConsumeMetal(amount) == 0)
             {
-                AlertService::Warning("All metal has been transferred");
+                AlertService::Warning("All metal has been transferred", this);
                 ResetState();
             }
         }
@@ -247,7 +247,7 @@ void Ship::TryMove(float x, float y)
     }
     else
     {
-        AlertService::Info("Can't move ship - no fuel");
+        AlertService::Info("Can't move ship - no fuel", this);
     }
 }
 
@@ -342,7 +342,7 @@ void Ship::TryColonize(float x, float y)
                 base->SetPos(goal->GetX(), goal->GetY());
                 GameService::TransferEntityToGame(base);
                 GameService::DestroyEntity(target);
-                AlertService::Info("You've found a suitable planet!");
+                AlertService::Info("You've found a suitable planet!", target);
                 AlertService::Info("Populate 1000 humans to save humanity");
             }
             // Colonization happens instantaniously

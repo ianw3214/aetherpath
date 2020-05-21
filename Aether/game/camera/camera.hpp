@@ -7,6 +7,7 @@ class Camera : public Oasis::GameStateLayer
 public:
     // Let the debug layer access camera members directly
     friend class DebugLayer;
+    friend class AlertLayer;
 public:
     // Global access to the camera
     static Oasis::Reference<Camera> GetCamera() { return s_camera; }

@@ -7,6 +7,7 @@
 #include "imgui.h"
 void DebugLayer::Init() 
 {
+    /*
     Oasis::ImGuiWrapper::AddWindowFunction([=](){
         ImGui::SetCurrentContext(Oasis::ImGuiWrapper::GetContext());
         static bool show = true;
@@ -33,6 +34,7 @@ void DebugLayer::Init()
 
         ImGui::End();   
     });
+    */
 }
 
 void DebugLayer::Close() 

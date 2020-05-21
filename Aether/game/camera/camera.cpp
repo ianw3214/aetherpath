@@ -29,7 +29,6 @@ float Camera::RawToScreenY(float y, float parallax)
     return (y - Camera::GetCamera()->GetY())  / parallax * scale + window_height / 2;
 }
 
-
 Camera::Camera()
     : m_x(0.f)
     , m_y(0.f)
@@ -77,10 +76,12 @@ bool Camera::HandleEvent(const Oasis::Event& event)
         if (mouseEvent.GetVerticalScroll() > 0)
         {
             m_scale *= 1.5f;
+            if (m_scale > 5.f) m_scale = 5.f;
         }
         if (mouseEvent.GetVerticalScroll() < 0)
         {
             m_scale /= 1.5f;
+            if (m_scale < 0.05f) m_scale = .05f;
         }
         return true;
     }

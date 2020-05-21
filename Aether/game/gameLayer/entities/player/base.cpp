@@ -143,7 +143,7 @@ void Base::Tick()
             m_shipStorage.emplace_back(ship);
             m_buildingQueue.pop_front();
 
-            AlertService::Info("Ship built!");
+            AlertService::Info("Ship built!", this);
         }
     }
     if (m_state == State::TRANSFER && m_transferTarget)
@@ -155,13 +155,13 @@ void Base::Tick()
             if (capacity <= amount && m_transferTarget->GetMetalCapacity() >= 0)
             {
                 amount = capacity;
-                AlertService::Info("Oxygen at capactiy");
+                AlertService::Info("Oxygen at capactiy", m_transferTarget.GetData());
                 ResetState();
             }
             m_transferTarget->AddOxygen(amount);
             if (ConsumeOxygen(amount) == 0)
             {
-                AlertService::Warning("All oxygen has been transferred");
+                AlertService::Warning("All oxygen has been transferred", this);
                 ResetState();
             }
         }
@@ -172,13 +172,13 @@ void Base::Tick()
             if (capacity <= amount && m_transferTarget->GetMetalCapacity() >= 0)
             {
                 amount = capacity;
-                AlertService::Info("Fuel at capactiy");
+                AlertService::Info("Fuel at capactiy", m_transferTarget.GetData());
                 ResetState();
             }
             m_transferTarget->AddFuel(amount);
             if (ConsumeFuel(amount) == 0)
             {
-                AlertService::Warning("All fuel has been transferred");
+                AlertService::Warning("All fuel has been transferred", this);
                 ResetState();
             }
         }
@@ -189,13 +189,13 @@ void Base::Tick()
             if (capacity <= amount && m_transferTarget->GetMetalCapacity() >= 0)
             {
                 amount = capacity;
-                AlertService::Info("Population at capactiy");
+                AlertService::Info("Population at capactiy", m_transferTarget.GetData());
                 ResetState();
             }
             m_transferTarget->AddPopulation(amount);
             if (ConsumePopulation(amount) == 0)
             {
-                AlertService::Warning("All population has been transferred");
+                AlertService::Warning("All population has been transferred", this);
                 ResetState();
             }
         }
@@ -206,13 +206,13 @@ void Base::Tick()
             if (capacity <= amount && m_transferTarget->GetMetalCapacity() >= 0)
             {
                 amount = capacity;
-                AlertService::Info("Metal at capactiy");
+                AlertService::Info("Metal at capactiy", m_transferTarget.GetData());
                 ResetState();
             }
             m_transferTarget->AddMetal(amount);
             if (ConsumeMetal(amount) == 0)
             {
-                AlertService::Warning("All metal has been transferred");
+                AlertService::Warning("All metal has been transferred", this);
                 ResetState();
             }
         }
@@ -255,7 +255,7 @@ void Base::CreateShip(ShipType type)
     }
     else
     {
-        AlertService::Critical("Not enough metal to build ship");
+        AlertService::Critical("Not enough metal to build ship", this);
     }
     ResetUIState();
 }
@@ -317,6 +317,6 @@ void GoalBase::Tick()
     // Check for win condition
     if (GetPopulation() >= settings.m_population_to_win)
     {
-        AlertService::Win();
+        AlertService::Win(this);
     }
 }

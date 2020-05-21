@@ -9,7 +9,9 @@ void Title::Init()
     Oasis::TextRenderer::LoadFont("res/fonts/Munro.ttf", "default60", 60);
 
     Oasis::Reference<Oasis::AudioResource> audio = Oasis::ResourceManager::LoadResource<Oasis::AudioResource>("res/music/track.wav");
-    Oasis::AudioSource * source = new Oasis::AudioSource();
+    static Oasis::AudioSource * source = nullptr;
+    if (source) delete source;
+    source = new Oasis::AudioSource();
     source->SetVolume(0.1f);
     source->Play(audio.GetData(), true);
 }
@@ -52,5 +54,4 @@ void Title::Update()
         Oasis::TextRenderer::DrawString("Click anywhere to start", "default40", x, 20, Oasis::Colours::WHITE);
     }
     m_accum += Oasis::WindowService::GetDelta() / 1000.f;
-    Oasis::Console::Print(std::to_string(m_accum));
 }

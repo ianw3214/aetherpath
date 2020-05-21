@@ -11,6 +11,13 @@
 #include "game/gameLayer/gameService.hpp"
 #include "game/alertLayer/alertService.hpp"
 
+// Super temporary for tutorial
+bool tutorial = true;
+Earth * earth = nullptr;
+MotherShip * ship = nullptr;
+Asteroid * asteroid = nullptr;
+Planet * planet = nullptr;
+
 GameLayer::GameLayer()
     : m_entities()
     , m_selected(nullptr)
@@ -22,8 +29,8 @@ GameLayer::GameLayer()
 
 void GameLayer::Init()
 {
-    GenerateGameWorld();
     SDL_ShowCursor(SDL_FALSE);
+    GenerateGameWorld();
 }
 
 void GameLayer::Close()
@@ -106,44 +113,23 @@ void GameLayer::GenerateGameWorld()
     GameSettings settings = GameService::GetGameSettings();
 
     // Mother earth always generated at 0, 0
-    AddPlayer(new Earth(
+    earth = new Earth(
         settings.m_defaultEarthOxygen,
         settings.m_defaultEarthFuel,
         settings.m_defaultltEarthPopulation,
         settings.m_defaultEarthMetal
-    ));
+    );
+    AddPlayer(earth);
 
     // -----------------------------------------------------------------
-    // TEMPORARY CODE
+    // STARTER SHIP
     {   // Mothership
-        MotherShip * ship = new MotherShip();
+        ship = new MotherShip();
         ship->InitializeShip(400.f, -400.f);
-        ship->AddFuel(1000);
+        ship->AddFuel(200);
         ship->AddOxygen(20);
         ship->AddPopulation(500);
-        AddPlayer(ship);
-    }
-
-    {   // Flagship
-        FlagShip * ship = new FlagShip();
-        ship->InitializeShip(-200.f, -200.f);
-        ship->AddFuel(1000);
-        ship->AddOxygen(20);
-        ship->AddPopulation(500);
-        AddPlayer(ship);
-    }
-
-    {   // Droneship
-        DroneShip * ship = new DroneShip();
-        ship->InitializeShip(200.f, -200.f);
-        ship->AddFuel(1000);
-        AddPlayer(ship);
-    }
-
-    {   // Scout
-        Scout * ship = new Scout();
-        ship->InitializeShip(300.f, 300.f);
-        ship->AddFuel(1000);
+        ship->AddMetal(20);
         AddPlayer(ship);
     }
     // -----------------------------------------------------------------
@@ -187,6 +173,10 @@ void GameLayer::GenerateGameWorld()
                 );
                 ent->SetPos(static_cast<float>(position_dist(el)), static_cast<float>(position_dist(el)));
                 m_entities.push_back(ent);
+                if (!asteroid)
+                {
+                    asteroid = ent;
+                }
             }
             else
             {
@@ -197,6 +187,11 @@ void GameLayer::GenerateGameWorld()
                 );
                 ent->SetPos(static_cast<float>(position_dist(el)), static_cast<float>(position_dist(el)));
                 m_entities.push_back(ent);
+                if (!planet)
+                {
+                    // Ignore the case where planets aren't created, chances too low
+                    planet = ent;
+                }
             }
         }
     }
@@ -235,6 +230,20 @@ void GameLayer::UpdateClockAndTick()
         for (Oasis::Reference<Entity> entity : m_entities)
         {
             entity->Tick();
+        }
+        if (tutorial)
+        {
+            tutorial = false;
+            AlertService::Info("Click on an object to interact with it");
+            AlertService::Info("This is earth", earth);
+            AlertService::Info("You can create new ships on planets", earth);
+            AlertService::Info("This is a ship", ship);
+            AlertService::Info("Transfer resources between objects!");
+            AlertService::Info("Mine for more resources", asteroid);
+            AlertService::Info("Colonize planets to make more ships", planet);
+            AlertService::Info("Find a safe haven for humans");
+            AlertService::Info("good luck! :)", earth);
+            AlertService::Info("P.S. people die without oxygen");
         }
     }
     if (m_dayAccumulator >= settings.m_seconds_per_day)

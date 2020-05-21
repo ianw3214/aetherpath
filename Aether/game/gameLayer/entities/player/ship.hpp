@@ -2,7 +2,7 @@
 #include "oasis.h"
 #include "game/gameLayer/entities/player/player.hpp"
 
-#define SPEED_DEBUG_MULTIPLIER 1000
+#define SPEED_DEBUG_MULTIPLIER 1
 
 class ResourceEntity;
 class Ship : public PlayerEntity

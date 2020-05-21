@@ -2,6 +2,7 @@
 #include "oasis.h"
 
 class AlertLayer;
+class Entity;
 class AlertService
 {
 private:
@@ -16,15 +17,15 @@ private:
     static bool s_won;
     static bool s_lost;
 public:
-    static void Info(const std::string& message);
-    static void Warning(const std::string& message);
-    static void Critical(const std::string& message);
+    static void Info(const std::string& message, Oasis::Reference<Entity> = nullptr);
+    static void Warning(const std::string& message, Oasis::Reference<Entity> = nullptr);
+    static void Critical(const std::string& message, Oasis::Reference<Entity> = nullptr);
 
     // These are for directly sending popups
-    static void PopupInfo(const std::string& message);
-    static void PopupWarning(const std::string& message);
-    static void PopupCritical(const std::string& message);
+    static void PopupInfo(const std::string& message, Oasis::Reference<Entity> = nullptr);
+    static void PopupWarning(const std::string& message, Oasis::Reference<Entity> = nullptr);
+    static void PopupCritical(const std::string& message, Oasis::Reference<Entity> = nullptr);
 
-    static void Win();
+    static void Win(Oasis::Reference<Entity> goal);
     static void Lose();
 };

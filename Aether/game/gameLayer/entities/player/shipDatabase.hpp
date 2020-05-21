@@ -1,6 +1,6 @@
 #pragma once
 
-#define DEBUG_DIVISOR 100
+#define DEBUG_DIVISOR 1
 
 enum class ShipType
 {

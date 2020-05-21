@@ -19,7 +19,7 @@ void PlayerEntity::Tick()
             int result = ConsumePopulation(1);
             if (result == 0)
             {
-                AlertService::Warning("Population has completely died aboard entity");
+                AlertService::Warning("Population has completely died", this);
             }
         }
     }
@@ -32,7 +32,7 @@ void PlayerEntity::DayCycle()
         int result = ConsumeOxygen(m_population / 100 > 0 ? m_population / 100 : 1);
         if (result <= 0)
         {
-            AlertService::Critical("No oxygen - population will start dying");
+            AlertService::Critical("No oxygen - population will start dying", this);
         }
     }
 }

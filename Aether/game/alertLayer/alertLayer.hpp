@@ -5,6 +5,7 @@
 #include <vector>
 
 ////////////////////////////////////////////////////////////////////////////////////////
+class Entity;
 class AlertService;
 class AlertLayer : public Oasis::GameStateLayer
 {
@@ -22,6 +23,7 @@ public:
     {
         AlertLevel m_level;
         std::string m_message;
+        Oasis::Reference<Entity> m_entity;
     };
 public:
     virtual void Init() override;
