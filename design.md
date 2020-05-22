@@ -93,3 +93,7 @@ Potentialy dangers to ships can also make gameplay a lot more interesting - plan
 This will have to be carefully tuned though, since the player cannot watch over all their ships/planets at once. One potential solution is a feature where asteroids have their paths projected, and if it might hit a ship or planet the player can be alerted.
 
 This might also allow for an 'attack' type of ship, where it can destroy asteroids very quickly but not a lot of resources are gathered from it.
+
+## Map environments
+
+The map could be generated with environments that could help/harm the player. This would add yet another layer of gameplay for the player to be mindeful of - some of these can be big risk/big reward environments. Examples are asteroid fields which can damage ships but have lots of resources, or nebula clouds which makes ship more efficient somehow because science.
