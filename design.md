@@ -45,3 +45,51 @@ The characters can either be randomly spawned or spawned based on a timer. They 
 ## Map Generation
 
 The map is populated with asteroids and planets, including one earth as the players starting base and one (or more) *target* planets, which is the end goal of the game. The resource nodes are populated with semi-random amounts of resources, but ensured to be distributed somewhat evenly so that the player always has a chance to win.
+
+## Replayability
+
+The replayability of the game comes from the difficulty, beating the game should be a challenging task and not easily achievable by the player. There can be different difficulty settings so that once the player beats the game, they can still play the game on a harder difficulty.
+
+## Art
+
+In terms of art style, the game assets will be done with pixel art. Shaders can potentially be used to enhance certain aesthetics, but this will depend on how well it can fit with the pixel art style.
+
+The UI needs to look clean and modern, dark backgrounds with light outlines to give it a sleek look. Since the UI is a very large part of the game, it has to be polished to look as good as possible while being as responsive as possible.
+
+## Ship types
+
+### Mining ship
+
+The mining ship is used to efficiently gather resources from resource nodes.
+
+### Scout ship
+
+The scout ship is a fast ship meant to let the player explore quickly and efficiently.
+
+### Mothership
+
+The mothership is a giant ship capable of transferring massive amounts of resources between ships and colonies.
+
+## Other mechanics
+
+### Fog of war
+
+Fog of war is a potential mechanic, it can really broaden the exploration aspect of the gameplay since the player wouldn't be able to see the whole map from the beginning of the game. It will also encourage the use of scout ships to explore more of the fog of war, whereas without fog of war scout ships are significantly less useful.
+
+### Ship augmentations
+
+Ship augmentations can add a lot of variety to the game without having to put in a lot of different ship types. Some augmentation ideas include increased mining speed, increased vision range, increased storage, emergency oxygen supply, faster movement, increased gathering amount, etc...
+
+Another potential interaction with the game is more uses from colonies, where the ship has to dock at a colony in order to receive augmentations. This gives colonies more purpose than just a ship making factory, and players will have to decide if they want to spend resources to return a ship to a colony.
+
+### Research
+
+Research can potentially work really well with the augmentation system, where players have to research augmentations before it is available to them. It will most likely be time based, and the player can choose things to research from a _research tree_ based on their playstyle.
+
+### Moving asteroids / Ship health
+
+Potentialy dangers to ships can also make gameplay a lot more interesting - planets and ships can have a health value so that asteroids that ram into them will cause damage.
+
+This will have to be carefully tuned though, since the player cannot watch over all their ships/planets at once. One potential solution is a feature where asteroids have their paths projected, and if it might hit a ship or planet the player can be alerted.
+
+This might also allow for an 'attack' type of ship, where it can destroy asteroids very quickly but not a lot of resources are gathered from it.
