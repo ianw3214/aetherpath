@@ -1,2 +1,0 @@
-target_sources(Aether PRIVATE alertLayer.hpp alertLayer.cpp)
-target_sources(Aether PRIVATE alertService.hpp alertService.cpp)

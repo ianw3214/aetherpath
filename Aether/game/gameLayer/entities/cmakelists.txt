@@ -1,4 +1,0 @@
-target_sources(Aether PRIVATE entity.hpp entity.cpp)
-
-add_subdirectory(player)
-add_subdirectory(universe)

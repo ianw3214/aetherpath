@@ -1,10 +1,1 @@
-target_sources(Aether PRIVATE game.hpp)
-
-target_sources(Aether PRIVATE game.cpp)
-
-add_subdirectory(UILayer)
-add_subdirectory(gameLayer)
-add_subdirectory(background)
-add_subdirectory(camera)
-add_subdirectory(alertLayer)
-add_subdirectory(debugLayer)
+target_sources(Aether PRIVATE game.hpp game.cpp)
