@@ -1,0 +1,2 @@
+target_sources(Aether PRIVATE entity.hpp entity.cpp)
+target_sources(Aether PRIVATE component.hpp component.cpp)
