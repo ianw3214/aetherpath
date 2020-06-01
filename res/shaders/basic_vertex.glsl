@@ -10,7 +10,7 @@ out vec2 vTexCoord;
 void main() {
 
     float x = mix(-1.0, 1.0, position.x / u_screenWidth);
-    float y = mix(-1.0, 1.0, position.y / u_screenHeight);
+    float y = mix(1.0, -1.0, position.y / u_screenHeight);
     gl_Position = vec4(x, y, 0.0, 1.0);
     
     vTexCoord = texCoord;

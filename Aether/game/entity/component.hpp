@@ -8,6 +8,6 @@ public:
     Component(Ref<Entity> entityRef);
 
     virtual void Update(float delta) {}
-private:
+protected:
     Ref<Entity> m_entityRef;
 };

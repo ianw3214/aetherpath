@@ -3,6 +3,7 @@
 
 ////////////////////////////////////////////////////////////
 #include "entity/component.hpp"
+#include "entity/components/renderComponent.hpp"
 class TestComponent : public Component
 {
 public:
@@ -27,7 +28,10 @@ void GameLayer::Init()
 {
     ////////////////////////////////////////////////////////////
     Entity * test = new Entity();
+    test->SetX(30.f);
+    test->SetY(30.f);
     test->AddComponent(new TestComponent(test));
+    test->AddComponent(new RenderComponent(test, "res/sprites/scout.png", 200.f, 200.f));
     GameService::AddEntity(test);
     ////////////////////////////////////////////////////////////
 }
