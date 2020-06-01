@@ -1,6 +1,8 @@
 #include "renderComponent.hpp"
 #include "game/entity/entity.hpp"
 
+#include "game/camera/camera.hpp"
+
 RenderComponent::RenderComponent(Ref<Entity> entity, const std::string& path, float width, float height)
     : Component(entity)
     , m_sprite(path)
@@ -18,6 +20,7 @@ RenderComponent::RenderComponent(Ref<Entity> entity, const std::string& path, fl
 void RenderComponent::Update(float delta)
 {
     m_sprite.SetDimensions(m_width, m_height);
-    m_sprite.SetPos(m_entityRef->GetX(), m_entityRef->GetY());
+    m_sprite.SetPos(m_entityRef->GetX() - CameraService::GetX(), m_entityRef->GetY() - CameraService::GetY());
     Oasis::Renderer::DrawSprite(&m_sprite);
+    Oasis::Console::AddLog("%f, %f", CameraService::GetX(), CameraService::GetY());
 }
