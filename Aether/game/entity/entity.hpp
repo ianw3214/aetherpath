@@ -8,6 +8,8 @@ class Entity
 public:
     Entity();
     void AddComponent(Component * component);
+    template<class T>
+    T * GetComponent();
 
     void Update(float delta);
 
@@ -19,3 +21,14 @@ private:
     float m_x, m_y;
     std::vector<Component*> m_components;
 };
+
+template<class T>
+T * Entity::GetComponent()
+{
+    for (Component * component : m_components)
+    {
+        T * result = dynamic_cast<T*>(component);
+        if (result) return result;
+    }
+    return nullptr;
+}

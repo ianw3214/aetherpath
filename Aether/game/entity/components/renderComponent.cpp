@@ -22,5 +22,4 @@ void RenderComponent::Update(float delta)
     m_sprite.SetDimensions(m_width, m_height);
     m_sprite.SetPos(m_entityRef->GetX() - CameraService::GetX(), m_entityRef->GetY() - CameraService::GetY());
     Oasis::Renderer::DrawSprite(&m_sprite);
-    Oasis::Console::AddLog("%f, %f", CameraService::GetX(), CameraService::GetY());
 }

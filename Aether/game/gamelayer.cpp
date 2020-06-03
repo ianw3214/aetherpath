@@ -3,6 +3,18 @@
 
 ////////////////////////////////////////////////////////////
 #include "entity/components/renderComponent.hpp"
+class TestComponent : public Component
+{
+public:
+    TestComponent(Ref<Entity> entity) : Component(entity) {}
+    virtual void Update(float delta) override
+    {
+        if (auto R = m_entityRef->GetComponent<RenderComponent>())
+        {
+            Oasis::Console::AddLog("TEST");
+        }
+    }
+};
 ////////////////////////////////////////////////////////////
 
 Ref<GameLayer> GameService::s_gameLayer = nullptr;
@@ -24,6 +36,7 @@ void GameLayer::Init()
     test->SetX(0.f);
     test->SetY(0.f);
     test->AddComponent(new RenderComponent(test, "res/sprites/scout.png", 200.f, 200.f));
+    test->AddComponent(new TestComponent(test));
     GameService::AddEntity(test);
     ////////////////////////////////////////////////////////////
 }
