@@ -2,7 +2,7 @@
 
 #include "gamelayer.hpp"
 #include "camera/camera.hpp"
-
+#include "debug/debugLayer.hpp"
 
 class Game : public Oasis::GameState
 {
@@ -15,7 +15,7 @@ public:
         AddLayer(new GameLayer());
         // AddLayer(new UILayer());
         // AddLayer(new AlertLayer());
-        // AddLayer(new DebugLayer());
+        AddLayer(new DebugLayer());
     }
 private:
     

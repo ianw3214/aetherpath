@@ -10,6 +10,7 @@ class GameService
 {
 public:
     static void AddEntity(Entity * entity);
+    static std::vector<Entity *>& GetEntities();
 private:
     friend class GameLayer;
     static Ref<GameLayer> s_gameLayer;

@@ -3,18 +3,7 @@
 
 ////////////////////////////////////////////////////////////
 #include "entity/components/renderComponent.hpp"
-class TestComponent : public Component
-{
-public:
-    TestComponent(Ref<Entity> entity) : Component(entity) {}
-    virtual void Update(float delta) override
-    {
-        if (auto R = m_entityRef->GetComponent<RenderComponent>())
-        {
-            Oasis::Console::AddLog("TEST");
-        }
-    }
-};
+#include "entity/components/collisionComponent.hpp"
 ////////////////////////////////////////////////////////////
 
 Ref<GameLayer> GameService::s_gameLayer = nullptr;
@@ -22,6 +11,11 @@ Ref<GameLayer> GameService::s_gameLayer = nullptr;
 void GameService::AddEntity(Entity * entity)
 {
     s_gameLayer->m_entities.push_back(entity);
+}
+
+std::vector<Entity *>& GameService::GetEntities()
+{
+    return s_gameLayer->m_entities;
 }
 
 GameLayer::GameLayer()
@@ -36,7 +30,7 @@ void GameLayer::Init()
     test->SetX(0.f);
     test->SetY(0.f);
     test->AddComponent(new RenderComponent(test, "res/sprites/scout.png", 200.f, 200.f));
-    test->AddComponent(new TestComponent(test));
+    test->AddComponent(new CollisionComponent(test, Shape::GenerateRect(150.f, 100.f)));
     GameService::AddEntity(test);
     ////////////////////////////////////////////////////////////
 }
