@@ -19,7 +19,20 @@ RenderComponent::RenderComponent(Ref<Entity> entity, const std::string& path, fl
 
 void RenderComponent::Update(float delta)
 {
-    m_sprite.SetDimensions(m_width, m_height);
-    m_sprite.SetPos(m_entityRef->GetX() - CameraService::GetX(), m_entityRef->GetY() - CameraService::GetY());
-    Oasis::Renderer::DrawSprite(&m_sprite);
+    const float scale = CameraService::GetScale();
+    const float window_width = static_cast<float>(Oasis::WindowService::WindowWidth());
+    const float window_height = static_cast<float>(Oasis::WindowService::WindowHeight());
+    const float width = m_width * scale;
+    const float height = m_height * scale;
+    // Have the sprite rendered cenetered around it's middle point
+    const float screen_x = CameraService::RawToScreenX(m_entityRef->GetX() - m_width / 2);
+    const float screen_y = CameraService::RawToScreenY(m_entityRef->GetY() - m_height / 2);
+    if (screen_x > -width && screen_x < window_width && screen_y > -height && screen_y < window_height)
+    {
+        // Render
+        m_sprite.SetPos(screen_x, screen_y);
+        m_sprite.SetDimensions(width, height);
+        // m_sprite.SetTint(Oasis::Colours::WHITE, static_cast<float>(Selected()) * 0.2f);
+        Oasis::Renderer::DrawSprite(&m_sprite);
+    }
 }

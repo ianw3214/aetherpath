@@ -30,7 +30,8 @@ void GameLayer::Init()
     test->SetX(0.f);
     test->SetY(0.f);
     test->AddComponent(new RenderComponent(test, "res/sprites/scout.png", 200.f, 200.f));
-    test->AddComponent(new CollisionComponent(test, Shape::GenerateRect(150.f, 100.f)));
+    // test->AddComponent(new CollisionComponent(test, Shape::GenerateRect(150.f, 100.f)));
+    test->AddComponent(new CollisionComponent(test, Shape::GenerateCircle(150.f)));
     GameService::AddEntity(test);
     ////////////////////////////////////////////////////////////
 }
