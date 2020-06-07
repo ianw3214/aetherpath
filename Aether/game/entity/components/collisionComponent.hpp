@@ -41,6 +41,10 @@ public:
 
     inline bool IsValid() const { return m_shape.m_type != Shape::Type::INVALID; }
     const Shape& GetShape() const { return m_shape; }
+
+    // Collision calculations
+    bool Colliding(float x, float y) const;
+    bool Colliding(float x, float y, const Shape& shape) const;
 private:
     Shape m_shape;
 };

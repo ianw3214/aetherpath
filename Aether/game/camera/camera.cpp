@@ -52,12 +52,14 @@ bool Camera::HandleEvent(const Oasis::Event& event)
 {
     if (event.GetType() == Oasis::EventType::MOUSE_PRESS)
     {
+        // Let the mouse event fall through to other layers still
         m_dragging = true;
-        return true;
+        return false;
     }
     if (event.GetType() == Oasis::EventType::MOUSE_RELEASE)
     {
         m_dragging = false;
+        return false;
     }
     if (event.GetType() == Oasis::EventType::MOUSE_MOVE)
     {

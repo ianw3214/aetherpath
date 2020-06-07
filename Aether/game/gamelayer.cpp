@@ -6,6 +6,10 @@
 #include "entity/components/collisionComponent.hpp"
 ////////////////////////////////////////////////////////////
 
+////////////////////////////////////////////////////////////
+#include "game/camera/camera.hpp"
+////////////////////////////////////////////////////////////
+
 Ref<GameLayer> GameService::s_gameLayer = nullptr;
 
 void GameService::AddEntity(Entity * entity)
@@ -43,6 +47,22 @@ void GameLayer::Close()
 
 bool GameLayer::HandleEvent(const Oasis::Event& event)
 {
+    if (event.GetType() == Oasis::EventType::MOUSE_PRESS)
+    {
+        auto mouseEvent = dynamic_cast<const Oasis::MousePressedEvent&>(event);
+        for (Ref<Entity> entity : m_entities)
+        {
+            if (auto component = entity->GetComponent<CollisionComponent>())
+            {
+                const float x = CameraService::ScreenToRawX(mouseEvent.GetX());
+                const float y = CameraService::ScreenToRawY(mouseEvent.GetY());
+                if (component->Colliding(x, y))
+                {
+                    Oasis::Console::AddLog("TEST CLICK");
+                }
+            }
+        }
+    }
     return false;
 }
 
