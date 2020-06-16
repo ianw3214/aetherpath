@@ -20,3 +20,6 @@ Oasis/
 # EXPORTED BUILD
 export/
 *.zip
+
+# ART FILES
+*.aseprite
