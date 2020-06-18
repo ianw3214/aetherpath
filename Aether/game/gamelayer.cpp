@@ -58,7 +58,7 @@ bool GameLayer::HandleEvent(const Oasis::Event& event)
                 const float y = CameraService::ScreenToRawY(mouseEvent.GetY());
                 if (component->Colliding(x, y))
                 {
-                    Oasis::Console::AddLog("TEST CLICK");
+                    Oasis::Console::AddLog("TEST COLLIDE");
                 }
             }
         }

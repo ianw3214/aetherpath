@@ -4,3 +4,5 @@ target_sources(Aether PRIVATE gamelayer.hpp gamelayer.cpp)
 add_subdirectory(entity)
 add_subdirectory(camera)
 add_subdirectory(debug)
+
+add_subdirectory(select)

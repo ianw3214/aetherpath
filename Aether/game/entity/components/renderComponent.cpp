@@ -2,6 +2,7 @@
 #include "game/entity/entity.hpp"
 
 #include "game/camera/camera.hpp"
+#include "game/select/select.hpp"
 
 RenderComponent::RenderComponent(Ref<Entity> entity, const std::string& path, float width, float height)
     : Component(entity)
@@ -32,7 +33,8 @@ void RenderComponent::Update(float delta)
         // Render
         m_sprite.SetPos(screen_x, screen_y);
         m_sprite.SetDimensions(width, height);
-        // m_sprite.SetTint(Oasis::Colours::WHITE, static_cast<float>(Selected()) * 0.2f);
+        bool selected = SelectService::Selected(m_entityRef);
+        m_sprite.SetTint(Oasis::Colours::WHITE, static_cast<float>(selected) * 0.2f);
         Oasis::Renderer::DrawSprite(&m_sprite);
     }
 }
