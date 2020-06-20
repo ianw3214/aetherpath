@@ -11,10 +11,11 @@ public:
     virtual void InitLayers() override
     {
         // Layers are added bottom -> top
+        // TODO: Event handling should also be handled top to bottom
         // AddLayer(new Background());
         AddLayer(new Camera());
-        AddLayer(new SelectLayer());
         AddLayer(new GameLayer());
+        AddLayer(new SelectLayer());
         // AddLayer(new UILayer());
         // AddLayer(new AlertLayer());
         AddLayer(new DebugLayer());
