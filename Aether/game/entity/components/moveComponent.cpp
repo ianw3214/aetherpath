@@ -14,39 +14,29 @@ MoveComponent::MoveComponent(Ref<Entity> entity, float speed)
 
 void MoveComponent::Update(float delta)
 {
-    // TODO: Swap to direct line movement
     if (m_moving)
     {
-        float x = m_entityRef->GetX();
-        float y = m_entityRef->GetY();
-        if (x < m_targetX)
+        const float x_offset = m_targetX - m_entityRef->GetX();
+        const float y_offset = m_targetY - m_entityRef->GetY();
+
+        const float hypotenuse = std::sqrt(x_offset * x_offset + y_offset * y_offset);
+        const float ratio = m_speed / hypotenuse * delta;
+        // Update the actual entity position
+        if (ratio > 1.f)
         {
-            x += delta * m_speed;
-            if (x > m_targetX) x = m_targetX;
-        }
-        if (x > m_targetX)
-        {
-            x -= delta * m_speed;
-            if (x < m_targetX) x = m_targetX;
-        }
-        if (y < m_targetY)
-        {
-            y += delta * m_speed;
-            if (y > m_targetY) y = m_targetY;
-        }
-        if (y > m_targetY)
-        {
-            y -= delta * m_speed;
-            if (y < m_targetY) y = m_targetY;
-        }
-        // Check if we have reached the destination
-        if (x == m_targetX && y == m_targetY)
-        {
+            // The ship has arrived at the target position
+            m_entityRef->SetX(m_targetX);
+            m_entityRef->SetY(m_targetY);
             m_moving = false;
         }
-        // Update the actual entity position
-        m_entityRef->SetX(x);
-        m_entityRef->SetY(y);
+        else
+        {
+            // Move a teeny bit
+            const float move_x = x_offset * ratio;
+            const float move_y = y_offset * ratio;
+            m_entityRef->SetX(m_entityRef->GetX() + move_x);
+            m_entityRef->SetY(m_entityRef->GetY() + move_y);
+        }
     }
 }
 
