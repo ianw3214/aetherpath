@@ -2,8 +2,42 @@
 #include "oasis.h"
 
 #include <vector>
+#include <string>
 
 class Entity;
+
+////////////////////////////////////////////////////////////////
+// Use a custom render system for more control on rendering
+struct RenderItem
+{
+    enum class Type
+    {
+        SPRITE,
+        LINE,
+        CIRCLE,
+        RECT
+    };
+    Type m_type;
+    float m_x;
+    float m_y;
+    int m_z;
+    union {
+        struct {
+            Oasis::Sprite * m_sprite;
+        };
+        struct {
+            float m_x2;
+            float m_y2;
+        };
+        struct {
+            float m_radius;
+        };
+        struct {
+            float m_width;
+            float m_height;
+        };
+    };
+};
 
 ////////////////////////////////////////////////////////////////
 class GameService
@@ -11,6 +45,11 @@ class GameService
 public:
     static void AddEntity(Entity * entity);
     static std::vector<Entity *>& GetEntities();
+
+    static void DrawSprite(Oasis::Sprite * sprite, int z = 0);
+    static void DrawLine(float x1, float y1, float x2, float y2, int z = 0);
+    static void DrawCircle(float x, float y, float radius, int z = 0);
+    static void DrawRect(float x, float y, float w, float h, int z = 0);
 private:
     friend class GameLayer;
     static Ref<GameLayer> s_gameLayer;
@@ -28,6 +67,9 @@ public:
 
     virtual bool HandleEvent(const Oasis::Event& event) override;
     virtual void Update()  override;
+
+    void DrawItem(RenderItem item) { m_renderItems.emplace_back(item); }
 private:
     std::vector<Entity *> m_entities;
+    std::vector<RenderItem> m_renderItems;
 };

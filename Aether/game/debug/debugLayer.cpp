@@ -27,19 +27,23 @@ void DrawCollision(float x, float y, const Shape& shape)
 {
     if (shape.m_type == Shape::Type::RECT)
     {
-        x = CameraService::RawToScreenX(x + shape.m_offsetX);
-        y = CameraService::RawToScreenY(y + shape.m_offsetY);
+        const float x = CameraService::RawToScreenX(x + shape.m_offsetX);
+        const float y = CameraService::RawToScreenY(y + shape.m_offsetY);
         const float width = shape.m_width * CameraService::GetScale();
         const float height = shape.m_height * CameraService::GetScale();
-        Oasis::Renderer::DrawLine(x, y, x, y + height, Oasis::Colours::RED);
-        Oasis::Renderer::DrawLine(x, y, x + width, y, Oasis::Colours::RED);
-        Oasis::Renderer::DrawLine(x + width, y, x + width, y + height, Oasis::Colours::RED);
-        Oasis::Renderer::DrawLine(x, y + height, x + width, y + height, Oasis::Colours::RED);
+        GameService::DrawRect(x, y, width, height, 1);
+        // Oasis::Renderer::DrawLine(x, y, x, y + height, Oasis::Colours::RED);
+        // Oasis::Renderer::DrawLine(x, y, x + width, y, Oasis::Colours::RED);
+        // Oasis::Renderer::DrawLine(x + width, y, x + width, y + height, Oasis::Colours::RED);
+        // Oasis::Renderer::DrawLine(x, y + height, x + width, y + height, Oasis::Colours::RED);
     }
     if (shape.m_type == Shape::Type::CIRCLE)
     {
-        float last_x = CameraService::RawToScreenX(x + shape.m_offsetX + shape.m_radius);
-        float last_y = CameraService::RawToScreenY(y + shape.m_offsetY);
+        float center_x = CameraService::RawToScreenX(x + shape.m_offsetX);
+        float center_y = CameraService::RawToScreenY(y + shape.m_offsetY);
+        float radius = shape.m_radius * CameraService::GetScale();
+        GameService::DrawCircle(center_x, center_y, radius, 1);
+        /*
         constexpr unsigned int granularity = 20;
         for (unsigned int i = 0; i <= granularity; ++i)
         {
@@ -50,6 +54,7 @@ void DrawCollision(float x, float y, const Shape& shape)
             last_x = next_x;
             last_y = next_y;
         }
+        */
     }
 }
 

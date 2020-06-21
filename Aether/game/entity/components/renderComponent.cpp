@@ -1,6 +1,7 @@
 #include "renderComponent.hpp"
 #include "game/entity/entity.hpp"
 
+#include "game/gamelayer.hpp"
 #include "game/camera/camera.hpp"
 #include "game/select/select.hpp"
 
@@ -35,6 +36,7 @@ void RenderComponent::Update(float delta)
         m_sprite.SetDimensions(width, height);
         bool selected = SelectService::Selected(m_entityRef);
         m_sprite.SetTint(Oasis::Colours::WHITE, static_cast<float>(selected) * 0.2f);
-        Oasis::Renderer::DrawSprite(&m_sprite);
+        // TODO: Be able to set the z level of the sprite we want to draw at
+        GameService::DrawSprite(&m_sprite);
     }
 }
