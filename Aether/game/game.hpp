@@ -3,12 +3,13 @@
 #include "gamelayer.hpp"
 #include "camera/camera.hpp"
 #include "select/select.hpp"
+#include "ui/UILayer.hpp"
 #include "debug/debugLayer.hpp"
 
 class Game : public Oasis::GameState
 {
 public:
-    virtual void InitLayers() override
+    virtual void CreateLayers() override
     {
         // Layers are added bottom -> top
         // TODO: Event handling should also be handled top to bottom
@@ -16,7 +17,7 @@ public:
         AddLayer(new Camera());
         AddLayer(new GameLayer());
         AddLayer(new SelectLayer());
-        // AddLayer(new UILayer());
+        AddLayer(new UILayer());
         // AddLayer(new AlertLayer());
         AddLayer(new DebugLayer());
     }
