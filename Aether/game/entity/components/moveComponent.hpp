@@ -10,6 +10,10 @@ public:
     virtual void Update(float delta) override;
 
     void Move(float targetX, float targetY);
+
+    inline bool Moving() const { return m_moving; }
+    inline float GetTargetX() const { return m_targetX; }
+    inline float GetTargetY() const { return m_targetY; }
 private:
     float m_speed;
     bool m_moving;
