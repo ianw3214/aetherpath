@@ -20,10 +20,10 @@ void DebugLayer::Init()
         {
             if (auto resource = selected->GetComponent<ResourceComponent>())
             {
-                ImGui::Text("Population: %f", resource->GetPopulation());
-                ImGui::Text("Oxygen: %f", resource->GetOxygen());
-                ImGui::Text("Fuel: %f", resource->GetFuel());
-                ImGui::Text("Metal: %f", resource->GetMetal());
+                ImGui::Text("Population: %i", resource->GetPopulation());
+                ImGui::Text("Oxygen: %i", resource->GetOxygen());
+                ImGui::Text("Fuel: %i", resource->GetFuel());
+                ImGui::Text("Metal: %i", resource->GetMetal());
             }
         }
 
