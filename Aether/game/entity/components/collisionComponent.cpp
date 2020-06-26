@@ -44,7 +44,6 @@ bool CollisionComponent::Colliding(float x, float y) const
     return false;
 }
 
-// TODO: Maybe refactor duplicate code into separate functions?
 bool CollisionComponent::Colliding(float x, float y, const Shape& shape) const
 {
     const float shape_x = m_entityRef->GetX() + m_shape.m_offsetX;

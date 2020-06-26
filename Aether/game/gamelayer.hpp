@@ -21,6 +21,7 @@ struct RenderItem
     float m_x;
     float m_y;
     int m_z;
+    Oasis::Colour m_colour;
     union {
         struct {
             Oasis::Sprite * m_sprite;
@@ -47,9 +48,13 @@ public:
     static std::vector<Entity *>& GetEntities();
 
     static void DrawSprite(Oasis::Sprite * sprite, int z = 0);
-    static void DrawLine(float x1, float y1, float x2, float y2, int z = 0);
-    static void DrawCircle(float x, float y, float radius, int z = 0);
-    static void DrawRect(float x, float y, float w, float h, int z = 0);
+    static void DrawLine(float x1, float y1, float x2, float y2, int z = 0, const Oasis::Colour& colour = Oasis::Colours::RED);
+    static void DrawCircle(float x, float y, float radius, int z = 0, const Oasis::Colour& colour = Oasis::Colours::RED);
+    static void DrawRect(float x, float y, float w, float h, int z = 0, const Oasis::Colour& colour = Oasis::Colours::RED);
+
+    static void Select(Ref<Entity> entity);
+    static bool Selected(Ref<Entity> entity);
+    static Ref<Entity> GetSelected();
 private:
     friend class GameLayer;
     static Ref<GameLayer> s_gameLayer;
@@ -72,4 +77,6 @@ public:
 private:
     std::vector<Entity *> m_entities;
     std::vector<RenderItem> m_renderItems;
+
+    Ref<Entity> m_selected;
 };

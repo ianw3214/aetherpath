@@ -32,14 +32,14 @@ void DrawCollision(float x, float y, const Shape& shape)
         const float y = CameraService::RawToScreenY(y + shape.m_offsetY);
         const float width = shape.m_width * CameraService::GetScale();
         const float height = shape.m_height * CameraService::GetScale();
-        GameService::DrawRect(x, y, width, height, 1);
+        GameService::DrawRect(x, y, width, height, 1, Oasis::Colours::BLUE);
     }
     if (shape.m_type == Shape::Type::CIRCLE)
     {
         float center_x = CameraService::RawToScreenX(x + shape.m_offsetX);
         float center_y = CameraService::RawToScreenY(y + shape.m_offsetY);
         float radius = shape.m_radius * CameraService::GetScale();
-        GameService::DrawCircle(center_x, center_y, radius, 1);
+        GameService::DrawCircle(center_x, center_y, radius, 1, Oasis::Colours::BLUE);
     }
 }
 
@@ -49,7 +49,7 @@ void DrawMove(float x, float y, float target_x, float target_y)
     y = CameraService::RawToScreenY(y);
     target_x = CameraService::RawToScreenX(target_x);
     target_y = CameraService::RawToScreenY(target_y);
-    GameService::DrawLine(x, y, target_x, target_y);
+    GameService::DrawLine(x, y, target_x, target_y, 1, Oasis::Colours::GREEN);
 }
 
 void DebugLayer::Update() 

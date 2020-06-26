@@ -2,7 +2,6 @@
 
 #include "gamelayer.hpp"
 #include "camera/camera.hpp"
-#include "select/select.hpp"
 #include "ui/UILayer.hpp"
 #include "debug/debugLayer.hpp"
 
@@ -12,11 +11,9 @@ public:
     virtual void CreateLayers() override
     {
         // Layers are added bottom -> top
-        // TODO: Event handling should also be handled top to bottom
         // AddLayer(new Background());
-        AddLayer(new Camera());
         AddLayer(new GameLayer());
-        AddLayer(new SelectLayer());
+        AddLayer(new Camera());
         AddLayer(new UILayer());
         // AddLayer(new AlertLayer());
         AddLayer(new DebugLayer());

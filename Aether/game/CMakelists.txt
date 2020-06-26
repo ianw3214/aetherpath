@@ -5,6 +5,4 @@ add_subdirectory(entity)
 add_subdirectory(camera)
 add_subdirectory(debug)
 
-add_subdirectory(select)
-
 add_subdirectory(ui)
