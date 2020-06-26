@@ -6,11 +6,28 @@
 
 #include "game/entity/components/collisionComponent.hpp"
 #include "game/entity/components/moveComponent.hpp"
+#include "game/entity/components/resourceComponent.hpp"
+
+// TODO: Need to have a better solution for this
+#include "../../Oasis/vendor/imgui/imgui.h"
 
 void DebugLayer::Init()
 {
     Oasis::ImGuiWrapper::AddWindowFunction([&](){
+        ImGui::Begin("Debug");
 
+        if (Ref<Entity> selected = GameService::GetSelected())
+        {
+            if (auto resource = selected->GetComponent<ResourceComponent>())
+            {
+                ImGui::Text("Population: %f", resource->GetPopulation());
+                ImGui::Text("Oxygen: %f", resource->GetOxygen());
+                ImGui::Text("Fuel: %f", resource->GetFuel());
+                ImGui::Text("Metal: %f", resource->GetMetal());
+            }
+        }
+
+        ImGui::End();
     });
 }
 

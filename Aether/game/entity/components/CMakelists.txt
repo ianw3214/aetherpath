@@ -1,3 +1,4 @@
 target_sources(Aether PRIVATE renderComponent.hpp renderComponent.cpp)
 target_sources(Aether PRIVATE collisionComponent.hpp collisionComponent.cpp)
 target_sources(Aether PRIVATE moveComponent.hpp moveComponent.cpp)
+target_sources(Aether PRIVATE resourceComponent.hpp resourceComponent.cpp)

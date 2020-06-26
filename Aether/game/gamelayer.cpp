@@ -5,6 +5,7 @@
 #include "entity/components/renderComponent.hpp"
 #include "entity/components/collisionComponent.hpp"
 #include "entity/components/moveComponent.hpp"
+#include "game/entity/components/resourceComponent.hpp"
 ////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////
@@ -89,6 +90,7 @@ void GameLayer::Init()
     test->AddComponent(new RenderComponent(test, "res/sprites/scout.png", 200.f, 200.f));
     // test->AddComponent(new CollisionComponent(test, Shape::GenerateRect(150.f, 100.f)));
     test->AddComponent(new CollisionComponent(test, Shape::GenerateCircle(150.f)));
+    test->AddComponent(new ResourceComponent(test, 100, 200, 200, 100));
     test->AddComponent(new MoveComponent(test));
     GameService::AddEntity(test);
     ////////////////////////////////////////////////////////////
