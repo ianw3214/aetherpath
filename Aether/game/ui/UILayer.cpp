@@ -14,7 +14,15 @@ UILayer::UILayer()
 
 void UILayer::Init()
 {
-
+    // TODO: Make this less of a hack
+    static bool fonts_loaded = false;
+    if (!fonts_loaded)
+    {
+        fonts_loaded = true;
+        // Initialize font resources only once
+        Oasis::TextRenderer::LoadFont(UI::GetFont(UI::Font::DEFAULT), UI::GetFontPath(UI::Font::DEFAULT), UI::GetFontSize(UI::Font::DEFAULT));
+        Oasis::TextRenderer::LoadFont(UI::GetFont(UI::Font::SMALL), UI::GetFontPath(UI::Font::SMALL), UI::GetFontSize(UI::Font::SMALL));
+    }
 }
 
 void UILayer::Close()
@@ -29,6 +37,7 @@ bool UILayer::HandleEvent(const Oasis::Event& event)
 
 void UILayer::Update() 
 {
+    // TODO: Many hard coded numbers need to be moved to margin/padding
     for (const UIWindow& window : m_windows)
     {
         if (!window.m_show) 
@@ -62,5 +71,20 @@ void UILayer::Update()
             x + 2.f, y + 2.f
         };
         Oasis::Renderer::DrawLineStrip(border, 15, Oasis::Colour{0.6f, 0.8f, 1.f});
+        // Draw the UI elements
+        float curr_y = static_cast<float>(window.m_y);
+        for (const UIElement& element : window.m_elements)
+        {
+            if (element.m_type == UIElement::Type::TEXT)
+            {
+                // TODO: Fix these issues in engine (or maybe not)
+                // y is actually inverted for text renderer
+                // Text drawing as also actually top aligned
+                const float y = static_cast<float>(Oasis::WindowService::WindowHeight()) - curr_y - UI::GetFontSize(element.m_font);
+                Oasis::TextRenderer::DrawString(UI::GetFont(element.m_font), std::string(element.m_text), x + 10, y, Oasis::Colour{0.6f, 0.8f, 1.f});
+                // TODO: Allow things to stay on the same line
+                curr_y += UI::GetFontSize(element.m_font) + 2;
+            }
+        }
     }
 }

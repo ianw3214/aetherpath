@@ -3,7 +3,7 @@
 
 void MainMenu::Init()
 {
-
+    
 }
 
 void MainMenu::Close()

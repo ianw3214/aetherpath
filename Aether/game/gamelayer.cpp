@@ -96,8 +96,16 @@ void GameLayer::Init()
     ////////////////////////////////////////////////////////////
 
     ////////////////////////////////////////////////////////////
-    UIService::AddUIWindow({true, 0, 0, 100, 100});
-    UIService::AddUIWindow({true, 300, 500, 400, 60});
+    std::vector<UIElement> windowElements;
+    UIElement text1 = {UIElement::Type::TEXT};
+    text1.m_font = UI::Font::DEFAULT;
+    text1.m_text = "TEST TEXT";
+    UIElement text2 = {UIElement::Type::TEXT};
+    text2.m_font = UI::Font::SMALL;
+    text2.m_text = "TEST TEXT 2";
+    windowElements.push_back(text1);
+    windowElements.push_back(text2);
+    UIService::AddUIWindow({true, 100, 200, 400, 80, windowElements});
     ////////////////////////////////////////////////////////////
 }
 
