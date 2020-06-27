@@ -48,7 +48,7 @@ void UILayer::Update()
         const float y = static_cast<float>(window.m_y);
         const float w = static_cast<float>(window.m_w);
         const float h = static_cast<float>(window.m_h);
-        Oasis::Renderer::DrawQuad(x, y, w, h, Oasis::Colour{0.f, 0.2f, 0.3f});
+        Oasis::Renderer::DrawQuad(x, y, w, h, window.m_background);
         // Draw the border as a line strip
         float border[30] = {
             // Layer 1
@@ -70,7 +70,7 @@ void UILayer::Update()
             x + 2.f, y + h - 2.f,
             x + 2.f, y + 2.f
         };
-        Oasis::Renderer::DrawLineStrip(border, 15, Oasis::Colour{0.6f, 0.8f, 1.f});
+        Oasis::Renderer::DrawLineStrip(border, 15, window.m_borderColour);
         // Draw the UI elements
         float curr_y = static_cast<float>(window.m_y);
         for (const UIElement& element : window.m_elements)
