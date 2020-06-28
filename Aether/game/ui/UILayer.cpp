@@ -50,27 +50,22 @@ void UILayer::Update()
         const float h = static_cast<float>(window.m_h);
         Oasis::Renderer::DrawQuad(x, y, w, h, window.m_background);
         // Draw the border as a line strip
-        float border[30] = {
-            // Layer 1
-            x, y,
-            x + w, y,
-            x + w, y + h,
-            x, y + h,
-            x, y,
-            // Layer 2
-            x + 1.f, y + 1.f,
-            x + w - 1.f, y + 1.f,
-            x + w - 1.f, y + h - 1.f,
-            x + 1.f, y + h - 1.f,
-            x + 1.f, y + 1.f,
-            // Layer 3
-            x + 2.f, y + 2.f,
-            x + w - 2.f, y + 2.f,
-            x + w - 2.f, y + h - 2.f,
-            x + 2.f, y + h - 2.f,
-            x + 2.f, y + 2.f
-        };
-        Oasis::Renderer::DrawLineStrip(border, 15, window.m_borderColour);
+        float * border = new float[window.m_borderWidth * 5 * 2];
+        for (unsigned int i = 0; i < window.m_borderWidth; ++i)
+        {
+            unsigned int start = i * 5 * 2;
+            border[start++] = x + static_cast<float>(i);
+            border[start++] = y + static_cast<float>(i);
+            border[start++] = x + w - static_cast<float>(i);
+            border[start++] = y + static_cast<float>(i);
+            border[start++] = x + w - static_cast<float>(i);
+            border[start++] = y + h - static_cast<float>(i);
+            border[start++] = x + static_cast<float>(i);
+            border[start++] = y + h - static_cast<float>(i);
+            border[start++] = x + static_cast<float>(i);
+            border[start++] = y + static_cast<float>(i);
+        }
+        Oasis::Renderer::DrawLineStrip(border, window.m_borderWidth * 5, window.m_borderColour);
         // Draw the UI elements
         float curr_y = static_cast<float>(window.m_y);
         for (const UIElement& element : window.m_elements)

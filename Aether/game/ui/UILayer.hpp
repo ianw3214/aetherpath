@@ -64,6 +64,7 @@ struct UIWindow
     // UI Window styling
     Oasis::Colour m_background;
     Oasis::Colour m_borderColour;
+    unsigned int m_borderWidth;
     // UI Elements from top to bottom
     std::vector<UIElement> m_elements;
 };
