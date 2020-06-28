@@ -96,6 +96,18 @@ void GameLayer::Init()
     ////////////////////////////////////////////////////////////
 
     ////////////////////////////////////////////////////////////
+    Entity * test2 = new Entity();
+    test2->SetX(300.f);
+    test2->SetY(300.f);
+    test2->AddComponent(new RenderComponent(test2, "res/sprites/scout.png", 200.f, 200.f));
+    // test->AddComponent(new CollisionComponent(test, Shape::GenerateRect(150.f, 100.f)));
+    test2->AddComponent(new CollisionComponent(test2, Shape::GenerateCircle(150.f)));
+    test2->AddComponent(new ResourceComponent(test2, 100, 200, 200, 100));
+    test2->AddComponent(new MoveComponent(test2));
+    GameService::AddEntity(test2);
+    ////////////////////////////////////////////////////////////
+
+    ////////////////////////////////////////////////////////////
     std::vector<UIElement> windowElements;
     UIElement text1 = {UIElement::Type::TEXT};
     text1.m_font = UI::Font::DEFAULT;
@@ -132,6 +144,17 @@ bool GameLayer::HandleEvent(const Oasis::Event& event)
                 if (component->Colliding(x, y))
                 {
                     over_entity = true;
+					// If we have a selected entity and we're clicking on another, transfer resources
+					if (m_selected && m_selected != entity)
+					{
+						if (auto resource = entity->GetComponent<ResourceComponent>())
+						{
+							if (auto source = m_selected->GetComponent<ResourceComponent>())
+							{
+								source->TransferResources(resource);
+							}
+						}
+					}
                 }
             }
         }

@@ -7,15 +7,20 @@ class ResourceComponent : public Component
 {
 public:
     ResourceComponent(Ref<Entity> entity, int population = 0, int oxygen = 0, int fuel = 0, int metal = 0);
-    // virtual void Update(float delta) override;
+    virtual void Update(float delta) override;
 
     inline int GetPopulation() const { return m_population; }
     inline int GetOxygen() const { return m_oxygen; }
     inline int GetFuel() const { return m_fuel; }
     inline int GetMetal() const { return m_metal; }
+
+    void TransferResources(Ref<ResourceComponent> other);
 private:
     int m_population;
     int m_oxygen;
     int m_fuel;
     int m_metal;
+
+    bool m_transferring;
+    Ref<ResourceComponent> m_transferTarget;
 };
