@@ -192,6 +192,19 @@ bool GameLayer::HandleEvent(const Oasis::Event& event)
         // If we click no entities, then deselect
         m_selected = nullptr;
     }
+    // Deselect the entity if the player presses escape
+    // TODO: in the future this should also bring up a pause menu
+    if (event.GetType() == Oasis::EventType::KEY_PRESSED)
+    {
+        const auto key = dynamic_cast<const Oasis::KeyPressedEvent&>(event);
+        if (key.GetKey() == SDL_SCANCODE_ESCAPE)
+        {
+            if (m_selected)
+            {
+                m_selected = nullptr;
+            }
+        }
+    }
     return false;
 }
 
