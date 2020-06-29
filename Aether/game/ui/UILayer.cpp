@@ -37,6 +37,32 @@ bool UILayer::HandleEvent(const Oasis::Event& event)
 
 void UILayer::Update() 
 {
+    // Keep track of current positions based on alignment to know where to draw next
+    float tl_x = 0.f;
+    float tl_y = 0.f;
+    float tr_x = Oasis::WindowService::WindowWidth();
+    float tr_y = 0.f;
+    float bl_x = 0.f;
+    float bl_y = Oasis::WindowService::WindowHeight();
+    float br_x = Oasis::WindowService::WindowWidth();
+    float br_y = Oasis::WindowService::WindowHeight();
+    auto GetAlignmentX = [&](UIWindow::Alignment a, float w, float h) {
+        return a == UIWindow::Alignment::TOP_LEFT ? tl_x :
+               a == UIWindow::Alignment::TOP_RIGHT ? tr_x - w :
+               a == UIWindow::Alignment::BOTTOM_LEFT ? bl_x : br_x - w;
+    };
+    auto GetAlignmentY = [&](UIWindow::Alignment a, float w, float h) {
+        return a == UIWindow::Alignment::TOP_LEFT ? tl_y :
+               a == UIWindow::Alignment::TOP_RIGHT ? tr_y :
+               a == UIWindow::Alignment::BOTTOM_LEFT ? bl_y - h : br_y - h;
+    };
+    auto UpdateAlignmentCoords = [&](UIWindow::Alignment a, float h) {
+        if (a == UIWindow::Alignment::TOP_LEFT) tl_y += h;
+        if (a == UIWindow::Alignment::TOP_RIGHT) tr_y += h;
+        if (a == UIWindow::Alignment::BOTTOM_LEFT) bl_y -= h;
+        if (a == UIWindow::Alignment::BOTTOM_RIGHT) br_y -= h;
+    };
+
     // TODO: Many hard coded numbers need to be moved to margin/padding
     for (const UIWindow& window : m_windows)
     {
@@ -44,8 +70,8 @@ void UILayer::Update()
         {
             continue;
         }
-        const float x = static_cast<float>(window.m_x);
-        const float y = static_cast<float>(window.m_y);
+        const float x = GetAlignmentX(window.m_alignment, (float) window.m_w, (float) window.m_h);
+        const float y = GetAlignmentY(window.m_alignment, (float) window.m_w, (float) window.m_h);
         const float w = static_cast<float>(window.m_w);
         const float h = static_cast<float>(window.m_h);
         Oasis::Renderer::DrawQuad(x, y, w, h, window.m_background);
@@ -67,7 +93,7 @@ void UILayer::Update()
         }
         Oasis::Renderer::DrawLineStrip(border, window.m_borderWidth * 5, window.m_borderColour);
         // Draw the UI elements
-        float curr_y = static_cast<float>(window.m_y);
+        float curr_y = y;
         for (const UIElement& element : window.m_elements)
         {
             if (element.m_type == UIElement::Type::TEXT)
@@ -81,5 +107,6 @@ void UILayer::Update()
                 curr_y += UI::GetFontSize(element.m_font) + 2;
             }
         }
+        UpdateAlignmentCoords(window.m_alignment, window.m_h);
     }
 }

@@ -55,10 +55,16 @@ struct UIElement
 ////////////////////////////////////////////////////////////////
 struct UIWindow
 {
+    enum class Alignment
+    {
+        TOP_LEFT = 0,
+        TOP_RIGHT,
+        BOTTOM_LEFT,
+        BOTTOM_RIGHT
+    };
+
     bool m_show;
-    // TODO: Use alignments w/ padding and margin instead of direct pos
-    int m_x;
-    int m_y;
+    Alignment m_alignment;
     int m_w;
     int m_h;
     // UI Window styling

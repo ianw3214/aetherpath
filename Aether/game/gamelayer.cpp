@@ -117,7 +117,8 @@ void GameLayer::Init()
     text2.m_text = "TEST TEXT 2";
     windowElements.push_back(text1);
     windowElements.push_back(text2);
-    UIService::AddUIWindow({true, 100, 200, 400, 80, Oasis::Colour{0.f, 0.2f, 0.2f}, Oasis::Colour{0.6f, 0.9f, 1.f}, 2, windowElements});
+    UIService::AddUIWindow({true, UIWindow::Alignment::TOP_RIGHT, 400, 80, Oasis::Colour{0.f, 0.2f, 0.2f}, Oasis::Colour{0.6f, 0.9f, 1.f}, 2, windowElements});
+    UIService::AddUIWindow({true, UIWindow::Alignment::TOP_RIGHT, 400, 80, Oasis::Colour{0.f, 0.2f, 0.2f}, Oasis::Colour{0.6f, 0.9f, 1.f}, 2, windowElements});
     ////////////////////////////////////////////////////////////
 }
 
