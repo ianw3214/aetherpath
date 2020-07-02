@@ -67,6 +67,8 @@ struct UIWindow
     Alignment m_alignment;
     int m_w;
     int m_h;
+    int m_marginH;
+    int m_marginV;
     // UI Window styling
     Oasis::Colour m_background;
     Oasis::Colour m_borderColour;

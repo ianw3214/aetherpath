@@ -46,21 +46,27 @@ void UILayer::Update()
     float bl_y = Oasis::WindowService::WindowHeight();
     float br_x = Oasis::WindowService::WindowWidth();
     float br_y = Oasis::WindowService::WindowHeight();
-    auto GetAlignmentX = [&](UIWindow::Alignment a, float w, float h) {
-        return a == UIWindow::Alignment::TOP_LEFT ? tl_x :
-               a == UIWindow::Alignment::TOP_RIGHT ? tr_x - w :
-               a == UIWindow::Alignment::BOTTOM_LEFT ? bl_x : br_x - w;
+    auto GetAlignmentX = [&](UIWindow window) {
+        const UIWindow::Alignment a = window.m_alignment;
+        const float w = static_cast<float>(window.m_w);
+        const float marginH = static_cast<float>(window.m_marginH);
+        return a == UIWindow::Alignment::TOP_LEFT ? tl_x + marginH :
+               a == UIWindow::Alignment::TOP_RIGHT ? tr_x - w - marginH:
+               a == UIWindow::Alignment::BOTTOM_LEFT ? bl_x + marginH : br_x - w - marginH;
     };
-    auto GetAlignmentY = [&](UIWindow::Alignment a, float w, float h) {
-        return a == UIWindow::Alignment::TOP_LEFT ? tl_y :
-               a == UIWindow::Alignment::TOP_RIGHT ? tr_y :
-               a == UIWindow::Alignment::BOTTOM_LEFT ? bl_y - h : br_y - h;
+    auto GetAlignmentY = [&](UIWindow window) {
+        const UIWindow::Alignment a = window.m_alignment;
+        const float h = static_cast<float>(window.m_h);
+        const float marginV = static_cast<float>(window.m_marginV);
+        return a == UIWindow::Alignment::TOP_LEFT ? tl_y + marginV:
+               a == UIWindow::Alignment::TOP_RIGHT ? tr_y + marginV :
+               a == UIWindow::Alignment::BOTTOM_LEFT ? bl_y - h - marginV : br_y - h - marginV;
     };
-    auto UpdateAlignmentCoords = [&](UIWindow::Alignment a, float h) {
-        if (a == UIWindow::Alignment::TOP_LEFT) tl_y += h;
-        if (a == UIWindow::Alignment::TOP_RIGHT) tr_y += h;
-        if (a == UIWindow::Alignment::BOTTOM_LEFT) bl_y -= h;
-        if (a == UIWindow::Alignment::BOTTOM_RIGHT) br_y -= h;
+    auto UpdateAlignmentCoords = [&](UIWindow::Alignment a, float h, float margin) {
+        if (a == UIWindow::Alignment::TOP_LEFT) tl_y += h + margin;
+        if (a == UIWindow::Alignment::TOP_RIGHT) tr_y += h + margin;
+        if (a == UIWindow::Alignment::BOTTOM_LEFT) bl_y -= h + margin;
+        if (a == UIWindow::Alignment::BOTTOM_RIGHT) br_y -= h + margin;
     };
 
     // TODO: Many hard coded numbers need to be moved to margin/padding
@@ -70,8 +76,8 @@ void UILayer::Update()
         {
             continue;
         }
-        const float x = GetAlignmentX(window.m_alignment, (float) window.m_w, (float) window.m_h);
-        const float y = GetAlignmentY(window.m_alignment, (float) window.m_w, (float) window.m_h);
+        const float x = GetAlignmentX(window);
+        const float y = GetAlignmentY(window);
         const float w = static_cast<float>(window.m_w);
         const float h = static_cast<float>(window.m_h);
         Oasis::Renderer::DrawQuad(x, y, w, h, window.m_background);
@@ -107,6 +113,6 @@ void UILayer::Update()
                 curr_y += UI::GetFontSize(element.m_font) + 2;
             }
         }
-        UpdateAlignmentCoords(window.m_alignment, window.m_h);
+        UpdateAlignmentCoords(window.m_alignment, window.m_h, window.m_marginV);
     }
 }
