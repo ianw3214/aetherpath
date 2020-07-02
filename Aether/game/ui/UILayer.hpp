@@ -36,7 +36,8 @@ struct UIElement
 {
     enum class Type
     {
-        TEXT = 0
+        TEXT = 0,
+        TEXTURE
     };
 
     Type m_type;
@@ -48,6 +49,11 @@ struct UIElement
             char * m_text;
             Oasis::Colour m_colour;
             UI::Font m_font;
+        };
+        struct {
+            char * m_path;
+            int m_width;
+            int m_height;
         };
     };
 };

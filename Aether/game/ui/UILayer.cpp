@@ -112,6 +112,17 @@ void UILayer::Update()
                 // TODO: Allow things to stay on the same line
                 curr_y += UI::GetFontSize(element.m_font) + 2;
             }
+            if (element.m_type == UIElement::Type::TEXTURE)
+            {
+                const float y = curr_y;
+                // TODO: Cache the sprite so we don't have to constantly recreate it
+                Oasis::Sprite sprite(element.m_path);
+                sprite.SetDimensions((float) element.m_width, (float) element.m_height);
+                sprite.SetPos(x + 10, y);
+                Oasis::Renderer::DrawSprite(&sprite);
+                // TODO: Allow things to stay on the same line
+                curr_y += element.m_height + 2;
+            }
         }
         UpdateAlignmentCoords(window.m_alignment, window.m_h, window.m_marginV);
     }
