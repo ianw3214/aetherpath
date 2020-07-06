@@ -102,7 +102,7 @@ void GameLayer::Init()
     test2->AddComponent(new RenderComponent(test2, "res/sprites/scout.png", 200.f, 200.f));
     // test->AddComponent(new CollisionComponent(test, Shape::GenerateRect(150.f, 100.f)));
     test2->AddComponent(new CollisionComponent(test2, Shape::GenerateCircle(150.f)));
-    test2->AddComponent(new ResourceComponent(test2, 100, 200, 200, 100));
+    test2->AddComponent(new ResourceComponent(test2, 0, 0, 0, 0, true));
     test2->AddComponent(new MoveComponent(test2));
     GameService::AddEntity(test2);
     ////////////////////////////////////////////////////////////
@@ -218,6 +218,9 @@ void GameLayer::Update()
 {
     // Microseconds to seconds
     float delta = Oasis::WindowService::GetDeltaF() / 1000000.f;
+    // Update all systems
+    GameWinSystem::Update();
+    // Update all entity components
     for (Ref<Entity> entity : m_entities)
     {
         entity->Update(delta);

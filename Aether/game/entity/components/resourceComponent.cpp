@@ -1,11 +1,33 @@
 #include "resourceComponent.hpp"
 
-ResourceComponent::ResourceComponent(Ref<Entity> entity, int population, int oxygen, int fuel, int metal)
+// TODO: Make this adjustable by game settings
+constexpr unsigned int kWinningPopulation = 10;
+
+unsigned int GameWinSystem::s_totalPopulation = 0;
+
+void GameWinSystem::Update()
+{
+    // First check if we've won the game
+    if (s_totalPopulation >= kWinningPopulation)
+    {
+        Oasis::Console::AddLog("YAY THE GAME IS WON!!!");
+    }
+    // Just clear the population at the start of every update
+    s_totalPopulation = 0;
+}
+
+void GameWinSystem::AddPopulation(unsigned int population)
+{
+    s_totalPopulation += population;
+}
+
+ResourceComponent::ResourceComponent(Ref<Entity> entity, int population, int oxygen, int fuel, int metal, bool countsForGameWin)
     : Component(entity)
     , m_population(population)
     , m_oxygen(oxygen)
     , m_fuel(fuel)
     , m_metal(metal)
+    , m_countsForGameWin(countsForGameWin)
     , m_transferring(false)
     , m_transferTarget(nullptr)
 {
@@ -47,6 +69,10 @@ void ResourceComponent::Update(float delta)
             m_transferring = false;
             m_transferTarget = nullptr;
         }
+    }
+    if (m_countsForGameWin)
+    {
+        GameWinSystem::AddPopulation(m_population);
     }
 }
 
