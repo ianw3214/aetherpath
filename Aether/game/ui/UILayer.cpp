@@ -40,12 +40,12 @@ void UILayer::Update()
     // Keep track of current positions based on alignment to know where to draw next
     float tl_x = 0.f;
     float tl_y = 0.f;
-    float tr_x = Oasis::WindowService::WindowWidth();
+    float tr_x = static_cast<float>(Oasis::WindowService::WindowWidth());
     float tr_y = 0.f;
     float bl_x = 0.f;
-    float bl_y = Oasis::WindowService::WindowHeight();
-    float br_x = Oasis::WindowService::WindowWidth();
-    float br_y = Oasis::WindowService::WindowHeight();
+    float bl_y = static_cast<float>(Oasis::WindowService::WindowHeight());
+    float br_x = static_cast<float>(Oasis::WindowService::WindowWidth());
+    float br_y = static_cast<float>(Oasis::WindowService::WindowHeight());
     auto GetAlignmentX = [&](UIWindow window) {
         const UIWindow::Alignment a = window.m_alignment;
         const float w = static_cast<float>(window.m_w);
@@ -112,6 +112,17 @@ void UILayer::Update()
                 // TODO: Allow things to stay on the same line
                 curr_y += UI::GetFontSize(element.m_font) + 2;
             }
+            if (element.m_type == UIElement::Type::TEXT_DYNAMIC)
+            {
+                // TODO: Fix these issues in engine (or maybe not)
+                // y is actually inverted for text renderer
+                // Text drawing as also actually top aligned
+                std::string text = element.m_textFunction();
+                const float y = static_cast<float>(Oasis::WindowService::WindowHeight()) - curr_y - UI::GetFontSize(element.m_font);
+                Oasis::TextRenderer::DrawString(UI::GetFont(element.m_font), text, x + 10, y, Oasis::Colour{0.6f, 0.8f, 1.f});
+                // TODO: Allow things to stay on the same line
+                curr_y += UI::GetFontSize(element.m_font) + 2;
+            }
             if (element.m_type == UIElement::Type::TEXTURE)
             {
                 const float y = curr_y;
@@ -124,6 +135,6 @@ void UILayer::Update()
                 curr_y += element.m_height + 2;
             }
         }
-        UpdateAlignmentCoords(window.m_alignment, window.m_h, window.m_marginV);
+        UpdateAlignmentCoords(window.m_alignment, (float) window.m_h, (float) window.m_marginV);
     }
 }

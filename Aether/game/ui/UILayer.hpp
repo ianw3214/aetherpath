@@ -2,6 +2,7 @@
 #include "oasis.h"
 
 #include <vector>
+#include <functional>
 
 ////////////////////////////////////////////////////////////////
 namespace UI
@@ -37,6 +38,7 @@ struct UIElement
     enum class Type
     {
         TEXT = 0,
+        TEXT_DYNAMIC,
         TEXTURE
     };
 
@@ -44,9 +46,11 @@ struct UIElement
     union
     {
         struct {
-            // TODO: Allow format strings
-            // probably want to use std::format
             char * m_text;
+            Oasis::Colour m_colour;
+            UI::Font m_font;
+        };
+        struct {
             Oasis::Colour m_colour;
             UI::Font m_font;
         };
@@ -56,6 +60,9 @@ struct UIElement
             int m_height;
         };
     };
+    // This is used for dynamic text ONLY
+    // Can't be put in union because of non-trivial destructor
+    std::function<std::string()> m_textFunction;
 };
 
 ////////////////////////////////////////////////////////////////

@@ -14,6 +14,8 @@
 
 #include "game/camera/camera.hpp"
 
+#include <string>
+
 Ref<GameLayer> GameService::s_gameLayer = nullptr;
 
 void GameService::AddEntity(Entity * entity)
@@ -112,9 +114,20 @@ void GameLayer::Init()
     UIElement text1 = {UIElement::Type::TEXT};
     text1.m_font = UI::Font::DEFAULT;
     text1.m_text = "TEST TEXT";
-    UIElement text2 = {UIElement::Type::TEXT};
+    UIElement text2 = {UIElement::Type::TEXT_DYNAMIC};
     text2.m_font = UI::Font::SMALL;
-    text2.m_text = "TEST TEXT 2";
+    // text2.m_text = "TEST TEXT 2";
+    text2.m_textFunction = [](){
+        Entity * entity = GameService::GetSelected();
+        if (entity)
+        {
+            if (auto resource = entity->GetComponent<ResourceComponent>())
+            {
+                return std::string("POPULATION: ") + std::to_string(resource->GetPopulation());
+            }
+        }
+        return std::string("TEST: ");
+    };
     windowElements.push_back(text1);
     windowElements.push_back(text2);
     UIElement texture = {UIElement::Type::TEXTURE};
