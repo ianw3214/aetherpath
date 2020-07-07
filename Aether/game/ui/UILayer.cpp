@@ -1,5 +1,32 @@
 #include "UILayer.hpp"
 
+UIElement UIElement::CreateText(char * text, Oasis::Colour colour, UI::Font font)
+{
+    UIElement result{UIElement::Type::TEXT};
+    result.m_text = text;
+    result.m_colour = colour;
+    result.m_font = font;
+    return result;
+}
+
+UIElement UIElement::CreateDynamicText(std::function<std::string()> func, Oasis::Colour colour, UI::Font font)
+{
+    UIElement result{UIElement::Type::TEXT_DYNAMIC};
+    result.m_textFunction = func;
+    result.m_colour = colour;
+    result.m_font = font;
+    return result;
+}
+
+UIElement UIElement::CreateTexture(char * path, int width, int height)
+{
+    UIElement result{UIElement::Type::TEXTURE};
+    result.m_path = path;
+    result.m_width = width;
+    result.m_height = height;
+    return result;
+}
+
 Ref<UILayer> UIService::s_UILayer = nullptr;
 
 void UIService::AddUIWindow(UIWindow window)

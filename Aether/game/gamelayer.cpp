@@ -111,13 +111,8 @@ void GameLayer::Init()
 
     ////////////////////////////////////////////////////////////
     std::vector<UIElement> windowElements;
-    UIElement text1 = {UIElement::Type::TEXT};
-    text1.m_font = UI::Font::DEFAULT;
-    text1.m_text = "TEST TEXT";
-    UIElement text2 = {UIElement::Type::TEXT_DYNAMIC};
-    text2.m_font = UI::Font::SMALL;
-    // text2.m_text = "TEST TEXT 2";
-    text2.m_textFunction = [](){
+    UIElement text1 = UIElement::CreateText("TEST TEXT", Oasis::Colours::WHITE, UI::Font::DEFAULT);
+    UIElement text2 = UIElement::CreateDynamicText([](){
         Entity * entity = GameService::GetSelected();
         if (entity)
         {
@@ -127,13 +122,10 @@ void GameLayer::Init()
             }
         }
         return std::string("TEST: ");
-    };
+    }, Oasis::Colours::WHITE, UI::Font::SMALL);
+    UIElement texture = UIElement::CreateTexture("res/icons/colonize.png", 20, 20);
     windowElements.push_back(text1);
     windowElements.push_back(text2);
-    UIElement texture = {UIElement::Type::TEXTURE};
-    texture.m_path = "res/icons/colonize.png";
-    texture.m_width = 20;
-    texture.m_height = 20;
     windowElements.push_back(texture);
     UIService::AddUIWindow({true, UIWindow::Alignment::BOTTOM_RIGHT, 400, 80, 10, 10, Oasis::Colour{0.f, 0.2f, 0.2f}, Oasis::Colour{0.6f, 0.9f, 1.f}, 2, windowElements});
     UIService::AddUIWindow({true, UIWindow::Alignment::BOTTOM_RIGHT, 400, 80, 10, 10, Oasis::Colour{0.f, 0.2f, 0.2f}, Oasis::Colour{0.6f, 0.9f, 1.f}, 2, windowElements});

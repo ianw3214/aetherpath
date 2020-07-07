@@ -63,6 +63,11 @@ struct UIElement
     // This is used for dynamic text ONLY
     // Can't be put in union because of non-trivial destructor
     std::function<std::string()> m_textFunction;
+
+    // Static generator functions
+    static UIElement CreateText(char * text, Oasis::Colour colour, UI::Font font);
+    static UIElement CreateDynamicText(std::function<std::string()> func, Oasis::Colour colour, UI::Font font);
+    static UIElement CreateTexture(char * path, int width, int height);
 };
 
 ////////////////////////////////////////////////////////////////
