@@ -6,3 +6,4 @@ add_subdirectory(camera)
 add_subdirectory(debug)
 
 add_subdirectory(ui)
+add_subdirectory(map)

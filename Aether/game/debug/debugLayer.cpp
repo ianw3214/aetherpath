@@ -45,11 +45,11 @@ void DrawCollision(float x, float y, const Shape& shape)
 {
     if (shape.m_type == Shape::Type::RECT)
     {
-        const float x = CameraService::RawToScreenX(x + shape.m_offsetX);
-        const float y = CameraService::RawToScreenY(y + shape.m_offsetY);
+        const float new_x = CameraService::RawToScreenX(x + shape.m_offsetX);
+        const float new_y = CameraService::RawToScreenY(y + shape.m_offsetY);
         const float width = shape.m_width * CameraService::GetScale();
         const float height = shape.m_height * CameraService::GetScale();
-        GameService::DrawRect(x, y, width, height, 1, Oasis::Colours::BLUE);
+        GameService::DrawRect(new_x, new_y, width, height, 1, Oasis::Colours::BLUE);
     }
     if (shape.m_type == Shape::Type::CIRCLE)
     {

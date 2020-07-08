@@ -12,6 +12,7 @@
 #include "game/ui/UILayer.hpp"
 ////////////////////////////////////////////////////////////
 
+#include "game/map/map.hpp"
 #include "game/camera/camera.hpp"
 
 #include <string>
@@ -86,30 +87,6 @@ GameLayer::GameLayer()
 void GameLayer::Init()
 {
     ////////////////////////////////////////////////////////////
-    Entity * test = new Entity();
-    test->SetX(0.f);
-    test->SetY(0.f);
-    test->AddComponent(new RenderComponent(test, "res/sprites/scout.png", 200.f, 200.f));
-    // test->AddComponent(new CollisionComponent(test, Shape::GenerateRect(150.f, 100.f)));
-    test->AddComponent(new CollisionComponent(test, Shape::GenerateCircle(150.f)));
-    test->AddComponent(new ResourceComponent(test, 100, 200, 200, 100));
-    test->AddComponent(new MoveComponent(test));
-    GameService::AddEntity(test);
-    ////////////////////////////////////////////////////////////
-
-    ////////////////////////////////////////////////////////////
-    Entity * test2 = new Entity();
-    test2->SetX(300.f);
-    test2->SetY(300.f);
-    test2->AddComponent(new RenderComponent(test2, "res/sprites/scout.png", 200.f, 200.f));
-    // test->AddComponent(new CollisionComponent(test, Shape::GenerateRect(150.f, 100.f)));
-    test2->AddComponent(new CollisionComponent(test2, Shape::GenerateCircle(150.f)));
-    test2->AddComponent(new ResourceComponent(test2, 0, 0, 0, 0, true));
-    test2->AddComponent(new MoveComponent(test2));
-    GameService::AddEntity(test2);
-    ////////////////////////////////////////////////////////////
-
-    ////////////////////////////////////////////////////////////
     std::vector<UIElement> windowElements;
     UIElement text1 = UIElement::CreateText("TEST TEXT", Oasis::Colours::WHITE, UI::Font::DEFAULT);
     UIElement text2 = UIElement::CreateDynamicText([](){
@@ -130,6 +107,8 @@ void GameLayer::Init()
     UIService::AddUIWindow({true, UIWindow::Alignment::BOTTOM_RIGHT, 400, 80, 10, 10, Oasis::Colour{0.f, 0.2f, 0.2f}, Oasis::Colour{0.6f, 0.9f, 1.f}, 2, windowElements});
     UIService::AddUIWindow({true, UIWindow::Alignment::BOTTOM_RIGHT, 400, 80, 10, 10, Oasis::Colour{0.f, 0.2f, 0.2f}, Oasis::Colour{0.6f, 0.9f, 1.f}, 2, windowElements});
     ////////////////////////////////////////////////////////////
+
+    Map::GenerateMap();
 }
 
 void GameLayer::Close()
