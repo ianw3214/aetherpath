@@ -4,6 +4,8 @@
 #include <vector>
 #include <string>
 
+#include "game/background/background.hpp"
+
 class Entity;
 
 ////////////////////////////////////////////////////////////////
@@ -79,4 +81,6 @@ private:
     std::vector<RenderItem> m_renderItems;
 
     Ref<Entity> m_selected;
+
+    Background m_background;
 };

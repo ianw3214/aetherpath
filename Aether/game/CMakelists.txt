@@ -7,3 +7,4 @@ add_subdirectory(debug)
 
 add_subdirectory(ui)
 add_subdirectory(map)
+add_subdirectory(background)

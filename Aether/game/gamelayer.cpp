@@ -200,6 +200,9 @@ bool GameLayer::HandleEvent(const Oasis::Event& event)
 
 void GameLayer::Update()
 {
+    // Render the background first
+    m_background.Render();
+
     // Microseconds to seconds
     float delta = Oasis::WindowService::GetDeltaF() / 1000000.f;
     // Update all systems
