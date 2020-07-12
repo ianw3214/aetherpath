@@ -3,9 +3,24 @@
 #include <glm/glm.hpp>
 #include <GL/glew.h>
 
+#include <random>
+
+#include "game/camera/camera.hpp"
+
 Background::Background()
 {
+    std::random_device r;
+    std::default_random_engine el(r());
+    std::uniform_int_distribution<int> position_dist(-5000, 5000);
+    std::uniform_int_distribution<int> parallax_dist(1, 6);
 
+    for (int i = 0; i < num_stars; ++i)
+    {
+        const float x = static_cast<float>(position_dist(el));
+        const float y = static_cast<float>(position_dist(el));
+        const float parallax = static_cast<float>(parallax_dist(el));
+        m_stars.push_back(StarInfo{ x, y, parallax });
+    }
 }
 
 void Background::Render() const
@@ -39,22 +54,15 @@ void Background::DrawStars() const
 	layout.pushFloat(2);
 	va.addBuffer(vb, layout);
 
-    float translations[200];
-    int index = 0;
-    float offset = 0.1f;
-    for (int y =  -10; y < 10; y += 2)
-    {
-        for (int x = -10; x < 10; x += 2)
-        {
-            translations[index++] = (float)x / 10.f + offset;
-			translations[index++] = (float)y / 10.f + offset;
-        }
-    }
     static Shader shader("res/shaders/instanced_vertex.glsl", "res/shaders/instanced_fragment.glsl");
+    shader.setUniform1f("u_screenWidth", (float) Oasis::WindowService::WindowWidth());
+    shader.setUniform1f("u_screenHeight", (float) Oasis::WindowService::WindowHeight());
     // static Shader shader("res/shaders/basic_vertex.glsl", "res/shaders/basic_fragment.glsl");
     for (unsigned int i = 0; i < 100; ++i)
     {
-        shader.setUniform2f("offsets[" + std::to_string(i) + "]", translations[2 * i], translations[2 * i + 1]);
+        const float x = CameraService::RawToScreenX(m_stars[i].x);
+        const float y = CameraService::RawToScreenY(m_stars[i].y);
+        shader.setUniform2f("offsets[" + std::to_string(i) + "]", x, y);
     }
 
     // Bind the texture and draw
