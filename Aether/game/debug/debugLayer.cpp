@@ -69,6 +69,17 @@ void DrawMove(float x, float y, float target_x, float target_y)
     GameService::DrawLine(x, y, target_x, target_y, 1, Oasis::Colours::GREEN);
 }
 
+void DrawResource(ResourceComponent * resource)
+{
+    const Ref<Entity> src = resource->GetEntity();
+    const float x = CameraService::RawToScreenX(src->GetX());
+    const float y = CameraService::RawToScreenY(src->GetY());
+    const Ref<Entity> target = resource->GetTransferTarget()->GetEntity();
+    const float target_x = CameraService::RawToScreenX(target->GetX());
+    const float target_y = CameraService::RawToScreenY(target->GetY());
+    GameService::DrawLine(x, y, target_x, target_y, 1, Oasis::Colour{1.f, 1.f, 0.f});
+}
+
 void DebugLayer::Update() 
 {
     for (Ref<Entity> entity : GameService::GetEntities())
@@ -86,6 +97,14 @@ void DebugLayer::Update()
             if (move->Moving())
             {
                 DrawMove(x, y, move->GetTargetX(), move->GetTargetY());
+            }
+        }
+        // Render transferring resource if exists and transferring
+        if (auto resource = entity->GetComponent<ResourceComponent>())
+        {
+            if (resource->Transferring())
+            {
+                DrawResource(resource);
             }
         }
     }

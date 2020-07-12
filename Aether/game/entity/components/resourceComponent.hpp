@@ -25,6 +25,8 @@ public:
     inline int GetOxygen() const { return m_oxygen; }
     inline int GetFuel() const { return m_fuel; }
     inline int GetMetal() const { return m_metal; }
+    inline bool Transferring() const { return m_transferring; }
+    inline Ref<ResourceComponent> GetTransferTarget() const { return m_transferTarget; }
 
     void TransferResources(Ref<ResourceComponent> other);
 private:
