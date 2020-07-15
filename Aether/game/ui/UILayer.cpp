@@ -126,6 +126,7 @@ void UILayer::Update()
         }
         Oasis::Renderer::DrawLineStrip(border, window.m_borderWidth * 5, window.m_borderColour);
         // Draw the UI elements
+        // TODO: Text drawing actually goes a little bit over the line for letters like p/y - FIX
         float curr_y = y;
         for (const UIElement& element : window.m_elements)
         {
@@ -134,7 +135,7 @@ void UILayer::Update()
                 // TODO: Fix these issues in engine (or maybe not)
                 // y is actually inverted for text renderer
                 // Text drawing as also actually top aligned
-                const float y = static_cast<float>(Oasis::WindowService::WindowHeight()) - curr_y - UI::GetFontSize(element.m_font);
+                const float y = curr_y + UI::GetFontSize(element.m_font);
                 Oasis::TextRenderer::DrawString(UI::GetFont(element.m_font), std::string(element.m_text), x + 10, y, Oasis::Colour{0.6f, 0.8f, 1.f});
                 // TODO: Allow things to stay on the same line
                 curr_y += UI::GetFontSize(element.m_font) + 2;
@@ -145,7 +146,7 @@ void UILayer::Update()
                 // y is actually inverted for text renderer
                 // Text drawing as also actually top aligned
                 std::string text = element.m_textFunction();
-                const float y = static_cast<float>(Oasis::WindowService::WindowHeight()) - curr_y - UI::GetFontSize(element.m_font);
+                const float y = curr_y + UI::GetFontSize(element.m_font);
                 Oasis::TextRenderer::DrawString(UI::GetFont(element.m_font), text, x + 10, y, Oasis::Colour{0.6f, 0.8f, 1.f});
                 // TODO: Allow things to stay on the same line
                 curr_y += UI::GetFontSize(element.m_font) + 2;
