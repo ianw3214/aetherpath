@@ -9,7 +9,7 @@ UIElement UIElement::CreateText(char * text, Oasis::Colour colour, UI::Font font
     return result;
 }
 
-UIElement UIElement::CreateDynamicText(std::function<std::string()> func, Oasis::Colour colour, UI::Font font)
+UIElement UIElement::CreateDynamicText(std::function<std::string(UIWindow&)> func, Oasis::Colour colour, UI::Font font)
 {
     UIElement result{UIElement::Type::TEXT_DYNAMIC};
     result.m_textFunction = func;
@@ -50,6 +50,9 @@ void UILayer::Init()
         Oasis::TextRenderer::LoadFont(UI::GetFont(UI::Font::DEFAULT), UI::GetFontPath(UI::Font::DEFAULT), UI::GetFontSize(UI::Font::DEFAULT));
         Oasis::TextRenderer::LoadFont(UI::GetFont(UI::Font::SMALL), UI::GetFontPath(UI::Font::SMALL), UI::GetFontSize(UI::Font::SMALL));
     }
+
+    // ADD UI
+    AddResourceUI();
 }
 
 void UILayer::Close()
@@ -97,10 +100,19 @@ void UILayer::Update()
     };
 
     // TODO: Many hard coded numbers need to be moved to margin/padding
-    for (const UIWindow& window : m_windows)
+    for (UIWindow& window : m_windows)
     {
         if (!window.m_show) 
         {
+            // TODO: This is pretty hard coded but I don't have a better solution
+            // Still update dynamic text even if not shown
+            for (const UIElement& element : window.m_elements)
+            {
+                if (element.m_type == UIElement::Type::TEXT_DYNAMIC)
+                {
+                    element.m_textFunction(window);
+                }
+            }
             continue;
         }
         const float x = GetAlignmentX(window);
@@ -145,7 +157,7 @@ void UILayer::Update()
                 // TODO: Fix these issues in engine (or maybe not)
                 // y is actually inverted for text renderer
                 // Text drawing as also actually top aligned
-                std::string text = element.m_textFunction();
+                std::string text = element.m_textFunction(window);
                 const float y = curr_y + UI::GetFontSize(element.m_font);
                 Oasis::TextRenderer::DrawString(UI::GetFont(element.m_font), text, x + 10, y, Oasis::Colour{0.6f, 0.8f, 1.f});
                 // TODO: Allow things to stay on the same line

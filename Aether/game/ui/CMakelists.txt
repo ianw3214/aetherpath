@@ -1,1 +1,5 @@
 target_sources(Aether PRIVATE UILayer.hpp UILayer.cpp)
+
+target_sources(Aether PRIVATE
+    UIResource.cpp
+)

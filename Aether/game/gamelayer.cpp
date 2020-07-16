@@ -89,7 +89,7 @@ void GameLayer::Init()
     ////////////////////////////////////////////////////////////
     std::vector<UIElement> windowElements;
     UIElement text1 = UIElement::CreateText("TEST TEXTyyyppp", Oasis::Colours::WHITE, UI::Font::DEFAULT);
-    UIElement text2 = UIElement::CreateDynamicText([](){
+    UIElement text2 = UIElement::CreateDynamicText([](UIWindow& window){
         Entity * entity = GameService::GetSelected();
         if (entity)
         {

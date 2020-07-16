@@ -15,18 +15,6 @@ void DebugLayer::Init()
 {
     Oasis::ImGuiWrapper::AddWindowFunction([&](){
         ImGui::Begin("Debug");
-
-        if (Ref<Entity> selected = GameService::GetSelected())
-        {
-            if (auto resource = selected->GetComponent<ResourceComponent>())
-            {
-                ImGui::Text("Population: %i", resource->GetPopulation());
-                ImGui::Text("Oxygen: %i", resource->GetOxygen());
-                ImGui::Text("Fuel: %i", resource->GetFuel());
-                ImGui::Text("Metal: %i", resource->GetMetal());
-            }
-        }
-
         ImGui::End();
     });
 }
