@@ -11,8 +11,8 @@ Background::Background()
 {
     std::random_device r;
     std::default_random_engine el(r());
-    std::uniform_int_distribution<int> position_dist(-5000, 5000);
-    std::uniform_int_distribution<int> parallax_dist(1, 6);
+    std::uniform_int_distribution<int> position_dist(-20000, 20000);
+    std::uniform_int_distribution<int> parallax_dist(2, 6);
 
     for (int i = 0; i < num_stars; ++i)
     {
@@ -37,13 +37,13 @@ void Background::Render() const
 void Background::DrawStars() const
 {
     float positions[32] = {
-		-0.05f, -0.05f, 0.f, 0.f,
-		-0.05f,  0.05f, 0.f, 1.f,
-        0.05f,  0.05f, 1.f, 1.f,
+		-3.f, -3.f, 0.f, 0.f,
+		-3.f,  3.f, 0.f, 1.f,
+        3.f,  3.f, 1.f, 1.f,
 
-        -0.05f, -0.05f, 0.f, 0.f,
-		0.05f, -0.05f, 1.f, 0.f,
-		0.05f,  0.05f, 1.f, 1.f
+        -3.f, -3.f, 0.f, 0.f,
+		3.f, -3.f, 1.f, 0.f,
+		3.f,  3.f, 1.f, 1.f
 	};
 
     VertexArray		va;
@@ -54,15 +54,20 @@ void Background::DrawStars() const
 	layout.pushFloat(2);
 	va.addBuffer(vb, layout);
 
-    static Shader shader("res/shaders/instanced_vertex.glsl", "res/shaders/instanced_fragment.glsl");
+    static Shader shader("res/shaders/star_vertex.glsl", "res/shaders/star_fragment.glsl");
     shader.setUniform1f("u_screenWidth", (float) Oasis::WindowService::WindowWidth());
     shader.setUniform1f("u_screenHeight", (float) Oasis::WindowService::WindowHeight());
+    shader.setUniform1f("u_scale", CameraService::GetScale());
+    shader.setUniform1f("u_cameraX", CameraService::GetX());
+    shader.setUniform1f("u_cameraY", CameraService::GetY());
     // static Shader shader("res/shaders/basic_vertex.glsl", "res/shaders/basic_fragment.glsl");
     for (unsigned int i = 0; i < 100; ++i)
     {
-        const float x = CameraService::RawToScreenX(m_stars[i].x);
-        const float y = CameraService::RawToScreenY(m_stars[i].y);
+        const float x = m_stars[i].x;
+        const float y = m_stars[i].y;
         shader.setUniform2f("offsets[" + std::to_string(i) + "]", x, y);
+        const float parallax = m_stars[i].scale;
+        shader.setUniform1f("parallaxes[" + std::to_string(i) + "]", parallax);
     }
 
     // Bind the texture and draw
