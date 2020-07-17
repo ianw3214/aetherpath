@@ -20,7 +20,7 @@ void MoveComponent::Update(float delta)
         const float y_offset = m_targetY - m_entityRef->GetY();
 
         const float hypotenuse = std::sqrt(x_offset * x_offset + y_offset * y_offset);
-        const float ratio = m_speed / hypotenuse * (delta / 1000.f);
+        const float ratio = m_speed / hypotenuse * (delta * 1000.f);
         // Update the actual entity position
         if (ratio > 1.f)
         {

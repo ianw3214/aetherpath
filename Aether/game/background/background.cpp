@@ -7,8 +7,15 @@
 
 #include "game/camera/camera.hpp"
 
+const std::string background_path = "res/sprites/background_backup.png";
+
 Background::Background()
+    : m_backgroundSprite(background_path)
 {
+    // Initialize background sprite
+    m_backgroundSprite.SetDimensions(1280.f, 960.f);
+    m_backgroundSprite.SetPos(0.f, 0.f);
+
     std::random_device r;
     std::default_random_engine el(r());
     std::uniform_int_distribution<int> position_dist(-20000, 20000);
@@ -25,11 +32,7 @@ Background::Background()
 
 void Background::Render() const
 {
-    // TODO: Cache the sprite
-    static Oasis::Sprite sprite(path);
-    sprite.SetDimensions(1280.f, 960.f);
-    sprite.SetPos(0.f, 0.f);
-    Oasis::Renderer::DrawSprite(&sprite);
+    Oasis::Renderer::DrawSprite(&m_backgroundSprite);
 
     DrawStars();
 }
