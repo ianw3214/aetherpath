@@ -65,10 +65,21 @@ struct UIElement
     // Can't be put in union because of non-trivial destructor
     std::function<std::string(UIWindow&)> m_textFunction;
 
+    // This is used to turn a UI element into a button
+    bool m_isButton;
+    std::function<void()> m_buttonFunction;
+
     // Static generator functions
     static UIElement CreateText(char * text, Oasis::Colour colour, UI::Font font);
     static UIElement CreateDynamicText(std::function<std::string(UIWindow&)> func, Oasis::Colour colour, UI::Font font);
     static UIElement CreateTexture(char * path, int width, int height);
+
+    // cache x/y values to avoid re-calculation when handling events
+    float m_cachedX;
+    float m_cachedY;
+    // These need to be cached for text drawing
+    float m_cachedW;
+    float m_cachedH;
 };
 
 ////////////////////////////////////////////////////////////////
@@ -94,6 +105,10 @@ struct UIWindow
     unsigned int m_borderWidth;
     // UI Elements from top to bottom
     std::vector<UIElement> m_elements;
+
+    // cache x/y values to avoid re-calculation when handling events
+    float m_cachedX;
+    float m_cachedY;
 };
 
 ////////////////////////////////////////////////////////////////

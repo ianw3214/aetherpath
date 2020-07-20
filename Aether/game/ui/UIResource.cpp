@@ -71,4 +71,23 @@ void UILayer::AddResourceUI()
         }, Oasis::Colours::WHITE, UI::Font::DEFAULT));
         UIService::AddUIWindow(window);
     }
+
+    {   // TEST WINDOW FOR BUTTONS
+        UIWindow window{true, UIWindow::Alignment::TOP_RIGHT, 300, 300, 10, 10, Oasis::Colour{0.f, 0.f, 0.f}, Oasis::Colour{1.f, 1.f, 1.f}, 2};
+        auto element = UIElement::CreateText("TEST BUTTON", Oasis::Colours::WHITE, UI::Font::DEFAULT);
+        element.m_isButton = true;
+        element.m_buttonFunction = [](){
+            Oasis::Console::AddLog("TEST BUTTON PRESSED");
+        };
+        window.m_elements.push_back(element);
+
+        auto element2 = UIElement::CreateTexture("res/icons/colonize.png", 100, 100);
+        element2.m_isButton = true;
+        element2.m_buttonFunction = [](){
+            Oasis::Console::AddLog("TEST BUTTON 2 PRESSED");
+        };
+        window.m_elements.push_back(element2);
+
+        UIService::AddUIWindow(window);
+    }
 }

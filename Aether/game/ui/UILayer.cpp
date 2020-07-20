@@ -6,6 +6,7 @@ UIElement UIElement::CreateText(char * text, Oasis::Colour colour, UI::Font font
     result.m_text = text;
     result.m_colour = colour;
     result.m_font = font;
+    result.m_isButton = false;
     return result;
 }
 
@@ -15,6 +16,7 @@ UIElement UIElement::CreateDynamicText(std::function<std::string(UIWindow&)> fun
     result.m_textFunction = func;
     result.m_colour = colour;
     result.m_font = font;
+    result.m_isButton = false;
     return result;
 }
 
@@ -24,6 +26,7 @@ UIElement UIElement::CreateTexture(char * path, int width, int height)
     result.m_path = path;
     result.m_width = width;
     result.m_height = height;
+    result.m_isButton = false;
     return result;
 }
 
@@ -62,6 +65,38 @@ void UILayer::Close()
 
 bool UILayer::HandleEvent(const Oasis::Event& event)
 {
+    if (event.GetType() == Oasis::EventType::MOUSE_PRESS)
+    {
+        const auto& mouse = dynamic_cast<const Oasis::MousePressedEvent&>(event);
+        const float x = static_cast<float>(mouse.GetX());
+        // TODO: This is flipped since the engine isn't consistent... :(
+        const float y = static_cast<float>(Oasis::WindowService::WindowHeight() - mouse.GetY());
+        for (UIWindow& window : m_windows)
+        {
+            if (window.m_cachedX < x && window.m_cachedX + (float) window.m_w > x)
+            {
+                if (window.m_cachedY < y && window.m_cachedY + (float) window.m_h > y)
+                {
+                    for (UIElement& element : window.m_elements)
+                    {
+                        if (!element.m_isButton)
+                        {
+                            continue;
+                        }
+                        if (element.m_cachedX < x && element.m_cachedX + element.m_cachedW > x)
+                        {
+                            if (element.m_cachedY < y && element.m_cachedY + element.m_cachedH > y)
+                            {
+                                element.m_buttonFunction();
+                                return true;
+                            }
+                        }
+                    }
+                    return false;
+                }
+            }
+        }
+    }
     return false;
 }
 
@@ -117,6 +152,10 @@ void UILayer::Update()
         }
         const float x = GetAlignmentX(window);
         const float y = GetAlignmentY(window);
+        {   // Update cached values
+            window.m_cachedX = x;
+            window.m_cachedY = y;
+        }
         const float w = static_cast<float>(window.m_w);
         const float h = static_cast<float>(window.m_h);
         Oasis::Renderer::DrawQuad(x, y, w, h, window.m_background);
@@ -140,7 +179,7 @@ void UILayer::Update()
         // Draw the UI elements
         // TODO: Text drawing actually goes a little bit over the line for letters like p/y - FIX
         float curr_y = y;
-        for (const UIElement& element : window.m_elements)
+        for (UIElement& element : window.m_elements)
         {
             if (element.m_type == UIElement::Type::TEXT)
             {
@@ -148,7 +187,13 @@ void UILayer::Update()
                 // y is actually inverted for text renderer
                 // Text drawing as also actually top aligned
                 const float y = curr_y + UI::GetFontSize(element.m_font);
-                Oasis::TextRenderer::DrawString(UI::GetFont(element.m_font), std::string(element.m_text), x + 10, y, Oasis::Colour{0.6f, 0.8f, 1.f});
+                const int length = Oasis::TextRenderer::DrawString(UI::GetFont(element.m_font), std::string(element.m_text), x + 10, y, Oasis::Colour{0.6f, 0.8f, 1.f});
+                {   // Update cached values
+                    element.m_cachedX = x + 10;
+                    element.m_cachedY = curr_y; // Text is drawn from a 'bottom' line so need to use original y
+                    element.m_cachedW = (float) length;
+                    element.m_cachedH = UI::GetFontSize(element.m_font);
+                }
                 // TODO: Allow things to stay on the same line
                 curr_y += UI::GetFontSize(element.m_font) + 2;
             }
@@ -159,7 +204,13 @@ void UILayer::Update()
                 // Text drawing as also actually top aligned
                 std::string text = element.m_textFunction(window);
                 const float y = curr_y + UI::GetFontSize(element.m_font);
-                Oasis::TextRenderer::DrawString(UI::GetFont(element.m_font), text, x + 10, y, Oasis::Colour{0.6f, 0.8f, 1.f});
+                const int length = Oasis::TextRenderer::DrawString(UI::GetFont(element.m_font), text, x + 10, y, Oasis::Colour{0.6f, 0.8f, 1.f});
+                {   // Update cached values
+                    element.m_cachedX = x + 10;
+                    element.m_cachedY = curr_y;
+                    element.m_cachedW = (float) length;
+                    element.m_cachedH = UI::GetFontSize(element.m_font);
+                }
                 // TODO: Allow things to stay on the same line
                 curr_y += UI::GetFontSize(element.m_font) + 2;
             }
@@ -173,6 +224,12 @@ void UILayer::Update()
                 Oasis::Renderer::DrawSprite(&sprite);
                 // TODO: Allow things to stay on the same line
                 curr_y += element.m_height + 2;
+                {   // Update cached values
+                    element.m_cachedX = x + 10;
+                    element.m_cachedY = y;
+                    element.m_cachedW = (float) element.m_width;
+                    element.m_cachedH = (float) element.m_height;
+                }
             }
         }
         UpdateAlignmentCoords(window.m_alignment, (float) window.m_h, (float) window.m_marginV);
