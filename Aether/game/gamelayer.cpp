@@ -219,16 +219,48 @@ void GameLayer::Update()
     });
     for (const RenderItem& item : m_renderItems)
     {
+        const float x = item.m_x;
+        const float y = item.m_y;
+        
         switch(item.m_type)
         {
             case RenderItem::Type::SPRITE: {
+                // TODO: Consider moving this into engine code?
+                // Skip rendering if the sprite is off screen
+                if (x + item.m_width < 0 || x > Oasis::WindowService::WindowWidth())
+                {
+                    if (y + item.m_height < 0 || y > Oasis::WindowService::WindowHeight())
+                    {
+                        continue;
+                    }
+                }
                 // Assume the x/y and other things are already set in the sprite
                 Oasis::Renderer::DrawSprite(item.m_sprite);
             } break;
             case RenderItem::Type::LINE: {
+                // Skip rendering if the sprite is off screen
+                const float width = Oasis::WindowService::WindowWidth();
+                const float height = Oasis::WindowService::WindowHeight();
+                if ((x < 0 && item.m_x2 < 0) || (x > width && item.m_x2 > width))
+                {
+                    continue;
+                }
+                if ((y < 0 && item.m_y2 < 0) || (y > height && item.m_y2 > height))
+                {
+                    continue;
+                }
                 Oasis::Renderer::DrawLine(item.m_x, item.m_y, item.m_x2, item.m_y2, item.m_colour);
             } break;
             case RenderItem::Type::CIRCLE: {
+                // Skip rendering if the sprite is off screen
+                if (x + item.m_radius < 0 || x - item.m_radius > Oasis::WindowService::WindowWidth())
+                {
+                    if (y + item.m_radius < 0 || y - item.m_radius > Oasis::WindowService::WindowHeight())
+                    {
+                        continue;
+                    }
+                }
+                // TODO: Can probably change this to a line strip
                 float last_x = item.m_x + item.m_radius;
                 float last_y = item.m_y;
                 constexpr unsigned int granularity = 20;
@@ -243,10 +275,15 @@ void GameLayer::Update()
                 }
             } break;
             case RenderItem::Type::RECT: {
-                const float x = item.m_x;
-                const float y = item.m_y;
                 const float width = item.m_width;
                 const float height = item.m_height;
+                if (x + width< 0 || x > Oasis::WindowService::WindowWidth())
+                {
+                    if (y + height < 0 || y > Oasis::WindowService::WindowHeight())
+                    {
+                        continue;
+                    }
+                }
                 Oasis::Renderer::DrawLine(x, y, x, y + height, item.m_colour);
                 Oasis::Renderer::DrawLine(x, y, x + width, y, item.m_colour);
                 Oasis::Renderer::DrawLine(x + width, y, x + width, y + height, item.m_colour);
