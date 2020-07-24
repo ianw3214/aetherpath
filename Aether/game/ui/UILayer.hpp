@@ -10,24 +10,28 @@ namespace UI
     enum class Font
     {
         DEFAULT = 0,
-        SMALL
+        SMALL,
+        NONE
     };
     inline int GetFontSize(Font font)
     {
         if (font == Font::DEFAULT) return 32;
         if (font == Font::SMALL) return 16;
+        if (font == Font::NONE) return 0;
         return 0;
     }
     inline std::string GetFont(Font font)
     {
         if (font == Font::DEFAULT) return "default";
         if (font == Font::SMALL) return "small";
+        if (font == Font::NONE) return "none";
         return "";
     }
     inline std::string GetFontPath(Font font)
     {
         if (font == Font::DEFAULT) return "res/fonts/ProggyClean.ttf";
         if (font == Font::SMALL) return "res/fonts/ProggyClean.ttf";
+        if (font == Font::SMALL) return "";
         return "";
     }
 }
@@ -138,4 +142,5 @@ private:
     // HELPER FUNCTIONS
     void AddResourceUI();
     void AddShipUI();
+    void AddActionsUI();
 };

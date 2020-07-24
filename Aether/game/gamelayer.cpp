@@ -74,6 +74,19 @@ Ref<Entity> GameService::GetSelected()
     return s_gameLayer->m_selected;
 }
 
+void GameService::SetMoveAction()
+{
+    OASIS_TRAP(s_gameLayer->m_selected);
+    s_gameLayer->m_userActionState = GameLayer::UserActionState::MOVE;
+}
+
+void GameService::SetTransferAction()
+{
+    OASIS_TRAP(s_gameLayer->m_selected);
+    s_gameLayer->m_userActionState = GameLayer::UserActionState::TRANSFER;
+}
+
+
 //////////////////////////////////////////////////
 // Game layer
 //////////////////////////////////////////////////
@@ -86,28 +99,6 @@ GameLayer::GameLayer()
 
 void GameLayer::Init()
 {
-    ////////////////////////////////////////////////////////////
-    std::vector<UIElement> windowElements;
-    UIElement text1 = UIElement::CreateText("TEST TEXTyyyppp", Oasis::Colours::WHITE, UI::Font::DEFAULT);
-    UIElement text2 = UIElement::CreateDynamicText([](UIWindow& window){
-        Entity * entity = GameService::GetSelected();
-        if (entity)
-        {
-            if (auto resource = entity->GetComponent<ResourceComponent>())
-            {
-                return std::string("POPULATION: ") + std::to_string(resource->GetPopulation());
-            }
-        }
-        return std::string("TEST: ");
-    }, Oasis::Colours::WHITE, UI::Font::SMALL);
-    UIElement texture = UIElement::CreateTexture("res/icons/colonize.png", 20, 20);
-    windowElements.push_back(text1);
-    windowElements.push_back(text2);
-    windowElements.push_back(texture);
-    UIService::AddUIWindow({true, UIWindow::Alignment::BOTTOM_RIGHT, 400, 80, 10, 10, Oasis::Colour{0.f, 0.2f, 0.2f}, Oasis::Colour{0.6f, 0.9f, 1.f}, 2, windowElements});
-    UIService::AddUIWindow({true, UIWindow::Alignment::BOTTOM_RIGHT, 400, 80, 10, 10, Oasis::Colour{0.f, 0.2f, 0.2f}, Oasis::Colour{0.6f, 0.9f, 1.f}, 2, windowElements});
-    ////////////////////////////////////////////////////////////
-
     Map::GenerateMap();
 }
 
@@ -135,7 +126,7 @@ bool GameLayer::HandleEvent(const Oasis::Event& event)
                 {
                     over_entity = true;
 					// If we have a selected entity and we're clicking on another, transfer resources
-					if (m_selected && m_selected != entity)
+					if (m_selected && m_selected != entity && m_userActionState == UserActionState::TRANSFER)
 					{
 						if (auto resource = entity->GetComponent<ResourceComponent>())
 						{
@@ -149,7 +140,7 @@ bool GameLayer::HandleEvent(const Oasis::Event& event)
             }
         }
         // Move the selected entity if we are not clicking on another entity
-        if (!over_entity)
+        if (!over_entity && m_userActionState == UserActionState::MOVE)
         {
             if (Ref<Entity> entity = m_selected)
             {
@@ -159,6 +150,8 @@ bool GameLayer::HandleEvent(const Oasis::Event& event)
                 }
             }
         }
+        // No matter what we do, revert the user action state to none to reset
+        m_userActionState = UserActionState::NONE;
         // NOTE: Not sure if I like having selection included in game layer yet
         // Handle selection of an entity if the click wasn't already handled
         for (Ref<Entity> entity : GameService::GetEntities())
@@ -239,8 +232,8 @@ void GameLayer::Update()
             } break;
             case RenderItem::Type::LINE: {
                 // Skip rendering if the sprite is off screen
-                const float width = Oasis::WindowService::WindowWidth();
-                const float height = Oasis::WindowService::WindowHeight();
+                const float width = static_cast<float>(Oasis::WindowService::WindowWidth());
+                const float height = static_cast<float>(Oasis::WindowService::WindowHeight());
                 if ((x < 0 && item.m_x2 < 0) || (x > width && item.m_x2 > width))
                 {
                     continue;

@@ -57,6 +57,7 @@ void UILayer::Init()
     // ADD UI
     AddResourceUI();
     AddShipUI();
+    AddActionsUI();
 }
 
 void UILayer::Close()
@@ -193,7 +194,7 @@ void UILayer::Update()
                     element.m_cachedX = x + 10;
                     element.m_cachedY = curr_y; // Text is drawn from a 'bottom' line so need to use original y
                     element.m_cachedW = (float) length;
-                    element.m_cachedH = UI::GetFontSize(element.m_font);
+                    element.m_cachedH = (float) UI::GetFontSize(element.m_font);
                 }
                 // TODO: Allow things to stay on the same line
                 curr_y += UI::GetFontSize(element.m_font) + 2;
@@ -210,7 +211,7 @@ void UILayer::Update()
                     element.m_cachedX = x + 10;
                     element.m_cachedY = curr_y;
                     element.m_cachedW = (float) length;
-                    element.m_cachedH = UI::GetFontSize(element.m_font);
+                    element.m_cachedH = (float) UI::GetFontSize(element.m_font);
                 }
                 // TODO: Allow things to stay on the same line
                 curr_y += UI::GetFontSize(element.m_font) + 2;

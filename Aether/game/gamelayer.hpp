@@ -57,6 +57,9 @@ public:
     static void Select(Ref<Entity> entity);
     static bool Selected(Ref<Entity> entity);
     static Ref<Entity> GetSelected();
+
+    static void SetMoveAction();
+    static void SetTransferAction();
 private:
     friend class GameLayer;
     static Ref<GameLayer> s_gameLayer;
@@ -81,6 +84,13 @@ private:
     std::vector<RenderItem> m_renderItems;
 
     Ref<Entity> m_selected;
+    enum class UserActionState
+    {
+        NONE = 0,
+        MOVE,
+        TRANSFER
+    };
+    UserActionState m_userActionState;
 
     Background m_background;
 };
