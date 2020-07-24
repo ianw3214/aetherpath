@@ -137,4 +137,5 @@ private:
 
     // HELPER FUNCTIONS
     void AddResourceUI();
+    void AddShipUI();
 };

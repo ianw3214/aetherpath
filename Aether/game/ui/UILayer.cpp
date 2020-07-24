@@ -56,6 +56,7 @@ void UILayer::Init()
 
     // ADD UI
     AddResourceUI();
+    AddShipUI();
 }
 
 void UILayer::Close()
