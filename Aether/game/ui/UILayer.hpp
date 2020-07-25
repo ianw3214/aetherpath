@@ -143,4 +143,5 @@ private:
     void AddResourceUI();
     void AddShipUI();
     void AddActionsUI();
+    void AddInfoUI();
 };

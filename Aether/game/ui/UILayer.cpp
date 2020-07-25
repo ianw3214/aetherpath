@@ -55,6 +55,7 @@ void UILayer::Init()
     }
 
     // ADD UI
+    AddInfoUI();
     AddResourceUI();
     AddShipUI();
     AddActionsUI();

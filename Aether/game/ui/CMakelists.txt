@@ -4,4 +4,5 @@ target_sources(Aether PRIVATE
     UIResource.cpp
     UIShip.cpp
     UIActions.cpp
+    UIInfo.cpp
 )
