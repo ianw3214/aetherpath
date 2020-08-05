@@ -253,19 +253,18 @@ void GameLayer::Update()
                         continue;
                     }
                 }
-                // TODO: Can probably change this to a line strip
-                float last_x = item.m_x + item.m_radius;
-                float last_y = item.m_y;
+                // Draw the circle as a line strip
                 constexpr unsigned int granularity = 20;
-                for (unsigned int i = 0; i <= granularity; ++i)
+                float * points = new float[(granularity + 1) * 2];
+                points[0] = item.m_x + item.m_radius;
+                points[1] = item.m_y;
+                for (unsigned int i = 1; i <= granularity; ++i)
                 {
                     const float angle = 2.f * 3.14f * static_cast<float>(i) / static_cast<float>(granularity);
-                    float next_x = item.m_x + std::cos(angle) * item.m_radius;
-                    float next_y = item.m_y +  std::sin(angle) * item.m_radius;
-                    Oasis::Renderer::DrawLine(last_x, last_y, next_x, next_y, item.m_colour);
-                    last_x = next_x;
-                    last_y = next_y;
+                    points[i * 2 + 0] = item.m_x + std::cos(angle) * item.m_radius;
+                    points[i * 2 + 1] = item.m_y +  std::sin(angle) * item.m_radius;
                 }
+                Oasis::Renderer::DrawLineStrip(points, granularity + 1, item.m_colour);
             } break;
             case RenderItem::Type::RECT: {
                 const float width = item.m_width;
