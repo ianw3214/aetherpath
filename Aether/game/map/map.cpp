@@ -9,12 +9,15 @@
 #include "game/entity/components/collisionComponent.hpp"
 #include "game/entity/components/moveComponent.hpp"
 #include "game/entity/components/resourceComponent.hpp"
+#include "game/entity/components/goalComponent.hpp"
 
 void Map::GenerateMap()
 {
     GenerateEarth();
     GenerateMoon();
     GeneratePlanets();
+    GenerateAsteroids();
+    GenerateGoalPlanet();
 
     /////////////////////////////////////////////////////////
     // DEBUG SHIP
@@ -74,4 +77,47 @@ void Map::GeneratePlanets()
         planet->AddComponent(new ResourceComponent(planet, 100, 100, 100, 100));
         GameService::AddEntity(planet);
     }
+}
+
+void Map::GenerateAsteroids()
+{
+    std::random_device r;
+    std::default_random_engine el(r());
+    std::uniform_int_distribution<int> position_dist(-40000, 40000);
+
+    for (unsigned int i = 0; i < NUM_ASTEROIDS; ++i)
+    {
+        const float x = static_cast<float>(position_dist(el));
+        const float y = static_cast<float>(position_dist(el));
+
+        Entity * asteroid = new Entity();
+        asteroid->SetX(x);
+        asteroid->SetY(y);
+        // TODO: Need actual asteroid sprites
+        asteroid->AddComponent(new RenderComponent(asteroid, "res/sprites/asteroid.png", 120.f, 120.f));
+        asteroid->AddComponent(new CollisionComponent(asteroid, Shape::GenerateCircle(60.f)));
+        asteroid->AddComponent(new ResourceComponent(asteroid, 100, 100, 100, 100));
+        GameService::AddEntity(asteroid);
+    }
+}
+
+void Map::GenerateGoalPlanet()
+{
+    std::random_device r;
+    std::default_random_engine el(r());
+    // Generate the goal planet close for now for debug purposes
+    std::uniform_int_distribution<int> position_dist(-2000, 2000);
+
+    const float x = static_cast<float>(position_dist(el));
+    const float y = static_cast<float>(position_dist(el));
+
+    Entity * goal = new Entity();
+    goal->SetX(x);
+    goal->SetY(y);
+    // TODO: Need actual asteroid sprites
+    goal->AddComponent(new RenderComponent(goal, "res/sprites/planets/goal.png", 420.f, 420.f));
+    goal->AddComponent(new CollisionComponent(goal, Shape::GenerateCircle(210.f)));
+    goal->AddComponent(new ResourceComponent(goal, 100, 100, 100, 100));
+    goal->AddComponent(new GoalComponent(goal));
+    GameService::AddEntity(goal);
 }
