@@ -187,6 +187,18 @@ bool GameLayer::HandleEvent(const Oasis::Event& event)
                 m_selected = nullptr;
             }
         }
+        // Hotkeys for ship actions if selected
+        if (auto selected = GameService::GetSelected())
+        {
+            if (key.GetKey() == SDL_SCANCODE_1)
+            {
+                GameService::SetMoveAction();
+            }
+            if (key.GetKey() == SDL_SCANCODE_2)
+            {
+                GameService::SetTransferAction();
+            }
+        }
     }
     return false;
 }
