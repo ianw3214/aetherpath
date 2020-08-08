@@ -31,14 +31,14 @@ std::vector<Entity *>& GameService::GetEntities()
 
 void GameService::DrawSprite(Oasis::Sprite * sprite, int z)
 {
-    RenderItem item{RenderItem::Type::SPRITE, 0.f, 0.f, z, Oasis::Colours::WHITE};
+    RenderItem item{RenderItem::Type::SPRITE, 0.f, 0.f, z, 1.f, Oasis::Colours::WHITE};
     item.m_sprite = sprite;
     s_gameLayer->DrawItem(item);
 }
 
 void GameService::DrawLine(float x1, float y1, float x2, float y2, int z, const Oasis::Colour& colour)
 {
-    RenderItem item{RenderItem::Type::LINE, x1, y1, z, colour};
+    RenderItem item{RenderItem::Type::LINE, x1, y1, z, 1.f, colour};
     item.m_x2 = x2;
     item.m_y2 = y2;
     s_gameLayer->DrawItem(item);
@@ -46,14 +46,22 @@ void GameService::DrawLine(float x1, float y1, float x2, float y2, int z, const 
 
 void GameService::DrawCircle(float x, float y, float radius, int z, const Oasis::Colour& colour)
 {
-    RenderItem item{RenderItem::Type::CIRCLE, x, y, z, colour};
+    RenderItem item{RenderItem::Type::CIRCLE, x, y, z, 1.f, colour};
     item.m_radius = radius;
     s_gameLayer->DrawItem(item);
 }
 
 void GameService::DrawRect(float x, float y, float w, float h, int z, const Oasis::Colour& colour)
 {
-    RenderItem item{RenderItem::Type::RECT, x, y, z, colour};
+    RenderItem item{RenderItem::Type::RECT, x, y, z, 1.f, colour};
+    item.m_width = w;
+    item.m_height = h;
+    s_gameLayer->DrawItem(item);
+}
+
+void GameService::DrawRectFilled(float x, float y, float w, float h, int z, const Oasis::Colour& colour, float alpha)
+{
+    RenderItem item{RenderItem::Type::RECT_FILLED, x, y, z, alpha, colour};
     item.m_width = w;
     item.m_height = h;
     s_gameLayer->DrawItem(item);
@@ -292,6 +300,18 @@ void GameLayer::Update()
                 Oasis::Renderer::DrawLine(x, y, x + width, y, item.m_colour);
                 Oasis::Renderer::DrawLine(x + width, y, x + width, y + height, item.m_colour);
                 Oasis::Renderer::DrawLine(x, y + height, x + width, y + height, item.m_colour);
+            } break;
+            case RenderItem::Type::RECT_FILLED: {
+                const float width = item.m_width;
+                const float height = item.m_height;
+                if (x + width< 0 || x > Oasis::WindowService::WindowWidth())
+                {
+                    if (y + height < 0 || y > Oasis::WindowService::WindowHeight())
+                    {
+                        continue;
+                    }
+                }
+                Oasis::Renderer::DrawQuad(x, y, width, height, item.m_colour, item.m_alpha);
             } break;
             default: {
                 Oasis::Console::AddLog("ERROR: Tried to render invalid render item");

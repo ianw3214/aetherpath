@@ -8,6 +8,8 @@
 #include "game/entity/components/moveComponent.hpp"
 #include "game/entity/components/resourceComponent.hpp"
 
+#include "game/ui/editor/UIEditor.hpp"
+
 // TODO: Need to have a better solution for this
 #include "../../Oasis/vendor/imgui/imgui.h"
 
@@ -15,6 +17,9 @@ void DebugLayer::Init()
 {
     Oasis::ImGuiWrapper::AddWindowFunction([&](){
         ImGui::Begin("Debug");
+
+        ImGui::Checkbox("UI Editor mode", &UIEditor::s_enabled);
+        
         ImGui::End();
     });
 }

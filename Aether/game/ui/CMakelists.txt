@@ -6,3 +6,5 @@ target_sources(Aether PRIVATE
     UIActions.cpp
     UIInfo.cpp
 )
+
+add_subdirectory(editor)

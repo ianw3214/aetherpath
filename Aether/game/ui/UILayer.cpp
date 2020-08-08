@@ -37,6 +37,11 @@ void UIService::AddUIWindow(UIWindow window)
     s_UILayer->m_windows.push_back(window);
 }
 
+Ref<UILayer> UIService::GetUILayer()
+{
+    return s_UILayer;
+}
+
 UILayer::UILayer()
 {
     UIService::s_UILayer = this;

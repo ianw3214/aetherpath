@@ -17,12 +17,14 @@ struct RenderItem
         SPRITE,
         LINE,
         CIRCLE,
-        RECT
+        RECT,
+        RECT_FILLED,
     };
     Type m_type;
     float m_x;
     float m_y;
     int m_z;
+    float m_alpha;
     Oasis::Colour m_colour;
     union {
         struct {
@@ -53,6 +55,7 @@ public:
     static void DrawLine(float x1, float y1, float x2, float y2, int z = 0, const Oasis::Colour& colour = Oasis::Colours::RED);
     static void DrawCircle(float x, float y, float radius, int z = 0, const Oasis::Colour& colour = Oasis::Colours::RED);
     static void DrawRect(float x, float y, float w, float h, int z = 0, const Oasis::Colour& colour = Oasis::Colours::RED);
+    static void DrawRectFilled(float x, float y, float w, float h, int z = 0, const Oasis::Colour& colour = Oasis::Colours::RED, float alpha = 1.f);
 
     static void Select(Ref<Entity> entity);
     static bool Selected(Ref<Entity> entity);

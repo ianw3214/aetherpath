@@ -126,12 +126,14 @@ class UIService
     static Ref<UILayer> s_UILayer;
 public:
     static void AddUIWindow(UIWindow window);
+    static Ref<UILayer> GetUILayer();
 };
 
 ////////////////////////////////////////////////////////////////
 class UILayer : public Oasis::GameStateLayer
 {
     friend class UIService;
+    friend class UIEditor;
 public:
     UILayer();
 
