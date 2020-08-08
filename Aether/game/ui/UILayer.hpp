@@ -84,6 +84,10 @@ struct UIElement
     // These need to be cached for text drawing
     float m_cachedW;
     float m_cachedH;
+
+    // Cached texture
+    // Can't be put in union because of non-trivial destructor
+    Oasis::Sprite * m_cachedSprite = nullptr;
 };
 
 ////////////////////////////////////////////////////////////////
