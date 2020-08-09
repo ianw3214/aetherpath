@@ -65,6 +65,10 @@ bool UIEditor::HandleEvent(const Oasis::Event& event)
             {
                 if (window.m_cachedY < y && window.m_cachedY + (float) window.m_h > y)
                 {
+                    if (!window.m_show)
+                    {
+                        continue;
+                    }
                     m_selectedWindow = &window;
                     // Choose a specific element to select if we can
                     for (UIElement& element : window.m_elements)
@@ -85,6 +89,7 @@ bool UIEditor::HandleEvent(const Oasis::Event& event)
             }
         }
         // If we finish this loop, no window was selected
+        m_selectedElement = nullptr;
         m_selectedWindow = nullptr;
     }
     return false;
