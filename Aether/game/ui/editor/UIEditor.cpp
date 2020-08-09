@@ -3,6 +3,9 @@
 #include "game/gamelayer.hpp"
 #include "game/ui/UILayer.hpp"
 
+// TODO: Need to have a better solution for this
+#include "../../Oasis/vendor/imgui/imgui.h"
+
 bool UIEditor::s_enabled = false;
 
 UIEditor::UIEditor()
@@ -14,7 +17,29 @@ UIEditor::UIEditor()
 
 void UIEditor::Init() 
 {
+    Oasis::ImGuiWrapper::AddWindowFunction([&](){
+        if (!s_enabled) return;
+        ImGui::Begin("UI Editor");
 
+        if (m_selectedWindow)
+        {
+            ImGui::SliderInt("Selected window width", &(m_selectedWindow->m_w), 0, Oasis::WindowService::WindowWidth());
+            ImGui::SliderInt("Selected window height", &(m_selectedWindow->m_h), 0, Oasis::WindowService::WindowHeight());
+        }
+        if (m_selectedElement)
+        {
+            if (m_selectedElement->m_type == UIElement::Type::TEXT || m_selectedElement->m_type == UIElement::Type::TEXT_DYNAMIC)
+            {
+                // TODO: Implement
+            }
+            if (m_selectedElement->m_type == UIElement::Type::TEXTURE)
+            {
+                // TODO: Implement
+            }
+        }
+        
+        ImGui::End();
+    });
 }
 
 void UIEditor::Close() 
@@ -71,8 +96,8 @@ void UIEditor::Update()
     {
         const float x = m_selectedWindow->m_cachedX;
         const float y = m_selectedWindow->m_cachedY;
-        const float w = m_selectedWindow->m_w;
-        const float h = m_selectedWindow->m_h;
+        const float w = static_cast<float>(m_selectedWindow->m_w);
+        const float h = static_cast<float>(m_selectedWindow->m_h);
         Oasis::Renderer::DrawQuad(x, y, w, h, Oasis::Colours::WHITE, 0.3f);
     }
     if (m_selectedElement)

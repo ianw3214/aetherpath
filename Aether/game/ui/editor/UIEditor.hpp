@@ -1,8 +1,8 @@
 #pragma once
 #include "oasis.h"
 
-class UIWindow;
-class UIElement;
+struct UIWindow;
+struct UIElement;
 
 class UIEditor : public Oasis::GameStateLayer
 {
