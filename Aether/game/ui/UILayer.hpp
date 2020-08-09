@@ -102,6 +102,7 @@ struct UIWindow
     };
 
     bool m_show;
+    bool m_isPopup; // Popup windows 
     Alignment m_alignment;
     int m_w;
     int m_h;

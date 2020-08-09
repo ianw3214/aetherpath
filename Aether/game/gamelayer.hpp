@@ -91,7 +91,7 @@ private:
     {
         NONE = 0,
         MOVE,
-        TRANSFER
+        TRANSFER,
     };
     UserActionState m_userActionState;
 

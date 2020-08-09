@@ -8,7 +8,7 @@
 void UILayer::AddActionsUI()
 {
     // Actions window
-    UIWindow window{true, UIWindow::Alignment::BOTTOM_RIGHT, 120, 210, 10, 10, Oasis::Colour{0.f, 0.2f, 0.2f}, Oasis::Colour{0.6f, 0.9f, 1.f}, 2};
+    UIWindow window{true, false, UIWindow::Alignment::BOTTOM_RIGHT, 120, 320, 10, 10, Oasis::Colour{0.f, 0.2f, 0.2f}, Oasis::Colour{0.6f, 0.9f, 1.f}, 2};
     
     // This element is just to determine if the window should be shown
     auto element = UIElement::CreateDynamicText([](UIWindow& window){
@@ -37,6 +37,13 @@ void UILayer::AddActionsUI()
         GameService::SetTransferAction();
     };
     window.m_elements.push_back(transferbutton);
+
+    auto createbutton = UIElement::CreateTexture("res/icons/create.png", 100, 100);
+    createbutton.m_isButton = true;
+    createbutton.m_buttonFunction = [](){
+        // TODO: This should bring up a ship creation UI
+    };
+    window.m_elements.push_back(createbutton);
 
     UIService::AddUIWindow(window);
 }
