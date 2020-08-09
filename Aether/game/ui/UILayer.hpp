@@ -146,6 +146,8 @@ public:
 private:
     std::vector<UIWindow> m_windows;
 
+    void DrawWindow(UIWindow& window, float x, float y);
+
     // HELPER FUNCTIONS
     void AddResourceUI();
     void AddShipUI();
