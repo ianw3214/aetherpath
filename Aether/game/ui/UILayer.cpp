@@ -86,13 +86,19 @@ bool UILayer::HandleEvent(const Oasis::Event& event)
         // TODO: This is flipped since the engine isn't consistent... :(
         const float y = static_cast<float>(Oasis::WindowService::WindowHeight() - mouse.GetY());
         // With popup windows, it's possible buttons overlap so we need to prioritize popups
+        bool mouseOverWindow = false;
         UIElement * pressedButton = nullptr;
         for (UIWindow& window : m_windows)
         {
+            if (!window.m_show)
+            {
+                continue;
+            }
             if (window.m_cachedX < x && window.m_cachedX + (float) window.m_w > x)
             {
                 if (window.m_cachedY < y && window.m_cachedY + (float) window.m_h > y)
                 {
+                    mouseOverWindow = true;
                     for (UIElement& element : window.m_elements)
                     {
                         if (!element.m_isButton)
@@ -111,7 +117,14 @@ bool UILayer::HandleEvent(const Oasis::Event& event)
                             }
                         }
                     }
+                    continue;
                 }
+            }
+            // If we reach this point, the mouse click was not on the window
+            // This means we exit popup windows
+            if (window.m_isPopup)
+            {
+                window.m_show = false;
             }
         }
         if (pressedButton)
@@ -119,6 +132,7 @@ bool UILayer::HandleEvent(const Oasis::Event& event)
             pressedButton->m_buttonFunction();
             return true;
         }
+        return mouseOverWindow;
     }
     return false;
 }
