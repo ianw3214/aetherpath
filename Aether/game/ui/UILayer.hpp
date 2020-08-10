@@ -128,6 +128,8 @@ class UIService
 public:
     static void AddUIWindow(UIWindow window);
     static Ref<UILayer> GetUILayer();
+
+    static void ShowShipCreationUI();
 };
 
 ////////////////////////////////////////////////////////////////
@@ -153,4 +155,7 @@ private:
     void AddShipUI();
     void AddActionsUI();
     void AddInfoUI();
+
+    // SAVE UI LAYERS THAT NEED TO BE REFERENCED FOR OTHER THINGS
+    Ref<UIWindow> m_shipCreateWindow;
 };

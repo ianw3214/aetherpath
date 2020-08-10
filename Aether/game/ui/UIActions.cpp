@@ -41,7 +41,7 @@ void UILayer::AddActionsUI()
     auto createbutton = UIElement::CreateTexture("res/icons/create.png", 100, 100);
     createbutton.m_isButton = true;
     createbutton.m_buttonFunction = [](){
-        // TODO: This should bring up a ship creation UI
+        UIService::ShowShipCreationUI();
     };
     window.m_elements.push_back(createbutton);
 

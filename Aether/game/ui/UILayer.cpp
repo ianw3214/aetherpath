@@ -42,6 +42,15 @@ Ref<UILayer> UIService::GetUILayer()
     return s_UILayer;
 }
 
+void UIService::ShowShipCreationUI()
+{
+    s_UILayer->m_shipCreateWindow->m_show = true;
+}
+
+//////////////////////////////////////////////////////////////////
+// UI LAYER
+//////////////////////////////////////////////////////////////////
+
 UILayer::UILayer()
 {
     UIService::s_UILayer = this;
@@ -65,10 +74,12 @@ void UILayer::Init()
     AddShipUI();
     AddActionsUI();
     
-    {   // ADD TEST POPUP UI
+    // TODO: Separate file probably
+    {   // ADD SHIP CREATION UI
         UIWindow window{true, true, UIWindow::Alignment::TOP_LEFT, 300, 300, 10, 10, Oasis::Colour{0.f, 0.2f, 0.2f}, Oasis::Colour{0.6f, 0.9f, 1.f}, 2};
         window.m_elements.push_back(UIElement::CreateText("TEST POPUP", Oasis::Colours::WHITE, UI::Font::DEFAULT));
         UIService::AddUIWindow(window);
+        m_shipCreateWindow = & (m_windows[m_windows.size() - 1]);
     }
 }
 
@@ -196,10 +207,6 @@ void UILayer::Update()
         }
         const float x = GetAlignmentX(window);
         const float y = GetAlignmentY(window);
-        {   // Update cached values
-            window.m_cachedX = x;
-            window.m_cachedY = y;
-        }
         DrawWindow(window, x, y);
         UpdateAlignmentCoords(window.m_alignment, (float) window.m_h, (float) window.m_marginV);
     }
@@ -208,17 +215,16 @@ void UILayer::Update()
         // Just center popups for now
         const float x = static_cast<float>(Oasis::WindowService::WindowWidth() - window->m_w) / 2.f;
         const float y = static_cast<float>(Oasis::WindowService::WindowHeight() - window->m_h) / 2.f;
-        {   // Update cached values
-            window->m_cachedX = x;
-            window->m_cachedY = y;
-        }
         DrawWindow(*window, x, y);
-        // UpdateAlignmentCoords(window->m_alignment, (float) window->m_h, (float) window->m_marginV);
     }
 }
 
 void UILayer::DrawWindow(UIWindow& window, float x, float y)
 {
+    {   // Update cached values
+        window.m_cachedX = x;
+        window.m_cachedY = y;
+    }
     const float w = static_cast<float>(window.m_w);
     const float h = static_cast<float>(window.m_h);
     Oasis::Renderer::DrawQuad(x, y, w, h, window.m_background);
