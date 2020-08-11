@@ -186,17 +186,10 @@ void UILayer::Update()
     std::vector<Ref<UIWindow>> popups;
     for (UIWindow& window : m_windows)
     {
+        // Always update window functions
+        window.m_windowFunction(window);
         if (!window.m_show) 
         {
-            // TODO: This is pretty hard coded but I don't have a better solution
-            // Still update dynamic text even if not shown
-            for (const UIElement& element : window.m_elements)
-            {
-                if (element.m_type == UIElement::Type::TEXT_DYNAMIC)
-                {
-                    element.m_textFunction(window);
-                }
-            }
             continue;
         }
         // Handle all the popups after handling all the normal UI

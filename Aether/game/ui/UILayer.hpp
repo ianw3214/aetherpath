@@ -115,6 +115,9 @@ struct UIWindow
     // UI Elements from top to bottom
     std::vector<UIElement> m_elements;
 
+    // An update function for windows themselves to handle
+    std::function<void(UIWindow&)> m_windowFunction = [](UIWindow&){};
+
     // cache x/y values to avoid re-calculation when handling events
     float m_cachedX;
     float m_cachedY;

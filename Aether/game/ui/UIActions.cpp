@@ -3,26 +3,14 @@
 #include "game/gamelayer.hpp"
 
 #include "game/entity/entity.hpp"
+#include "game/entity/components/moveComponent.hpp"
 #include "game/entity/components/resourceComponent.hpp"
+#include "game/entity/components/hangarComponent.hpp"
 
 void UILayer::AddActionsUI()
 {
     // Actions window
     UIWindow window{true, false, UIWindow::Alignment::BOTTOM_RIGHT, 120, 320, 10, 10, Oasis::Colour{0.f, 0.2f, 0.2f}, Oasis::Colour{0.6f, 0.9f, 1.f}, 2};
-    
-    // This element is just to determine if the window should be shown
-    auto element = UIElement::CreateDynamicText([](UIWindow& window){
-        if (auto selected = GameService::GetSelected())
-        {
-            window.m_show = true;
-        }
-        else
-        {
-            window.m_show = false;
-        }
-        return "";
-    }, Oasis::Colours::WHITE, UI::Font::NONE);
-    window.m_elements.push_back(element);
 
     auto movebutton = UIElement::CreateTexture("res/icons/move.png", 100, 100);
     movebutton.m_isButton = true;
@@ -44,6 +32,17 @@ void UILayer::AddActionsUI()
         UIService::ShowShipCreationUI();
     };
     window.m_elements.push_back(createbutton);
+
+    window.m_windowFunction = [](UIWindow& window) {
+        if (auto selected = GameService::GetSelected())
+        {
+            window.m_show = true;
+        }
+        else
+        {
+            window.m_show = false;
+        }
+    };
 
     UIService::AddUIWindow(window);
 }

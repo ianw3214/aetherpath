@@ -14,13 +14,21 @@ void UILayer::AddResourceUI()
             {
                 if (auto resource = entity->GetComponent<ResourceComponent>())
                 {
-                    window.m_show = true;
                     return std::to_string(resource->GetPopulation());
                 }
             }
-            window.m_show = false;
             return std::string();
         }, Oasis::Colours::WHITE, UI::Font::DEFAULT));
+        window.m_windowFunction = [](UIWindow& window){
+            if (auto selected = GameService::GetSelected())
+            {
+                window.m_show = selected->GetComponent<ResourceComponent>();
+            }
+            else
+            {
+                window.m_show = false;
+            }
+        };
         UIService::AddUIWindow(window);
     }
     {   // Oxygen window
@@ -30,13 +38,21 @@ void UILayer::AddResourceUI()
             {
                 if (auto resource = entity->GetComponent<ResourceComponent>())
                 {
-                    window.m_show = true;
                     return std::to_string(resource->GetOxygen());
                 }
             }
-            window.m_show = false;
             return std::string();
         }, Oasis::Colours::WHITE, UI::Font::DEFAULT));
+        window.m_windowFunction = [](UIWindow& window){
+            if (auto selected = GameService::GetSelected())
+            {
+                window.m_show = selected->GetComponent<ResourceComponent>();
+            }
+            else
+            {
+                window.m_show = false;
+            }
+        };
         UIService::AddUIWindow(window);
     }
     {   // Fuel window
@@ -46,13 +62,23 @@ void UILayer::AddResourceUI()
             {
                 if (auto resource = entity->GetComponent<ResourceComponent>())
                 {
-                    window.m_show = true;
                     return std::to_string(resource->GetFuel());
                 }
             }
-            window.m_show = false;
             return std::string();
         }, Oasis::Colours::WHITE, UI::Font::DEFAULT));
+
+        window.m_windowFunction = [](UIWindow& window){
+            if (auto selected = GameService::GetSelected())
+            {
+                window.m_show = selected->GetComponent<ResourceComponent>();
+            }
+            else
+            {
+                window.m_show = false;
+            }
+        };
+
         UIService::AddUIWindow(window);
     }
     {   // Metal window
@@ -62,13 +88,23 @@ void UILayer::AddResourceUI()
             {
                 if (auto resource = entity->GetComponent<ResourceComponent>())
                 {
-                    window.m_show = true;
                     return std::to_string(resource->GetMetal());
                 }
             }
-            window.m_show = false;
             return std::string();
         }, Oasis::Colours::WHITE, UI::Font::DEFAULT));
+
+        window.m_windowFunction = [](UIWindow& window){
+            if (auto selected = GameService::GetSelected())
+            {
+                window.m_show = selected->GetComponent<ResourceComponent>();
+            }
+            else
+            {
+                window.m_show = false;
+            }
+        };
+
         UIService::AddUIWindow(window);
     }
 }

@@ -10,6 +10,7 @@
 #include "game/entity/components/moveComponent.hpp"
 #include "game/entity/components/resourceComponent.hpp"
 #include "game/entity/components/goalComponent.hpp"
+#include "game/entity/components/hangarComponent.hpp"
 
 void Map::GenerateMap()
 {
@@ -40,6 +41,7 @@ void Map::GenerateEarth()
     earth->AddComponent(new RenderComponent(earth, "res/sprites/earth.png", 400.f, 400.f));
     earth->AddComponent(new CollisionComponent(earth, Shape::GenerateCircle(200.f)));
     earth->AddComponent(new ResourceComponent(earth, 100, 100, 100, 100));
+    earth->AddComponent(new HangarComponent(earth));
     // earth->AddComponent(new MoveComponent(earth));
     GameService::AddEntity(earth);
 }
