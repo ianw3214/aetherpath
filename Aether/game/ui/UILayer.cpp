@@ -83,12 +83,13 @@ void UILayer::Init()
         UIWindow window{false, true, UIWindow::Alignment::TOP_LEFT, 300, 300, 10, 10, Oasis::Colour{0.f, 0.2f, 0.2f}, Oasis::Colour{0.6f, 0.9f, 1.f}, 2};
         window.m_elements.push_back(UIElement::CreateText("CREATE SHIP", Oasis::Colours::WHITE, UI::Font::DEFAULT));
         auto button = UIElement::CreateTexture("res/icons/create.png", 280, 100);
+        button.m_isButton = true;
         button.m_buttonFunction = [](){
             if (auto selected = GameService::GetSelected())
             {
                 if (auto hangar = selected->GetComponent<HangarComponent>())
                 {
-                    // TODO: SHIP CREATE BUTTON HERE
+                    hangar->CreateShip();
                     return;
                 }
             }

@@ -76,6 +76,35 @@ void ResourceComponent::Update(float delta)
     }
 }
 
+bool ResourceComponent::ConsumePopulation(int amount)
+{
+    if (amount > m_population) return false;
+    m_population -= amount;
+    return true;
+}
+
+bool ResourceComponent::ConsumeOxygen(int amount)
+{
+    if (amount > m_oxygen) return false;
+    m_oxygen -= amount;
+    return true;
+}
+
+bool ResourceComponent::ConsumeFuel(int amount)
+{
+    if (amount > m_fuel) return false;
+    m_fuel -= amount;
+    return true;
+}
+
+bool ResourceComponent::ConsumeMetal(int amount)
+{
+    if (amount > m_metal) return false;
+    m_metal -= amount;
+    return true;
+}
+
+
 void ResourceComponent::TransferResources(Ref<ResourceComponent> other)
 {
     OASIS_TRAP(other != this);
