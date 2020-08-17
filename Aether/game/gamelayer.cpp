@@ -6,6 +6,7 @@
 #include "entity/components/collisionComponent.hpp"
 #include "entity/components/moveComponent.hpp"
 #include "game/entity/components/resourceComponent.hpp"
+#include "game/entity/components/hangarComponent.hpp"
 ////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////
@@ -94,6 +95,12 @@ void GameService::SetTransferAction()
     s_gameLayer->m_userActionState = GameLayer::UserActionState::TRANSFER;
 }
 
+void GameService::SetDeployAction()
+{
+    OASIS_TRAP(s_gameLayer->m_selected);
+    s_gameLayer->m_userActionState = GameLayer::UserActionState::DEPLOY;
+}
+
 
 //////////////////////////////////////////////////
 // Game layer
@@ -144,6 +151,13 @@ bool GameLayer::HandleEvent(const Oasis::Event& event)
 							}
 						}
 					}
+                    if (m_userActionState == UserActionState::DEPLOY)
+                    {
+                        // TODO: Actually show the message to the user
+                        Oasis::Console::AddLog("Can't deploy onto an existing entity");
+                        m_userActionState = UserActionState::NONE;
+                        break;
+                    }
                 }
             }
         }
@@ -155,6 +169,26 @@ bool GameLayer::HandleEvent(const Oasis::Event& event)
                 if (auto move = entity->GetComponent<MoveComponent>())
                 {
                     move->Move(x, y);
+                }
+                else
+                {
+                    // This should never happen
+                    OASIS_TRAP(nullptr);
+                }
+            }
+        }
+        if (!over_entity && m_userActionState == UserActionState::DEPLOY)
+        {
+            if (Ref<Entity> entity = m_selected)
+            {
+                if (auto hangar = entity->GetComponent<HangarComponent>())
+                {
+                    hangar->DeployShip(x, y);
+                }
+                else
+                {
+                    // This should never happen
+                    OASIS_TRAP(nullptr);
                 }
             }
         }

@@ -14,6 +14,7 @@ public:
     int GetNumShips() const { return m_ships; }
 
     bool CreateShip();
+    bool DeployShip(float x, float y);
 private:
     int m_capacity;
     int m_ships;

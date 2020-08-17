@@ -63,6 +63,7 @@ public:
 
     static void SetMoveAction();
     static void SetTransferAction();
+    static void SetDeployAction();
 private:
     friend class GameLayer;
     static Ref<GameLayer> s_gameLayer;
@@ -92,6 +93,7 @@ private:
         NONE = 0,
         MOVE,
         TRANSFER,
+        DEPLOY
     };
     UserActionState m_userActionState;
 

@@ -28,7 +28,6 @@ void UILayer::AddShipUI()
                 
                 if (auto hangar = selected->GetComponent<HangarComponent>())
                 {
-                    Oasis::Console::AddLog("HELLO HELLO HELLO");
                     window.m_elements.push_back(UIElement::CreateDynamicText([=](UIWindow& window){
                         return std::to_string(hangar->GetNumShips());
                     }, Oasis::Colours::WHITE, UI::Font::DEFAULT));

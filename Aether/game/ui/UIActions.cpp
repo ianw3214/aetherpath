@@ -52,6 +52,13 @@ void UILayer::AddActionsUI()
                         UIService::ShowShipCreationUI();
                     };
                     window.m_elements.push_back(createbutton);
+
+                    auto deployButton = UIElement::CreateTexture("res/icons/deploy.png", 100, 100);
+                    deployButton.m_isButton = true;
+                    deployButton.m_buttonFunction = [](){
+                        GameService::SetDeployAction();
+                    };
+                    window.m_elements.push_back(deployButton);
                 }
             }
         }
