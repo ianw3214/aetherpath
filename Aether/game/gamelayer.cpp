@@ -129,6 +129,7 @@ bool GameLayer::HandleEvent(const Oasis::Event& event)
     {
         auto mouseEvent = dynamic_cast<const Oasis::MousePressedEvent&>(event);
 
+        // TODO: Can store this info in a 'ClickInfo' struct and pass it to functions to handle themselves
         // Make sure we aren't clicking on an entity
         bool over_entity = false;
         const float x = CameraService::ScreenToRawX(mouseEvent.GetX());

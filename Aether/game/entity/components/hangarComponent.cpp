@@ -9,9 +9,10 @@
 #include "game/entity/entity.hpp"
 #include "game/entity/components/resourceComponent.hpp"
 
-HangarComponent::HangarComponent(Ref<Entity> entity, int capacity)
+HangarComponent::HangarComponent(Ref<Entity> entity, int capacity, int deployRange)
     : Component(entity)
     , m_capacity(capacity)
+    , m_deployRange(deployRange)
     , m_ships(0)
 {
 
@@ -47,6 +48,16 @@ bool HangarComponent::DeployShip(float x, float y)
     // If no ships in the hangar, do nothing
     if (m_ships <= 0)
     {
+        Oasis::Console::AddLog("Can't deploy ship: no ships to deploy");
+        return false;
+    }
+
+    // If the point is outside the deploy range, do nothing
+    int x_diff = GetEntity()->GetX() - x;
+    int y_diff = GetEntity()->GetY() - y;
+    if (x_diff * x_diff + y_diff * y_diff > m_deployRange * m_deployRange)
+    {
+        Oasis::Console::AddLog("Can't deploy ship: not in range");
         return false;
     }
 
