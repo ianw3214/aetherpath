@@ -9,6 +9,8 @@
 #include "game/entity/entity.hpp"
 #include "game/entity/components/resourceComponent.hpp"
 
+#include "game/camera/camera.hpp"
+
 HangarComponent::HangarComponent(Ref<Entity> entity, int capacity, int deployRange)
     : Component(entity)
     , m_capacity(capacity)
@@ -20,7 +22,18 @@ HangarComponent::HangarComponent(Ref<Entity> entity, int capacity, int deployRan
 
 void HangarComponent::Update(float delta)
 {
-
+    // Show the deploy range if the user is about to deploy
+    if (GameService::IsUserDeployAction())
+    {
+        // Only show the range from if the user is selecting this hangar
+        if (GetEntity() == GameService::GetSelected())
+        {
+            const float x = CameraService::RawToScreenX(GetEntity()->GetX());
+            const float y = CameraService::RawToScreenY(GetEntity()->GetY());
+            const float radius = static_cast<float>(m_deployRange) * CameraService::GetScale();
+            GameService::DrawCircle(x, y, radius, 1, Oasis::Colours::RED);
+        }
+    }
 }
 
 bool HangarComponent::CreateShip()
@@ -53,8 +66,8 @@ bool HangarComponent::DeployShip(float x, float y)
     }
 
     // If the point is outside the deploy range, do nothing
-    int x_diff = GetEntity()->GetX() - x;
-    int y_diff = GetEntity()->GetY() - y;
+    int x_diff = static_cast<int>(GetEntity()->GetX() - x);
+    int y_diff = static_cast<int>(GetEntity()->GetY() - y);
     if (x_diff * x_diff + y_diff * y_diff > m_deployRange * m_deployRange)
     {
         Oasis::Console::AddLog("Can't deploy ship: not in range");

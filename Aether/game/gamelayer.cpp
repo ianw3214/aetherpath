@@ -101,6 +101,18 @@ void GameService::SetDeployAction()
     s_gameLayer->m_userActionState = GameLayer::UserActionState::DEPLOY;
 }
 
+bool GameService::IsUserMoveAction()
+{
+    return s_gameLayer->m_userActionState == GameLayer::UserActionState::MOVE;
+}
+bool GameService::IsUserTransferAction()
+{
+    return s_gameLayer->m_userActionState == GameLayer::UserActionState::TRANSFER;
+}
+bool GameService::IsUserDeployAction()
+{
+    return s_gameLayer->m_userActionState == GameLayer::UserActionState::DEPLOY;
+}
 
 //////////////////////////////////////////////////
 // Game layer

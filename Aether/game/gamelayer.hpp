@@ -64,6 +64,9 @@ public:
     static void SetMoveAction();
     static void SetTransferAction();
     static void SetDeployAction();
+    static bool IsUserMoveAction();
+    static bool IsUserTransferAction();
+    static bool IsUserDeployAction();
 private:
     friend class GameLayer;
     static Ref<GameLayer> s_gameLayer;
