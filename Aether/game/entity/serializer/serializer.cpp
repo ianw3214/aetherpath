@@ -1,6 +1,13 @@
 #include "serializer.hpp"
 
+#include <fstream>
+
 EntitySerializer * EntitySerializer::s_instance = nullptr;
+
+EntitySerializer::EntitySerializer()
+{
+    // TODO: Initialize stuff
+}
 
 Ref<EntitySerializer> EntitySerializer::GetInstance()
 {
@@ -8,7 +15,18 @@ Ref<EntitySerializer> EntitySerializer::GetInstance()
     return s_instance;
 }
 
-EntitySerializer::EntitySerializer()
+Entity* EntitySerializer::GetEntity(const std::string& path)
 {
-    // TODO: Initialize stuff
+    std::ifstream raw_data(path);
+    json data;
+    raw_data >> data;
+
+    std::string name;
+    if (data.find("name") != data.end() && data["name"].is_string())
+    {
+        name = data["name"];
+        Oasis::Console::AddLog(name.c_str());
+    }
+
+    return nullptr;
 }

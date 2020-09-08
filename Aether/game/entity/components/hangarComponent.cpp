@@ -11,6 +11,8 @@
 
 #include "game/camera/camera.hpp"
 
+#include "game/entity/serializer/serializer.hpp"
+
 HangarComponent::HangarComponent(Ref<Entity> entity, int capacity, int deployRange)
     : Component(entity)
     , m_capacity(capacity)
@@ -83,6 +85,8 @@ bool HangarComponent::DeployShip(float x, float y)
     ship->AddComponent(new ResourceComponent(ship, 100, 100, 100, 100));
     ship->AddComponent(new MoveComponent(ship));
     GameService::AddEntity(ship);
+
+    Entity * test = EntitySerializer::GetInstance()->GetEntity("test_entity.json");
 
     m_ships--;
     return true;
