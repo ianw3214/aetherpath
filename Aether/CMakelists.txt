@@ -1,3 +1,5 @@
+target_include_directories(Aether PRIVATE vendor)
+
 target_sources(Aether PRIVATE config.cpp)
 
 add_subdirectory(menu)
