@@ -5,6 +5,9 @@
 
 #include <string>
 
+#include "nlohmann/json.hpp"
+using json = nlohmann::json;
+
 class RenderComponent : public Component
 {
 public:
@@ -14,4 +17,8 @@ private:
     float m_width;
     float m_height;
     Oasis::Sprite m_sprite;
+public:
+    // Serialization
+    static std::string GetID() { return "render"; }
+    static RenderComponent* LoadFromJson(const json& data);
 };

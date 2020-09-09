@@ -1,3 +1,11 @@
 {
-    "name": "test name"
+    "name": "test name",
+    "components": [
+        {
+            "id": "render",
+            "data": {
+                "test": "test"
+            }
+        }
+    ]
 }

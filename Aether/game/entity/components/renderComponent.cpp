@@ -38,3 +38,10 @@ void RenderComponent::Update(float delta)
         GameService::DrawSprite(&m_sprite, 0);
     }
 }
+
+RenderComponent* RenderComponent::LoadFromJson(const json& data)
+{
+    std::string test = data["test"];
+    Oasis::Console::AddLog(test.c_str());
+    return nullptr;
+}
