@@ -39,9 +39,24 @@ void RenderComponent::Update(float delta)
     }
 }
 
-RenderComponent* RenderComponent::LoadFromJson(const json& data)
+RenderComponent* RenderComponent::LoadFromJson(const json& data, Ref<Entity> entity)
 {
-    std::string test = data["test"];
-    Oasis::Console::AddLog(test.c_str());
-    return nullptr;
+    // TODO: Add an error image to make it clear when something is wrong
+    std::string path = "";
+    float width = 100.f;
+    float height = 100.f;
+    if (data.find("path") != data.end() && data["path"].is_string())
+    {
+        path = data["path"];
+    }
+    if (data.find("width") != data.end() && data["width"].is_number_float())
+    {
+        width = data["width"];
+    }
+    if (data.find("height") != data.end() && data["height"].is_number_float())
+    {
+        height = data["height"];
+    }
+    Oasis::Console::AddLog(path.c_str());
+    return new RenderComponent(entity, path, width, height);
 }

@@ -55,18 +55,21 @@ Entity* EntitySerializer::GetEntity(const std::string& path)
             }
             if (s_componentMap.find(id) != s_componentMap.end())
             {
+                Component * comp = nullptr;
                 if (component.find("data") != component.end() && component["data"].is_object())
                 {
-                    Component * comp = s_componentMap[id](component["data"]);   
+                    comp = s_componentMap[id](component["data"], result);   
                 }
                 else
                 {
                     json empty;
-                    Component * comp = s_componentMap[id](empty);
+                    comp = s_componentMap[id](empty, result);
                 }
+                OASIS_TRAP(comp);
+                result->AddComponent(comp);
             }
         }
     }
 
-    return nullptr;
+    return result;
 }

@@ -18,7 +18,7 @@ private:
     static EntitySerializer * s_instance;
 private:
     // Mapping of IDs to components
-    std::unordered_map<std::string, std::function<Component*(const json&)>> s_componentMap;
+    std::unordered_map<std::string, std::function<Component*(const json&, Ref<Entity>)>> s_componentMap;
     void RegisterComponents();
 public:
     static Ref<EntitySerializer> GetInstance();

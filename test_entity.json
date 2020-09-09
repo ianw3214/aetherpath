@@ -4,7 +4,9 @@
         {
             "id": "render",
             "data": {
-                "test": "test"
+                "path": "res/sprites/scout.png",
+                "width": 200.0,
+                "height": 200.0
             }
         }
     ]

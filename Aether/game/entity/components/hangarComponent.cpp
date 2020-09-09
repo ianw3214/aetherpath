@@ -84,9 +84,12 @@ bool HangarComponent::DeployShip(float x, float y)
     ship->AddComponent(new CollisionComponent(ship, Shape::GenerateRect(130.f, 80.f, -60.f, -40.f)));
     ship->AddComponent(new ResourceComponent(ship, 100, 100, 100, 100));
     ship->AddComponent(new MoveComponent(ship));
-    GameService::AddEntity(ship);
+    // GameService::AddEntity(ship);
 
     Entity * test = EntitySerializer::GetInstance()->GetEntity("test_entity.json");
+    test->SetX(x);
+    test->SetY(y);
+    GameService::AddEntity(test);
 
     m_ships--;
     return true;

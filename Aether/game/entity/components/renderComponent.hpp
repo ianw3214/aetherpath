@@ -20,5 +20,5 @@ private:
 public:
     // Serialization
     static std::string GetID() { return "render"; }
-    static RenderComponent* LoadFromJson(const json& data);
+    static RenderComponent* LoadFromJson(const json& data, Ref<Entity> entity);
 };
