@@ -6,6 +6,7 @@
 // TODO: This should be managed by a game difficulty setting
 #define TARGET_POPULATION 101
 
+// TODO: Should goal component be serialized? (probably not)
 ////////////////////////////////////////////////////////////////
 class GoalComponent : public Component
 {

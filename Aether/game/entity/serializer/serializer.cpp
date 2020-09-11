@@ -6,6 +6,7 @@
 #include "game/entity/components/collisionComponent.hpp"
 #include "game/entity/components/resourceComponent.hpp"
 #include "game/entity/components/moveComponent.hpp"
+#include "game/entity/components/hangarComponent.hpp"
 
 EntitySerializer * EntitySerializer::s_instance = nullptr;
 
@@ -20,6 +21,7 @@ void EntitySerializer::RegisterComponents()
     s_componentMap[CollisionComponent::GetID()] = CollisionComponent::LoadFromJson;
     s_componentMap[ResourceComponent::GetID()] = ResourceComponent::LoadFromJson;
     s_componentMap[MoveComponent::GetID()] = MoveComponent::LoadFromJson;
+    s_componentMap[HangarComponent::GetID()] = HangarComponent::LoadFromJson;
 }
 
 Ref<EntitySerializer> EntitySerializer::GetInstance()

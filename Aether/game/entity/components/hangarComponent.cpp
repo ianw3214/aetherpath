@@ -85,3 +85,18 @@ bool HangarComponent::DeployShip(float x, float y)
     m_ships--;
     return true;
 }
+
+HangarComponent* HangarComponent::LoadFromJson(const json& data, Ref<Entity> entity)
+{
+    int capacity = 10;
+    int deployRange = 500;
+    if (data.find("capacity") != data.end() && data["capacity"].is_number_integer())
+    {
+        capacity = data["capacity"];
+    }
+    if (data.find("deployRange") != data.end() && data["deployRange"].is_number_integer())
+    {
+        deployRange = data["deployRange"];
+    }
+    return new HangarComponent(entity, capacity, deployRange);
+}

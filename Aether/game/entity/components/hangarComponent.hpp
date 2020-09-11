@@ -5,6 +5,9 @@
 
 #include <string>
 
+#include "nlohmann/json.hpp"
+using json = nlohmann::json;
+
 class HangarComponent : public Component
 {
 public:
@@ -22,4 +25,8 @@ private:
 
     // Hangar component stats
     int m_ships;
+public:
+    // Serialization
+    static std::string GetID() { return "hangar"; }
+    static HangarComponent* LoadFromJson(const json& data, Ref<Entity> entity);
 };
