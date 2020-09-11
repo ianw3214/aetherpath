@@ -4,6 +4,8 @@
 
 #include "game/entity/components/renderComponent.hpp"
 #include "game/entity/components/collisionComponent.hpp"
+#include "game/entity/components/resourceComponent.hpp"
+#include "game/entity/components/moveComponent.hpp"
 
 EntitySerializer * EntitySerializer::s_instance = nullptr;
 
@@ -16,6 +18,8 @@ void EntitySerializer::RegisterComponents()
 {
     s_componentMap[RenderComponent::GetID()] = RenderComponent::LoadFromJson;
     s_componentMap[CollisionComponent::GetID()] = CollisionComponent::LoadFromJson;
+    s_componentMap[ResourceComponent::GetID()] = ResourceComponent::LoadFromJson;
+    s_componentMap[MoveComponent::GetID()] = MoveComponent::LoadFromJson;
 }
 
 Ref<EntitySerializer> EntitySerializer::GetInstance()

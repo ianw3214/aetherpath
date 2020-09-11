@@ -3,6 +3,9 @@
 
 #include "game/entity/component.hpp"
 
+#include "nlohmann/json.hpp"
+using json = nlohmann::json;
+
 ///////////////////////////////////////////////////////////////
 // public class to handle whether the game has been won or not
 class GameWinSystem
@@ -44,4 +47,8 @@ private:
 
     bool m_transferring;
     Ref<ResourceComponent> m_transferTarget;
+public:
+    // Serialization
+    static std::string GetID() { return "resource"; }
+    static ResourceComponent* LoadFromJson(const json& data, Ref<Entity> entity);
 };

@@ -77,19 +77,10 @@ bool HangarComponent::DeployShip(float x, float y)
     }
 
     // TODO: Not sure if ship creation should stay in hangar component
-    Entity * ship = new Entity();
+    Entity * ship = EntitySerializer::GetInstance()->GetEntity("test_entity.json");
     ship->SetX(x);
     ship->SetY(y);
-    ship->AddComponent(new RenderComponent(ship, "res/sprites/scout.png", 130.f, 80.f));
-    ship->AddComponent(new CollisionComponent(ship, Shape::GenerateRect(130.f, 80.f, -60.f, -40.f)));
-    ship->AddComponent(new ResourceComponent(ship, 100, 100, 100, 100));
-    ship->AddComponent(new MoveComponent(ship));
-    // GameService::AddEntity(ship);
-
-    Entity * test = EntitySerializer::GetInstance()->GetEntity("test_entity.json");
-    test->SetX(x);
-    test->SetY(y);
-    GameService::AddEntity(test);
+    GameService::AddEntity(ship);
 
     m_ships--;
     return true;

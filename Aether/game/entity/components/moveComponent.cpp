@@ -46,3 +46,13 @@ void MoveComponent::Move(float targetX, float targetY)
     m_targetX = targetX;
     m_targetY = targetY;
 }
+
+MoveComponent* MoveComponent::LoadFromJson(const json& data, Ref<Entity> entity)
+{
+    float speed = 100.f;
+    if (data.find("speed") != data.end() && data["speed"].is_number_float())
+    {
+        speed = data["speed"];
+    }
+    return new MoveComponent(entity, speed);
+}

@@ -3,6 +3,9 @@
 
 #include "game/entity/component.hpp"
 
+#include "nlohmann/json.hpp"
+using json = nlohmann::json;
+
 class MoveComponent : public Component
 {
 public:
@@ -19,4 +22,8 @@ private:
     bool m_moving;
     float m_targetX;
     float m_targetY;
+public:
+    // Serialization
+    static std::string GetID() { return "move"; }
+    static MoveComponent* LoadFromJson(const json& data, Ref<Entity> entity);
 };

@@ -20,6 +20,16 @@
                 "offsetX": -100.0,
                 "offsetY": -100.0
             }
+        },
+        {
+            "id": "resource",
+            "data": {}
+        },
+        {
+            "id": "move",
+            "data": {
+                "speed": 200.0
+            }
         }
     ]
 }

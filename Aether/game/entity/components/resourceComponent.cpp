@@ -111,3 +111,25 @@ void ResourceComponent::TransferResources(Ref<ResourceComponent> other)
     m_transferring = true;
     m_transferTarget = other;
 }
+
+ResourceComponent* ResourceComponent::LoadFromJson(const json& data, Ref<Entity> entity)
+{
+    int population = 0, oxygen = 0, fuel = 0, metal = 0;
+    if (data.find("population") != data.end() && data["population"].is_number_integer())
+    {
+        population = data["population"];
+    }
+    if (data.find("oxygen") != data.end() && data["oxygen"].is_number_integer())
+    {
+        oxygen = data["oxygen"];
+    }
+    if (data.find("fuel") != data.end() && data["fuel"].is_number_integer())
+    {
+        fuel = data["fuel"];
+    }
+    if (data.find("metal") != data.end() && data["metal"].is_number_integer())
+    {
+        metal = data["metal"];
+    }
+    return new ResourceComponent(entity, population, oxygen, fuel, metal);
+}
