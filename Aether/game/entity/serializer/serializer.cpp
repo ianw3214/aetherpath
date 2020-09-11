@@ -3,6 +3,7 @@
 #include <fstream>
 
 #include "game/entity/components/renderComponent.hpp"
+#include "game/entity/components/collisionComponent.hpp"
 
 EntitySerializer * EntitySerializer::s_instance = nullptr;
 
@@ -14,6 +15,7 @@ EntitySerializer::EntitySerializer()
 void EntitySerializer::RegisterComponents()
 {
     s_componentMap[RenderComponent::GetID()] = RenderComponent::LoadFromJson;
+    s_componentMap[CollisionComponent::GetID()] = CollisionComponent::LoadFromJson;
 }
 
 Ref<EntitySerializer> EntitySerializer::GetInstance()

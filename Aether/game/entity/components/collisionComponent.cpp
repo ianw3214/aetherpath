@@ -16,6 +16,28 @@ Shape Shape::GenerateCircle(float radius, float offsetX, float offsetY)
     return shape;
 }
 
+Shape Shape::LoadFromJson(const json& data)
+{
+    if (data.find("type") != data.end() && data["type"].is_string())
+    {
+        // TODO: Function to get type string from enum to avoid small errors
+        // TODO: More error checking for missing keys
+        if (data["type"] == "rect")
+        {
+            Shape result = { Type::RECT, 0.f, 0.f };
+            result.m_width = data["width"];
+            result.m_height = data["height"];
+            return result;
+        }
+        if (data["type"] == "circle")
+        {
+            Shape result = { Type::CIRCLE, 0.f, 0.f };
+            result.m_radius = data["radius"];
+            return result;
+        }
+    }
+    return {Type::INVALID};
+}
 
 CollisionComponent::CollisionComponent(Ref<Entity> entity, Shape shape)
     : Component(entity)
@@ -82,4 +104,24 @@ bool CollisionComponent::Colliding(float x, float y, const Shape& shape) const
         }
     }
     return false;
+}
+
+CollisionComponent* CollisionComponent::LoadFromJson(const json& data, Ref<Entity> entity)
+{
+    // TODO: More error checking
+    Shape shape = Shape::LoadFromJson(data["shape"]);
+    
+    float offsetX = 0.f, offsetY = 0.f;
+    if (data.find("offsetX") != data.end() && data["offsetX"].is_number_float())
+    {
+        offsetX = data["offsetX"];
+    }
+    if (data.find("offsetY") != data.end() && data["offsetY"].is_number_float())
+    {
+        offsetY = data["offsetY"];
+    }
+    shape.m_offsetX = offsetX;
+    shape.m_offsetY = offsetY;
+
+    return new CollisionComponent(entity, shape);
 }

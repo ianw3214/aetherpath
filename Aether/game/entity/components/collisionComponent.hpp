@@ -3,6 +3,9 @@
 
 #include "game/entity/component.hpp"
 
+#include "nlohmann/json.hpp"
+using json = nlohmann::json;
+
 ////////////////////////////////////////////////////////////////
 struct Shape
 {
@@ -28,6 +31,8 @@ struct Shape
 
     static Shape GenerateRect(float width, float height, float offsetX = 0.f, float offsetY = 0.f);
     static Shape GenerateCircle(float radius, float offsetX = 0.f, float offsetY = 0.f);
+
+    static Shape LoadFromJson(const json& data);
 };
 
 ////////////////////////////////////////////////////////////////
@@ -47,4 +52,8 @@ public:
     bool Colliding(float x, float y, const Shape& shape) const;
 private:
     Shape m_shape;
+public:
+    // Serialization
+    static std::string GetID() { return "collision"; }
+    static CollisionComponent* LoadFromJson(const json& data, Ref<Entity> entity);
 };

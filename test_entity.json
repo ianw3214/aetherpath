@@ -8,6 +8,18 @@
                 "width": 200.0,
                 "height": 200.0
             }
+        },
+        {
+            "id": "collision",
+            "data": {
+                "shape": {
+                    "type": "rect",
+                    "width": 200.0,
+                    "height": 200.0
+                },
+                "offsetX": -100.0,
+                "offsetY": -100.0
+            }
         }
     ]
 }
