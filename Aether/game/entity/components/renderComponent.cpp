@@ -57,6 +57,5 @@ RenderComponent* RenderComponent::LoadFromJson(const json& data, Ref<Entity> ent
     {
         height = data["height"];
     }
-    Oasis::Console::AddLog(path.c_str());
     return new RenderComponent(entity, path, width, height);
 }

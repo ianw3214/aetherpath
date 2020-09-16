@@ -21,10 +21,19 @@ Shape Shape::LoadFromJson(const json& data)
     if (data.find("type") != data.end() && data["type"].is_string())
     {
         // TODO: Function to get type string from enum to avoid small errors
-        // TODO: More error checking for missing keys
         if (data["type"] == "rect")
         {
             Shape result = { Type::RECT, 0.f, 0.f };
+            if (data.find("width") == data.end() || !data["width"].is_number_float())
+            {
+                Oasis::Console::Error("Expected a width key for RECT shape type");
+                return result;
+            }
+            if (data.find("height") == data.end() || !data["height"].is_number_float())
+            {
+                Oasis::Console::Error("Expected a height key for RECT shape type");
+                return result;
+            }
             result.m_width = data["width"];
             result.m_height = data["height"];
             return result;
@@ -32,6 +41,11 @@ Shape Shape::LoadFromJson(const json& data)
         if (data["type"] == "circle")
         {
             Shape result = { Type::CIRCLE, 0.f, 0.f };
+            if (data.find("radius") == data.end() || !data["radius"].is_number_float())
+            {
+                Oasis::Console::Error("Expected a radius key for RECT shape type");
+                return result;
+            }
             result.m_radius = data["radius"];
             return result;
         }
@@ -108,7 +122,6 @@ bool CollisionComponent::Colliding(float x, float y, const Shape& shape) const
 
 CollisionComponent* CollisionComponent::LoadFromJson(const json& data, Ref<Entity> entity)
 {
-    // TODO: More error checking
     Shape shape = Shape::LoadFromJson(data["shape"]);
     
     float offsetX = 0.f, offsetY = 0.f;

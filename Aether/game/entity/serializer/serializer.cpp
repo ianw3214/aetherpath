@@ -46,6 +46,10 @@ Entity* EntitySerializer::GetEntity(const std::string& path)
         // Might want to put this in a data component or something of the sort
         // Or we could just put it in the actual base entity class
     }
+    else
+    {
+        Oasis::Console::Error("Entity missing name (%s)", path);
+    }
 
     if (data.find("components") != data.end() && data["components"].is_array())
     {
@@ -59,6 +63,7 @@ Entity* EntitySerializer::GetEntity(const std::string& path)
             }
             else
             {
+                Oasis::Console::Error("Item in component list missing component id");
                 continue;
             }
             if (s_componentMap.find(id) != s_componentMap.end())
@@ -75,6 +80,10 @@ Entity* EntitySerializer::GetEntity(const std::string& path)
                 }
                 OASIS_TRAP(comp);
                 result->AddComponent(comp);
+            }
+            else
+            {
+                Oasis::Console::Error("Couldn't find component of id '%s'", id);
             }
         }
     }
